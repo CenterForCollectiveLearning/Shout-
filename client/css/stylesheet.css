@@ -1,0 +1,18 @@
+#main-container {
+	padding: 20px;
+}
+
+.trade-button {
+	margin-top: 55px;
+	width: 100%;
+}
+
+.trade-select {
+	height: 45px;
+	width: 100%;
+	background-color: rgba(211, 211, 211, 0.37)
+}
+
+#user_list {
+	margin:auto;
+}

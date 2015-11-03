@@ -1,0 +1,40 @@
+<template name="trade_modal"> 
+  <div class="modal fade" id="{{_id}}">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Propose a trade</h4>
+        </div>
+        <div class="modal-body">
+          <div>
+            <span class="form-group">
+              <label for="num_you">Your tweets</label>
+              <select class="form-control num_you">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </span>
+            <span class="form-group">
+              <label for="num_them">Their tweets</label>
+              <select class="form-control num_them">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+              </select>
+            </span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary propose-trade" data-dismiss="modal">Propose Trade</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</template>

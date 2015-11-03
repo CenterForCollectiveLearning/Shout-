@@ -1,0 +1,16 @@
+<template name="home">
+	<head></head>
+<body>
+	{{> nav}}
+
+	{{#if currentUser}}
+		<div id="main-container">
+		{{> post_list}}
+		{{> retweet_requests}}
+		{{> trade_requests}}
+		{{> user_list}}
+		</div>
+	{{/if}}
+
+</body>
+</template>

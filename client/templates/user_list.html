@@ -1,0 +1,21 @@
+<template name="user_list">
+  {{#with user_list}}
+  <h3>All Trade-A-Tweet Users</h3>
+  {{#each user_list}}
+    <div class="row">
+      <div class="col-md-3">
+         <img src="{{services.twitter.profile_image_url}}">
+          <b>{{profile.name}}</b> 
+          @{{services.twitter.screenName}}
+        </div>
+        <div class="col-md-3">
+          {{#unless is_trading _id}}
+                    <button type="button" class="btn btn-default setUpTrade" aria-label="Left Align" id="@{{services.twitter.screenName}}" data-toggle="modal" data-target="#{{_id}}">Request</button>
+          {{/unless}}
+          </div>
+         {{> trade_modal}}
+       </div>
+ {{/each}}
+
+ {{/with}}
+</template>

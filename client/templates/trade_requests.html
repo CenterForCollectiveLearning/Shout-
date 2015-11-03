@@ -1,0 +1,13 @@
+<template name="trade_requests">
+	{{#if requests_list}}
+		<h3> Your Trade Requests</h3> 
+		{{#each requests_list}}
+		<p>
+			{{name_lookup user_id_from}} proposes a trade - You send <b>{{proposed_to}}</b> tweets, he/she sends <b>{{proposed_from}}</b> tweets!
+			<button class="btn btn-default proposal-action accept">Accept</button>
+			<button class="btn btn-default proposal-action reject">Reject</button>
+			<button class="btn btn-default proposal-action modify">Modify</button>
+		</p>	
+		{{/each}}
+	{{/if}}
+</template>
