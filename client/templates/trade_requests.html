@@ -6,8 +6,9 @@
 			{{name_lookup user_id_from}} proposes a trade - You send <b>{{proposed_to}}</b> tweets, he/she sends <b>{{proposed_from}}</b> tweets!
 			<button class="btn btn-default proposal-action accept">Accept</button>
 			<button class="btn btn-default proposal-action reject">Reject</button>
-			<button class="btn btn-default proposal-action modify">Modify</button>
+			<button type="button" class="btn btn-default proposal-action modify" data-toggle="modal" data-target="#modify-modal">Modify</button>
 		</p>	
+		{{> modify_trade_modal}}
 		{{/each}}
 	{{/if}}
 </template>

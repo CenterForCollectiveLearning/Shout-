@@ -10,7 +10,7 @@
         </div>
         <div class="col-md-3">
           {{#unless is_trading _id}}
-                    <button type="button" class="btn btn-default setUpTrade" aria-label="Left Align" id="@{{services.twitter.screenName}}" data-toggle="modal" data-target="#{{_id}}">Request</button>
+                    <button type="button" class="btn btn-default setUpTrade" aria-label="Left Align" id="@{{services.twitter.screenName}}" data-toggle="modal" data-target="#{{_id}}" disabled="{{is_requested _id}}">Request</button>
           {{/unless}}
           </div>
          {{> trade_modal}}

@@ -78,6 +78,7 @@ Meteor.methods({
 
     pushHistoricTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to, status) {
         if (this.userId){
+            console.log("inserting into historic trade requests");
             // Push trade request to history, and clear the current one.
             Historic_trade_requests.insert({"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "status": status});
             Current_trade_requests.remove({"user_id_from":user_id_from, "user_id_to":user_id_to});
@@ -111,17 +112,6 @@ Meteor.methods({
             return "No user logged in.";
         }
     },
-
-    updateProposalStatus: function(request, new_status) {
-        if (this.userId) {
-            Meteor.call("pushHistoricTradeRequest", request.user_id_from, request.user_id_to, request.proposed_from, request.proposed_to, new_status);
-        
-        }
-        else {
-            return "No user logged in.";
-        }
-    }
-
 
 });
 
