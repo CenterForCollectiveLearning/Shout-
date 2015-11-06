@@ -2,8 +2,6 @@ Template.trade_requests.helpers({
 	// Returns a list of trades that the current user is involved in
 	// Only return the OTHER username & quantity.
 	requests_list: function() {
-		console.log("user id: " + Meteor.userId());
-		console.log(Current_trade_requests.find({"user_id_to": Meteor.userId()}).fetch());
 		return Current_trade_requests.find({"user_id_to": Meteor.userId()}).fetch();
 	},
 
@@ -15,7 +13,6 @@ Template.trade_requests.helpers({
 		}
 	}
 });
-
 
 Template.trade_requests.events({
 	// Todo: update curent trade request, push historic trade request.
@@ -36,6 +33,7 @@ Template.trade_requests.events({
 
 		}
 		else {
+			// Session vars s
 			new_status = "modified";
 			Session.set("modify_trade_from_id", this.user_id_from);
 			Session.set("old_proposed_from", this.proposed_from);

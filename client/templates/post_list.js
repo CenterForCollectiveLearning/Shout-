@@ -4,7 +4,6 @@ Meteor.call("getUserTimeline", function(error, result){
 		return;
 	}
 	Session.set("timeline", result);
-
 	// Logic below for populated embedded tweet dropdown
 
 	// for (var i=0; i<result.length; i+=1) {
@@ -41,12 +40,10 @@ Template.post_list.helpers({
 });
 
 
-
 Template.post_list.events({
 	'click .trade-button': function(e, template) {
-		var tweet_text = template.find("#tweet-select :selected").text;
-		var trader = template.find("#trader-select :selected").value;
-		Retweet_requests.insert({"user_id_from": Meteor.userId(), "user_id_to": trader, "text": tweet_text, "status":"pending"});
-		// To do - Temporarily remove this trader from the trader list. 
+		var tweet_id = template.find("#tweet-select :selected").id;
+		var trader_id = template.find("#trader-select :selected").value;
+		Meteor.call("retweet", tweet_id, trader_id);
 	}
 });

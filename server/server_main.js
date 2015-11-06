@@ -48,10 +48,6 @@
         return Historic_trade_requests.find();
     });
 
-    Meteor.publish("retweet_requests", function() {
-        return Retweet_requests.find();
-    });
-
 });
 
 
@@ -60,6 +56,7 @@ Meteor.methods({
         if (this.userId){
             var getTimelineSync = Meteor.wrapAsync(T.get, T);
             var res = getTimelineSync('statuses/user_timeline',{user_id: this.userId});
+            console.log(res);
             return res;
         }
         else {
@@ -89,17 +86,6 @@ Meteor.methods({
 
     },
 
-    postRetweet: function(traded_status) {
-        if (this.userId) {
-            T.post('statuses/update', {status: traded_status}, function(err, data, response) {
-                console.log(data);
-            });
-        }
-        else {
-            return "No user logged in.";
-        }
-    },
-
     createNewTrade: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to) {
         if (this.userId) {
             Trades.update({"user_id":user_id_from}, {$pull: {"trades":{"other_user_id":user_id_to}}});
@@ -112,6 +98,30 @@ Meteor.methods({
             return "No user logged in.";
         }
     },
+
+    retweet: function(tweet_id, trader_id) {
+        console.log("in server retweet");
+        if (this.userId) {
+            // Make a twit object for trader
+            var trader = Meteor.users.findOne({"_id":trader_id});
+            var trader_access_token = trader.services.twitter.accessToken;
+            var trader_access_token_secret = trader.services.twitter.accessTokenSecret;
+            var TraderTwit = Meteor.npmRequire('twit');
+
+            T_trader = new TraderTwit({
+                consumer_key: '7nnEJcadkHGw6U4jCfeM1k9rK', // API key
+                consumer_secret: 'VEQtyxVBlaSLTTqFYjN9q4bKSeUs802Vc2FhSPkjYSvAvowwK9', // API secret
+                access_token: trader_access_token,
+                access_token_secret: trader_access_token_secret
+            });
+            T_trader.post('statuses/retweet/'+tweet_id, function(err, data, response) {
+                console.log(data);
+            });
+        }
+        else {
+            return "No user logged in.";
+        }
+    }
 
 });
 

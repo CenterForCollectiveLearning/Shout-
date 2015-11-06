@@ -25,7 +25,7 @@
             </div> -->
             <h3>Choose a recent tweet:</h3><select class="trade-select" id="tweet-select">
             {{#each timeline}}
-                <option value="{{text}}">
+                <option id="{{id_str}}" value="{{text}}">
                     {{text}}
                 </option>
             {{/each}}
