@@ -3,8 +3,7 @@
 }
 
 .trade-button {
-	margin-top: 55px;
-	width: 100%;
+	float:right;
 }
 
 .trade-select {
@@ -15,4 +14,22 @@
 
 #user_list {
 	margin:auto;
+}
+
+.setUpTrade {
+	float:right;
+}
+
+.proposal-buttons {
+	margin-top: 10px;
+	float:right;
+}
+
+.verticalLine {
+    border-left: thick solid #ff0000;
+}
+
+.num_left {
+	color: red;
+	font-size: large;
 }

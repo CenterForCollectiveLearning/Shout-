@@ -1,12 +1,22 @@
 <template name="trade_requests">
 	{{#if requests_list}}
-		<h3> Your Trade Requests</h3> 
 		{{#each requests_list}}
 		<p>
-			{{name_lookup user_id_from}} proposes a trade - You send <b>{{proposed_to}}</b> tweets, he/she sends <b>{{proposed_from}}</b> tweets!
-			<button class="btn btn-default proposal-action accept">Accept</button>
-			<button class="btn btn-default proposal-action reject">Reject</button>
-			<button type="button" class="btn btn-default proposal-action modify" data-toggle="modal" data-target="#modify-modal">Modify</button>
+			<div class="panel panel-default">
+				<div class="panel-body">
+					{{#with specific_user user_id_from}} 
+					 <img src="{{services.twitter.profile_image_url}}">
+                	 <b>{{profile.name}}</b> @{{services.twitter.screenName}} proposes a trade
+                	{{/with}}
+                	- You send <b>{{proposed_to}}</b> tweets, he/she sends <b>{{proposed_from}}</b> tweets!
+                	<div class="btn-group proposal-buttons" role="group">
+						<button class="btn btn-default proposal-action accept">Accept</button>
+						<button class="btn btn-default proposal-action reject">Reject</button>
+						<button type="button" class="btn btn-default proposal-action modify" data-toggle="modal" data-target="#modify-modal">Modify</button>
+					</div>
+
+				</div>
+			</div>
 		</p>	
 		{{> modify_trade_modal}}
 		{{/each}}

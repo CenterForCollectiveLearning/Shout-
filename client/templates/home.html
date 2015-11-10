@@ -4,12 +4,21 @@
 	{{> nav}}
 
 	{{#if currentUser}}
+				<hr width="1" size="500">
+
 		<div id="main-container">
-		<!-- {{> post_list}} -->
-		{{> recent_tweets}}
-		{{> current_traders}}
-		{{> trade_requests}}
-		{{> user_list}}
+			<div class="row">
+				<div class="col-md-5">
+					{{> trade_requests}}
+					{{> user_list}}
+				</div>
+				<div class="verticalLine">
+					<div class="col-md-7">
+						{{> recent_tweets}}
+						{{> current_traders}}
+					</div>
+				</div>
+			</div>
 		</div>
 	{{/if}}
 

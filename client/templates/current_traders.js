@@ -18,7 +18,10 @@ Template.current_traders.helpers({
 			return true;
 		}
 		return false;
-	}
+	},
+	specific_user: function(specific_user_id) {
+		return Meteor.users.findOne({"_id":specific_user_id});
+	},
 });
 
 Template.current_traders.events({

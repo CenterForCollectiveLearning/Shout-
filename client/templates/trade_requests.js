@@ -11,6 +11,9 @@ Template.trade_requests.helpers({
 		if (user) {
 			return user.profile.name;
 		}
+	},
+	specific_user: function(specific_user_id) {
+		return Meteor.users.findOne({"_id":specific_user_id});
 	}
 });
 

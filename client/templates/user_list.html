@@ -1,20 +1,31 @@
 <template name="user_list">
+  <div id="user-search-input">
+      <div class="input-group">
+          <input type="text" class="form-control input-lg">
+          <span class="input-group-btn">
+              <button class="btn btn-info btn-lg" type="button">
+                  <i class="glyphicon glyphicon-search"></i>
+              </button>
+          </span>
+       </div>
+  </div>
+
+
   {{#with user_list}}
   <h3>All Trade-A-Tweet Users</h3>
-  {{#each user_list}}
-    <div class="row">
-      <div class="col-md-3">
-         <img src="{{services.twitter.profile_image_url}}">
-          <b>{{profile.name}}</b> 
-          @{{services.twitter.screenName}}
-        </div>
-        <div class="col-md-3">
-          {{#unless is_trading _id}}
-                    <button type="button" class="btn btn-default setUpTrade" aria-label="Left Align" id="@{{services.twitter.screenName}}" data-toggle="modal" data-target="#{{_id}}" disabled="{{is_requested _id}}">Request</button>
-          {{/unless}}
-          </div>
-         {{> trade_modal}}
-       </div>
+  {{#each user_list}} 
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <img src="{{services.twitter.profile_image_url}}">
+                <b>{{profile.name}}</b> 
+                @{{services.twitter.screenName}}
+                {{#unless is_trading _id}}
+                          <button type="button" class="btn btn-info setUpTrade" aria-label="Left Align" id="@{{services.twitter.screenName}}" data-toggle="modal" data-target="#{{_id}}" disabled="{{is_requested _id}}">Request</button>
+                {{/unless}}
+                {{> trade_modal}}
+            </div>
+         </div>
+
  {{/each}}
 
  {{/with}}
