@@ -20,39 +20,25 @@ Meteor.call("getUserTimeline", function(error, result){
 	// }
 });
 
-Template.post_list.helpers({
+Template.recent_tweets.helpers({
 	timeline: function() {
 		return Session.get("timeline");
 	},
-
-	trader_list: function() {
-		var trades2 = Trades.findOne({"user_id":Meteor.userId()});
-		console.log("TRADES: " + trades2);
-		return trades2;
-	},
-
-	name_lookup: function(user_id) {
-		var user = Meteor.users.findOne({"_id": user_id});
-		if (user) {
-			return user.profile.name;
-		}
-	},
-
-	has_more_trades: function(trade) {
-		if (trade.this_trade_num > 0) {
-			return true;
-		}
-		return false;
-	}
-
-
 });
 
-
-Template.post_list.events({
-	'click .trade-button': function(e, template) {
+Template.recent_tweets.events({
+	// TODO: Set selected tweet ID on page load. 
+	'change #tweet-select':function(event, template) {
 		var tweet_id = template.find("#tweet-select :selected").id;
-		var trader_id = template.find("#trader-select :selected").value;
-		Meteor.call("retweet", tweet_id, trader_id, Meteor.userId());
+
+		Session.set("selected-tweet-id", tweet_id);
 	}
 });
+
+Template.recent_tweets.rendered = function() {
+    if(!this._rendered) {
+      this._rendered = true;
+      var tweet_id = $('#tweet-select').find(":selected").attr('id');
+	  Session.set("selected-tweet-id", tweet_id);
+    }
+};

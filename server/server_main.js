@@ -58,9 +58,9 @@ Meteor.methods({
             var res = getTimelineSync('statuses/user_timeline',{user_id: this.userId});
             return res;
         }
-        else {
-            return "No user logged in.";
-        }
+        // else {
+        //     return "No user logged in.";
+        // }
     },
 
     updateCurrentTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to) {
@@ -121,7 +121,6 @@ Meteor.methods({
             // If successful, decrement the corresponding trade counts. 
 
             Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":-1}});
-
             Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":-1}});            
         }
         else {

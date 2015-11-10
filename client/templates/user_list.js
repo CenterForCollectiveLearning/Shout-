@@ -35,6 +35,7 @@ Template.user_list.helpers({
 
 Template.user_list.events({
     'click .menuitem': function (event) {
+    	console.log("menuitem clicked");
         $('#dropdown-toggle').text(event.currentTarget.innerText);
     }
 
