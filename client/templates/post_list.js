@@ -28,7 +28,9 @@ Template.post_list.helpers({
 	},
 
 	trader_list: function() {
-		return Trades.find({"user_id":Meteor.userId()}).fetch();
+		var trades2 = Trades.findOne({"user_id":Meteor.userId()});
+		console.log(trades2);
+		return trades2;
 	},
 
 	name_lookup: function(user_id) {
@@ -36,7 +38,17 @@ Template.post_list.helpers({
 		if (user) {
 			return user.profile.name;
 		}
+	},
+
+	has_more_trades: function(trade) {
+		if (trade.this_trade_num > 0) {
+			return true;
+		}
+		return false;
+
 	}
+
+
 });
 
 
@@ -44,6 +56,6 @@ Template.post_list.events({
 	'click .trade-button': function(e, template) {
 		var tweet_id = template.find("#tweet-select :selected").id;
 		var trader_id = template.find("#trader-select :selected").value;
-		Meteor.call("retweet", tweet_id, trader_id);
+		Meteor.call("retweet", tweet_id, trader_id, Meteor.userId());
 	}
 });
