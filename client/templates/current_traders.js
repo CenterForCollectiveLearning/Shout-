@@ -27,7 +27,8 @@ Template.current_traders.helpers({
 Template.current_traders.events({
 	'click .trade-button': function(e, template) {
 		var tweet_id = Session.get("selected-tweet-id");
-		var trader_id = template.find("#trader-select :selected").value;
+		var trader_id = this.other_user_id;
+		console.log("tweet id: " + tweet_id + ", trader id: " + trader_id);
 		Meteor.call("retweet", tweet_id, trader_id, Meteor.userId());
 	}
 });

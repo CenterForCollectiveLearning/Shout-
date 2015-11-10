@@ -1,6 +1,5 @@
 <template name="current_traders">
-<!--     <h3>Choose a trader:</h3><select class="trade-select" id="trader-select">
- -->        {{#with trader_list}}
+        {{#with trader_list}}
                 {{#each trades}}
                         {{#if has_more_trades this_trade_num}} 
                         <div class="panel panel-default">
@@ -11,14 +10,9 @@
                                 {{/with}}
                                 - <span class="num_left"><b>{{this_trade_num}}</b></span> left to send! 
                                 <button class="btn btn-default trade-button">SEND!</button>
-
-    <!--                         <option value="{{other_user_id}}">
-                                {{name_lookup other_user_id}}
-                            </option> -->
                          </div>
                          </div>
                         {{/if}}
                 {{/each}}
             {{/with}}
-    <!-- <button class="btn btn-lg btn-primary trade-button">TRADE!</button> -->
 </template>

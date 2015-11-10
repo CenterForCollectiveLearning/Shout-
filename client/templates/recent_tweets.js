@@ -30,7 +30,7 @@ Template.recent_tweets.events({
 	// TODO: Set selected tweet ID on page load. 
 	'change #tweet-select':function(event, template) {
 		var tweet_id = template.find("#tweet-select :selected").id;
-
+		console.log("set tweet id to: " + tweet_id);
 		Session.set("selected-tweet-id", tweet_id);
 	}
 });
@@ -39,6 +39,7 @@ Template.recent_tweets.rendered = function() {
     if(!this._rendered) {
       this._rendered = true;
       var tweet_id = $('#tweet-select').find(":selected").attr('id');
+      console.log("set tweet id to: " + tweet_id);
 	  Session.set("selected-tweet-id", tweet_id);
     }
 };
