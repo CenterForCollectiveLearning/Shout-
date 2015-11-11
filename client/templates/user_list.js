@@ -1,6 +1,9 @@
 Template.user_list.helpers({
+
+	// Returns all users, or a filtered set if users are searched.
 	user_list: function() {
-		return Meteor.users.find({"_id":{$ne:Meteor.userId()}});
+		return Session.get("other_user_list");
+		//return Meteor.users.find({"_id":{$ne:Meteor.userId()}});
 	},
 
 	specific_user: function(specific_user_id) {
@@ -35,6 +38,27 @@ Template.user_list.helpers({
 Template.user_list.events({
     'click .menuitem': function (event) {
         $('#dropdown-toggle').text(event.currentTarget.innerText);
-    }
+    },
 
+    // On search submit, update the user list accordingly.
+    'click #search-submit': function(event) {
+    	var search_terms = $("#search-terms").val();
+    	var searched_users = Meteor.call("searchUsers", search_terms, function(err, result) {
+    		if (err) {
+    			console.log(err.reason);
+    			return;
+    		}
+    		Session.set("other_user_list", result);
+    	})
+    }
 });
+
+Template.user_list.onCreated(function() {
+		var users = Meteor.call("getOtherUsers", Meteor.userId(), function(err, result) {
+			if (err) {
+				console.log(err.reason);
+				return;
+			 }
+			 Session.set("other_user_list", result);
+		});
+	});
