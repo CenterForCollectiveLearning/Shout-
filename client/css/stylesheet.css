@@ -9,7 +9,7 @@
 .trade-select {
 	height: 45px;
 	width: 100%;
-	background-color: rgba(211, 211, 211, 0.37)
+	margin-bottom: 10px;
 }
 
 #user_list {
@@ -30,10 +30,18 @@
 }
 
 .num_left {
-	color: red;
+	color: green;
 	font-size: large;
 }
 
 .no-traders-alert {
 	margin-top: 10px;
+}
+
+.content-container {
+	padding-top: 65px;
+}
+
+#login-buttons-logout {
+	background-color: #5bc0de;
 }

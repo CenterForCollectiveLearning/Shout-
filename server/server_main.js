@@ -132,8 +132,6 @@ Meteor.methods({
 
     getOtherUsers: function(user_id) {
         if (this.userId) {
-            console.log("user id: " + user_id);
-            var result = Meteor.users.find({"_id":{$ne:user_id}}).fetch();
             return Meteor.users.find({"_id":{$ne:user_id}}).fetch();
         }
         else {
@@ -141,10 +139,14 @@ Meteor.methods({
         }
     },
 
-    searchUsers: function(search_terms) {
+    searchUsers: function(search_terms, user_id) {
         if (this.userId) {
-            console.log(Meteor.users.find({$text:{$search:search_terms}}).fetch());
-            return Meteor.users.find({$text:{$search:search_terms}}).fetch();
+            if (search_terms==="") {
+                return Meteor.users.find({"_id":{$ne:user_id}}).fetch();
+            }
+            else {
+                return Meteor.users.find({$text:{$search:search_terms}}).fetch();
+            }
         }
         else {
             return "No user logged in.";

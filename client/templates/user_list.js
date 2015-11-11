@@ -43,13 +43,18 @@ Template.user_list.events({
     // On search submit, update the user list accordingly.
     'click #search-submit': function(event) {
     	var search_terms = $("#search-terms").val();
-    	var searched_users = Meteor.call("searchUsers", search_terms, function(err, result) {
+    	var searched_users = Meteor.call("searchUsers", search_terms, Meteor.userId(), function(err, result) {
     		if (err) {
     			console.log(err.reason);
     			return;
     		}
     		Session.set("other_user_list", result);
     	})
+    },
+    'keydown #search-terms': function(event) {
+    	if(event.which === 13){
+        	$("#search-submit").click();
+    	}
     }
 });
 
