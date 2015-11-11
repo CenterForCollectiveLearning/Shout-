@@ -4,7 +4,6 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-meteor-platform
 twbs:bootstrap
 http
 underscore
@@ -14,4 +13,19 @@ meteorhacks:npm
 npm-container
 accounts-twitter
 accounts-ui
-iron:router
+standard-minifiers
+meteor-base
+mobile-experience
+mongo
+blaze-html-templates
+session
+jquery
+tracker
+logging
+reload
+random
+ejson
+spacebars
+check
+kadira:flow-router
+kadira:blaze-layout

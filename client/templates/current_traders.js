@@ -10,13 +10,28 @@ Template.current_traders.helpers({
 			return user.profile.name;
 		}
 	},
-
+	// See if specific trade has any more remaining to send 
 	has_more_trades: function(trade_num) {
 		if (trade_num > 0) {
 			return true;
 		}
 		return false;
 	},
+	// See if user has any more to send to any user
+	has_more_trades_aggregate: function(trades) {
+		if (!Trades.findOne({"user_id":Meteor.userId()})) {
+			return false;
+		}
+		for (var i=0; i<trades.length; i+=1) {
+			console.log("in has more trades agg");
+			console.log(trades[i].this_trade_num);
+			if (trades[i].this_trade_num>0) {
+				return true;
+			}
+		}
+		return false;
+	},
+
 	specific_user: function(specific_user_id) {
 		return Meteor.users.findOne({"_id":specific_user_id});
 	},

@@ -15,4 +15,7 @@
                         {{/if}}
                 {{/each}}
             {{/with}}
+            {{#unless has_more_trades_aggregate trades}}
+                <div class="alert alert-warning no-traders-alert" role="alert">You have nobody to trade with! Request some traders to get up and running.</div>
+            {{/unless}}
 </template>
