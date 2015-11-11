@@ -18,3 +18,6 @@ Meteor.subscribe("allUsers", function() {
 	Session.set("all_users_ready", true);
 });
 
+Meteor.subscribe("retweet_ids", function() {
+	Session.set("retweet_ids_ready", true);
+});

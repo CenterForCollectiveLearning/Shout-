@@ -9,7 +9,12 @@
                                     <b>{{profile.name}}</b> @{{services.twitter.screenName}} 
                                 {{/with}}
                                 - <span class="num_left"><b>{{this_trade_num}}</b></span> left to send! 
-                                <button class="btn btn-default trade-button">SEND!</button>
+                                    {{#unless already_retweeted other_user_id}}
+                                        <button class="btn btn-default trade-button">SEND!</button>
+                                    {{else}}
+                                        <button class="btn btn-default trade-button" disabled="true">SENT</button>
+                                    {{/unless}}
+                                
                          </div>
                          </div>
                         {{/if}}

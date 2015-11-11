@@ -35,12 +35,24 @@ Template.current_traders.helpers({
 	specific_user: function(specific_user_id) {
 		return Meteor.users.findOne({"_id":specific_user_id});
 	},
+
+	// Check if the tweet in question has already been retweeted by the trader
+	already_retweeted: function(user_id) {
+		var tweet_id = Session.get("selected-tweet-id");
+		var res = Retweet_ids.find({"tweet_id" : tweet_id, "trader_ids":user_id.toString()}).count();
+		if (res>0) {
+			return true;
+		}
+		return false;
+	},
 });
 
 Template.current_traders.events({
 	'click .trade-button': function(e, template) {
 		var tweet_id = Session.get("selected-tweet-id");
 		var trader_id = this.other_user_id;
+		console.log("Tweet id: " + tweet_id);
+        console.log("user id posted: " + trader_id);
 		Meteor.call("retweet", tweet_id, trader_id, Meteor.userId());
 	}
 });

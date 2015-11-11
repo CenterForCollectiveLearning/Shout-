@@ -47,6 +47,9 @@
     Meteor.publish("historic_trade_requests", function() {
         return Historic_trade_requests.find();
     });
+    Meteor.publish("retweet_ids", function() {
+        return Retweet_ids.find();
+    });
 
 });
 
@@ -114,20 +117,24 @@ Meteor.methods({
                 access_token: trader_access_token,
                 access_token_secret: trader_access_token_secret
             });
-            T_trader.post('statuses/retweet/'+tweet_id, function(err, data, response) {
+            T_trader.post('statuses/retweet/'+tweet_id, Meteor.bindEnvironment(function(err, data, response) {
                 if (err) {
+                    console.log("ERROR!");
                     console.log(err);
                     return;
-                }            
-            });
-            // If successful, decrement the corresponding trade counts. 
+                } 
+                // If successful, decrement the corresponding trade counts.           
+                Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":-1}});
+                Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":-1}}); 
+                Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
+            }, function() {
+                console.log("Failed to bind environment");
+            }));
 
-            Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":-1}});
-            Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":-1}});            
-        }
-        else {
-            return "No user logged in.";
-        }
+            }
+            else {
+                return "No user logged in.";
+            }
     },
 
     getOtherUsers: function(user_id) {
