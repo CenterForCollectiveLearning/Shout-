@@ -12,7 +12,7 @@
 
 
   {{#with user_list}}
-  <h3>All Trade-A-Tweet Users</h3>
+  <h3>Suggested Traders</h3>
   {{#each user_list}} 
         <div class="panel panel-default">
             <div class="panel-body">
@@ -20,7 +20,13 @@
                 <b>{{profile.name}}</b> 
                 @{{services.twitter.screenName}}
                 {{#unless is_trading _id}}
-                          <button type="button" class="btn btn-info setUpTrade" aria-label="Left Align" id="@{{services.twitter.screenName}}" data-toggle="modal" data-target="#{{_id}}" disabled="{{is_requested _id}}">Request</button>
+                          <button type="button" class="btn btn-info setUpTrade" aria-label="Left Align" id="@{{services.twitter.screenName}}" data-toggle="modal" data-target="#{{_id}}" disabled="{{is_requested _id}}">
+                            {{#if is_requested _id}}
+                            Request Pending
+                            {{else}}
+                            Request
+                            {{/if}}
+                          </button>
                 {{/unless}}
                 {{> trade_modal}}
             </div>

@@ -36,7 +36,6 @@ Template.trade_requests.events({
 
 		}
 		else {
-			// Session vars s
 			new_status = "modified";
 			Session.set("modify_trade_from_id", this.user_id_from);
 			Session.set("old_proposed_from", this.proposed_from);

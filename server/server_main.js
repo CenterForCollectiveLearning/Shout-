@@ -53,6 +53,8 @@
 
 Meteor.methods({
     getUserTimeline: function() {
+
+        // PROBLEM: This does not wait for Users collection
         if (this.userId){
             var getTimelineSync = Meteor.wrapAsync(T.get, T);
             var res = getTimelineSync('statuses/user_timeline',{user_id: this.userId});

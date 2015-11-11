@@ -1,6 +1,20 @@
-Meteor.subscribe("userData");
-Meteor.subscribe("trades");
-Meteor.subscribe("current_trade_requests");
-Meteor.subscribe("historic_current_trade_requests");
-Meteor.subscribe("retweet_requests");
-Meteor.subscribe("allUsers");
+Meteor.subscribe("userData", function() {
+	Session.set("user_data_ready", true);
+});
+
+Meteor.subscribe("trades", function() {
+	Session.set("trades_ready", true);
+});
+
+Meteor.subscribe("current_trade_requests", function() {
+	Session.set("current_trade_requests_ready", true);
+});
+
+Meteor.subscribe("historic_current_trade_requests", function() {
+	Session.set("historic_current_trade_requests_ready", true);
+});
+
+Meteor.subscribe("allUsers", function() {
+	Session.set("all_users_ready", true);
+});
+

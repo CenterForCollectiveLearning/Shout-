@@ -1,6 +1,5 @@
 Template.user_list.helpers({
 	user_list: function() {
-		console.log(Meteor.users.find({"_id":{$ne:Meteor.userId()}}));
 		return Meteor.users.find({"_id":{$ne:Meteor.userId()}});
 	},
 
@@ -35,9 +34,7 @@ Template.user_list.helpers({
 
 Template.user_list.events({
     'click .menuitem': function (event) {
-    	console.log("menuitem clicked");
         $('#dropdown-toggle').text(event.currentTarget.innerText);
     }
-
 
 });

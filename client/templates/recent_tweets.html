@@ -1,7 +1,9 @@
 <template name="recent_tweets">
     <select class="trade-select" id="tweet-select">
 		{{#each timeline}}
+			{{#unless retweeted_status}}
    			 <option id="{{id_str}}" value="{{text}}">{{text}}</option>
+			{{/unless}}
 		{{/each}}
 	</select>
 </template>
