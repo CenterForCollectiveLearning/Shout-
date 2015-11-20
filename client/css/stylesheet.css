@@ -45,3 +45,15 @@
 #login-buttons-logout {
 	background-color: #5bc0de;
 }
+
+.highlighted {
+	background-color: #f2f2f2;
+}
+
+.tweet-clear {
+	float:right;
+}
+
+.hidden {
+	visibility: hidden;
+}

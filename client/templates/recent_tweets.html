@@ -1,9 +1,23 @@
 <template name="recent_tweets">
-    <select class="trade-select" id="tweet-select">
+	{{#each timeline}}
+		{{#unless retweeted_status}}
+        <div class="panel panel-default">
+            <div class="panel-body tweet-panel-body">
+                <b>{{text}}</b> 
+                {{#if partial_timeline_status}}
+                <a class="tweet-clear"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                {{/if}}
+            </div>
+         </div>
+         {{/unless}}
+     {{/each}}
+
+
+<!--     <select class="trade-select" id="tweet-select">
 		{{#each timeline}}
 			{{#unless retweeted_status}}
    			 <option id="{{id_str}}" value="{{text}}">{{text}}</option>
 			{{/unless}}
 		{{/each}}
-	</select>
+	</select> -->
 </template>

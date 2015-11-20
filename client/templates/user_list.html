@@ -9,17 +9,61 @@
           </span>
        </div>
   </div>
+  {{#each filtered_traders}}
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <img src="{{services.twitter.profile_image_url}}">
+          <b>{{profile.name}}</b> @{{services.twitter.screenName}} 
+          {{#with find_trade_with_user _id}}
+            {{#each trades}}
+              {{#if check_user_id_equality ../../_id other_user_id}}
+               - <span class="num_left"><b>{{this_trade_num}}</b></span> left to send! 
+              {{/if}}
+            {{/each}}
+          {{/with}}    
+        </div>
+     </div>
+  {{/each}}
+  Non traders
+  {{#each filtered_non_traders}}
+  {{profile.name}}
+  {{/each}}
+
+        {{#with trader_list}}
+                {{#each trades}}
+                        {{#if has_more_trades this_trade_num}} 
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                {{#with specific_user other_user_id}}
+                                    <img src="{{services.twitter.profile_image_url}}">
+                                    <b>{{profile.name}}</b> @{{services.twitter.screenName}} 
+                                {{/with}}
+                                - <span class="num_left"><b>{{this_trade_num}}</b></span> left to send! 
+                                    {{#unless already_retweeted other_user_id}}
+                                        <button class="btn btn-default trade-button">SEND!</button>
+                                    {{else}}
+                                        <button class="btn btn-default trade-button" disabled="true">SENT</button>
+                                    {{/unless}}
+                                
+                         </div>
+                         </div>
+                        {{/if}}
+                {{/each}}
+            {{/with}}
+            {{#unless has_more_trades_aggregate trader_list.trades}}
+                <div class="alert alert-warning no-traders-alert" role="alert">You have nobody to trade with! Request some traders to get up and running.</div>
+            {{/unless}}
 
 
   {{#with user_list}}
-  <h3>Suggested Traders</h3>
   {{#each user_list}} 
+      {{#unless is_trading _id}}
         <div class="panel panel-default">
             <div class="panel-body">
                 <img src="{{services.twitter.profile_image_url}}">
                 <b>{{profile.name}}</b> 
                 @{{services.twitter.screenName}}
-                {{#unless is_trading _id}}
+                <!-- {{#unless is_trading _id}} -->
                           <button type="button" class="btn btn-info setUpTrade" aria-label="Left Align" id="@{{services.twitter.screenName}}" data-toggle="modal" data-target="#{{_id}}" disabled="{{is_requested _id}}">
                             {{#if is_requested _id}}
                             Request Pending
@@ -27,10 +71,11 @@
                             Request
                             {{/if}}
                           </button>
-                {{/unless}}
+               <!--  {{/unless}} -->
                 {{> trade_modal}}
             </div>
          </div>
+      {{/unless}}
 
  {{/each}}
 

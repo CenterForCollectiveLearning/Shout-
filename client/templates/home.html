@@ -5,15 +5,16 @@
 	<div class="content-container">
 	{{#if currentUser}}
 		<div id="main-container">
+			{{> trade_requests}}
+			<div id="instructions">Select a tweet and a trader!</div>
+
 			<div class="row">
-				<div class="col-md-5">
-					{{> trade_requests}}
-					{{> user_list}}
+				<div class="col-md-6">
+					{{> recent_tweets}}
 				</div>
 				<div class="verticalLine">
-					<div class="col-md-7">
-						{{> recent_tweets}}
-						{{> current_traders}}
+					<div class="col-md-6">
+						{{> user_list}}
 					</div>
 				</div>
 			</div>
