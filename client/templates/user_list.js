@@ -1,3 +1,4 @@
+// Helper functions
 function is_trading(other_user_id) {
 	var count = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id}).fetch().length;
 	if (count===0) {
@@ -6,18 +7,25 @@ function is_trading(other_user_id) {
 	return true;
 }
 
+// SESSION VARIABLES
+
+// full_user_list: entire user list
+// filtered_user_list: partial user list by search or click
+// filtered_user_list_status: whether there has been a partial search or click
+// selected_user_list_status: whether there is ONE user selected who logged-in user can trade with
+
+
 Template.user_list.helpers({
+	filtered_user_list_status: function() {
+		return Session.get("filtered_user_list_status");
+	},
+
+	// return trades for logged-in user
 	trader_list: function() {
 		var trades = Trades.findOne({"user_id":Meteor.userId()});
 		return trades;
 	},
 
-	name_lookup: function(user_id) {
-		var user = Meteor.users.findOne({"_id": user_id});
-		if (user) {
-			return user.profile.name;
-		}
-	},
 	// See if specific trade has any more remaining to send 
 	has_more_trades: function(trade_num) {
 		if (trade_num > 0) {
@@ -40,16 +48,13 @@ Template.user_list.helpers({
 
 
 	find_trade_with_user: function(other_user_id) {
-		console.log(Trades.findOne({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id}));
-		return Trades.findOne({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id})
+		return Trades.findOne({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id});
 	},
 
 	check_user_id_equality: function(first_user_id, second_user_id) {
-		console.log("Checking equality");
 		if (first_user_id===second_user_id) {
 			return true;
 		}
-		console.log("returning false");
 		return false;
 	},
 
@@ -73,11 +78,18 @@ Template.user_list.helpers({
 	},
 	filtered_non_traders: function() {
 		return Session.get("filtered_non_traders");
-
 	},
+
+	// Get the lists of traders and non-traders from the (possibly filtered) user list
+	// first element of returned value is the traders, 2nd is the non-traders
 	user_list: function() {
-		// Assign the filtered users to these separate lists (for ordering)
-		var users =  Session.get("filtered_user_list");
+		var users;
+		if (Session.get("filtered_user_list_status")){
+			users =  Session.get("filtered_user_list");
+		}
+		else {
+			users =  Session.get("full_user_list");
+		}
 		var trading_users = []
 		var non_trading_users = []
 		for (var i=0; i<users.length; i+=1) {
@@ -91,7 +103,7 @@ Template.user_list.helpers({
 		}
 		Session.set("filtered_traders", trading_users);
 		Session.set("filtered_non_traders", non_trading_users);
-		
+		return [trading_users, non_trading_users];
 	},
 
 	// Users who are already trading w/ logged-in user
@@ -121,39 +133,46 @@ Template.user_list.events({
         $('#dropdown-toggle').text(event.currentTarget.innerText);
     },
 
-    // On search submit, update the user list accordingly.
-    'click #search-submit': function(event) {
-    	var search_terms = $("#search-terms").val();
-    	var searched_users = Meteor.call("searchUsers", search_terms, Meteor.userId(), function(err, result) {
-    		if (err) {
-    			console.log(err.reason);
-    			return;
-    		}
-    		Session.set("filtered_user_list", result);
-    	})
-    },
-    'keydown #search-terms': function(event) {
-    	if(event.which === 13){
-        	$("#search-submit").click();
-    	}
-    },
+	'mouseenter .user-panel': function(event, template) {
+		$(event.target).addClass("highlighted");
+	},
 
-    'click .trade-button': function(e, template) {
-		var tweet_id = Session.get("selected-tweet-id");
-		var trader_id = this.other_user_id;
-		console.log("Tweet id: " + tweet_id);
-        console.log("user id posted: " + trader_id);
-		Meteor.call("retweet", tweet_id, trader_id, Meteor.userId());
+	'mouseleave .user-panel': function(event, template) {
+		$(event.target).removeClass("highlighted");
+	},
+
+	// User should only be able to click on a user they can complete the trade with.
+	// TODO: If there is a selected tweet already, must check that the selected user
+	// hasn't already retweeted that tweet. 
+	'click .user-panel': function(event, template) {
+		if (is_trading(this._id)) {
+	    	Session.set("filtered_user_list", [this]);
+			Session.set("filtered_user_list_status", true);
+			Session.set("selected_trader_id", this._id);
+    		Session.set("selected_user_list_status", true);
+		}
+	},
+
+	'click .user-list-clear': function(event, template) {
+		Session.set("filtered_user_list_status", false);
+		Session.set("selected_user_list_status", true);
+
+		event.stopPropagation();
 	}
+
 });
 
 Template.user_list.onCreated(function() {
-		var users = Meteor.call("getOtherUsers", Meteor.userId(), function(err, result) {
-			if (err) {
-				console.log(err.reason);
-				return;
-			 }
-			 console.log("created user list");
-			 Session.set("filtered_user_list", result);
-		});
+	// Populate the user list initially
+	var users = Meteor.call("getOtherUsers", Meteor.userId(), function(err, result) {
+		if (err) {
+			console.log(err.reason);
+			return;
+		 }
+		 Session.set("full_user_list", result);
+		 Session.set("filtered_user_list", result);
+		 Session.set("filtered_user_list_status", false);
+		 Session.set("selected_user_list_status", false);
+
 	});
+});
