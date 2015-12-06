@@ -12,7 +12,6 @@ meteorhacks:npm
 
 npm-container
 accounts-twitter
-accounts-ui
 standard-minifiers
 meteor-base
 mobile-experience
@@ -29,3 +28,4 @@ spacebars
 check
 kadira:flow-router
 kadira:blaze-layout
+accounts-ui-unstyled

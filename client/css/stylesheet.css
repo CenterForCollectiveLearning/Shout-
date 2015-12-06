@@ -16,9 +16,10 @@
 	margin:auto;
 }
 
-/*.setUpTrade {
-	float:right;
-}*/
+.setUpTrade {
+	/*float:right;*/
+	background-color: #0084B4;
+}
 
 .proposal-buttons {
 	margin-top: 10px;
@@ -43,7 +44,7 @@
 }
 
 #login-buttons-logout {
-	background-color: #5bc0de;
+	background-color: #0084B4;
 }
 
 .highlighted {
@@ -63,7 +64,7 @@
 }
 
 .navbar {
-	background-color: #5BC0DE;
+	background-color: #0084B4;
 	border-bottom: thick solid gray;
 	border-bottom-width: 3px;
 }
@@ -75,7 +76,7 @@
 }
 
 #login_link {
-	background-color: #5BC0DE;
+	background-color: #0084B4;
 }
 
 #instructions {
@@ -104,6 +105,36 @@
 
 .navbar-default .navbar-brand{
 	color:black;
+	margin-top: 10px;
+}
+
+#user-dropdown {
+	margin-top:8px;
+}
+
+#signin-jumbo {
+	width: 50%;
+	margin: auto;
+	margin-top: 100px;
+	text-align: center;
+}
+
+#big-logo {
+	font-size: 40px;
+	font-family: verdana;
+}
+
+#friends-icon-login {
+	width: 80px;
+	margin-bottom: 52px;
+}
+
+#friends-icon-nav {
+	width: 40px;
+}
+
+#search-submit {
+	background-color: #0084B4;
 }
 
 .btn-custom {

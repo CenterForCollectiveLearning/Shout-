@@ -1,9 +1,10 @@
 <template name="home">
 <head></head>
 <body>
+	{{#if currentUser}}
+
 	{{> nav}}
 	<div class="content-container">
-	{{#if currentUser}}
 		<div id="main-container">
 <!-- 			{{#unless trade_ready}}
  -->				{{> trade_requests}}
@@ -28,8 +29,8 @@
 				</div>
 				<div class="row">
 					<div class="recent-tweets col-md-6">
-<!-- 						{{> recent_tweets}}
- -->					</div>
+						{{> recent_tweets}}
+					</div>
 					<div id="arrow-block" hidden><img src="/gray_arrow.png" id="arrow"></div>
 					<div class="users col-md-6">
 						{{> user_list}}
@@ -39,12 +40,12 @@
 				{{#if trade_ready}}
 					<div id="trade-button-div"> <button class="btn btn-xlarge btn-custom" id="trade-button"> SEND RETWEET</button></div>
 				{{/if}}
-<!-- 				{{else}}
-
-			{{/unless}} -->
 
 		</div>
-	{{/if}}
+
 </div>
+	{{else}}
+		{{>signin_page}}
+	{{/if}}
 </body>
 </template>
