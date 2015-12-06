@@ -1,3 +1,11 @@
+Template.trade_modal.helpers({
+	proposing_trade_to: function() {
+
+		return Meteor.users.findOne({"_id":Session.get("proposing_trade_to")}).profile.name;
+	}
+
+});
+
 Template.trade_modal.events({
   'click .propose-trade': function(e, template) {
     e.preventDefault();
@@ -7,7 +15,5 @@ Template.trade_modal.events({
     var proposed_to = template.find('.num_them').value;
 
     Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, proposed_from, proposed_to);
-
   }
 });
-

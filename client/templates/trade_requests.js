@@ -18,7 +18,7 @@ Template.trade_requests.helpers({
 });
 
 Template.trade_requests.events({
-	// Todo: update curent trade request, push historic trade request.
+	// Todo: update current trade request, push historic trade request.
 
 	'click .proposal-action': function(e, template) {
 		// Update the current trade request

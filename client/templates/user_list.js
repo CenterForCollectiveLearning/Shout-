@@ -158,6 +158,11 @@ Template.user_list.events({
 		Session.set("selected_user_list_status", false);
 
 		event.stopPropagation();
+	},
+
+	'click .setUpTrade': function(event, template){
+  		//console.log(this._id);
+  		Session.set("proposing_trade_to", this._id);
 	}
 
 });
