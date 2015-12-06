@@ -1,7 +1,7 @@
 <template name="user_list">
   {{#each user_list.[0]}}
       <div class="panel panel-default">
-        <div class="panel-body user-panel">
+        <div class="panel-body user-panel-body">
           <img src="{{services.twitter.profile_image_url}}">
           <b>{{profile.name}}</b> @{{services.twitter.screenName}} 
           {{#with find_trade_with_user _id}}
@@ -19,11 +19,12 @@
   {{/each}}
 
   {{#each user_list.[1]}}
-    <div class="panel panel-default">
-        <div class="panel-body user-panel">
+    <div class="panel panel-default user-panel">
+        <div class="panel-body user-panel-body">
               <img src="{{services.twitter.profile_image_url}}">
               <b>{{profile.name}}</b> 
               @{{services.twitter.screenName}}
+                        <span>
                         <button type="button" class="btn btn-info setUpTrade" aria-label="Left Align" id="@{{services.twitter.screenName}}" data-toggle="modal" data-target="#{{_id}}" disabled="{{is_requested _id}}">
                           {{#if is_requested _id}}
                           Request Pending
@@ -31,6 +32,12 @@
                           Request
                           {{/if}}
                         </button>
+                        </span>
+                        <span>
+                        {{#if filtered_user_list_status}}
+                            <a class="user-list-clear"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                        {{/if}} 
+                      </span>
               {{> trade_modal}}
             </div>
          </div>

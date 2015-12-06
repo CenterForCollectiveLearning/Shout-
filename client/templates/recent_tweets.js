@@ -13,22 +13,35 @@ Template.recent_tweets.helpers({
 		return Session.get("partial_timeline_status");
 	},
 
+	// TODO: figure out how to store embedded tweet so don't have to query Twitter every time
 	insert_embedded_tweet: function(id_str){
-		//if (!$("#"+id_str).hasClass("tweet_embedded")) {
+		$("#"+id_str).parent().parent().hide();
+		if (!$("#"+id_str).hasClass("tweet_embedded")) {
 			$("#"+id_str).empty();
 			twttr.ready(function(twttr) {
-				element = document.getElementById(id_str);
+				//console.log(document.getElementById(id_str).html());
+				var element = document.getElementById(id_str);
+				console.log("element: " + element)
 				style = {align: 'center'};
 				twttr.widgets.createTweet(id_str, element, style)
 			     .then(function(el) {
-					 $("#"+id_str).addClass("tweet_embedded");
-					 Session.set(id_str+"_html", $("#"+id_str).html());
+					 //$("#"+id_str).addClass("tweet_embedded");
+
+					 var iframeHtmlInner = $("#"+id_str).children()[0].contentWindow.document.body.innerHTML
+					 var iframeHtmlOuter = $("#"+id_str).html();
+					 Session.set(String(id_str)+"_iframeHtmlInner", iframeHtmlInner);
+					 Session.set(String(id_str)+"_iframeHtmlOuter", iframeHtmlOuter);
+					 $("#"+id_str).parent().parent().show();
 				});	
-			})
-		//}
-		// else {
-		// 	$("#"+id_str).html(Session.get(id_str+"_html"));
-		// }
+			});
+
+		}
+		else {
+			var iframeHtml = String(id_str)+"_iframeHtmlOuter";
+			var innerIframeHtml = String(id_str)+"_iframeHtmlInner"; 
+			$("#"+id_str).html(Session.get(iframeHtml));
+			$("#"+id_str).children()[0].contentWindow.document.write(Session.get(innerIframeHtml));
+		}
 	}
 });
 
@@ -51,7 +64,7 @@ Template.recent_tweets.events({
 
 	'click .tweet-clear': function(event, template) {
 		Session.set("partial_timeline_status", false);
-		event.stopPropogation();
+		event.stopPropagation();
 	}
 
 });
@@ -65,18 +78,7 @@ Template.recent_tweets.onCreated(function() {
 		}
 		Session.set("timeline", result);
 		Session.set("partial_timeline_status", false);
-		// twttr.ready(function(twttr) {
-		// 	result.forEach(function(tweet) {
-		// 		var id = tweet.id_str;
-		// 		element = document.getElementById('timeline');
-		// 		style = {align: 'center'};
-		// 		twttr.widgets.createTweet(id, element, style)
-		// 	     .then(function(el) {
-		// 			 console.log("@ev's Tweet has been displayed.")
-		// 		});
-
-		// 	});
-		// })
+		Session.set("panels_ready", false);
 	});
 //};
 });

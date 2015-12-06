@@ -2,8 +2,37 @@ Template.home.helpers({
 	// Determines whether a trade can take place now
 	trade_ready: function() {
 		if (Session.get("partial_timeline_status") && Session.get("selected_user_list_status")) {
+			
+			//$(".recent-tweets").animate({top: '200px'});
+			// Formulas to align everything
+			var tweet_height = $(".tweet-panel").height()/2+200-$(".user-panel").height()/2;
+			console.log(tweet_height);
+			//$(".users").animate({top: String(tweet_height)+'px'});
+			$("#user-search-input").hide();
+
+			// TODO: Fix animations..
+
+			$(".recent-tweets").removeClass("col-md-6", {duration:500, children: true});
+			$(".recent-tweets").addClass("trade-mode-tweets-styling", {duration:500, children: true});
+
+			$(".users").removeClass("col-md-6", {duration:500});
+			$(".users").addClass("trade-mode-users-styling",{duration:500});
+
+			$("#arrow-block").show();
+
+			//$(".recent-tweets").animate({left: '300px'});
+			//$(".users").animate({left: '0px', top: '300px'});
+
 			return true;
 		}
+		$(".recent-tweets").addClass("col-md-6");
+		$(".recent-tweets").removeClass("trade-mode-tweets-styling");
+
+		$(".users").addClass("col-md-6");
+		$(".users").removeClass("trade-mode-users-styling");
+		$("#arrow-block").hide()
+
+		$("#user-search-input").show();
 		return false;
 	},
 	// Returns a variation of instructions to the user based on what has been selected
@@ -22,6 +51,14 @@ Template.home.helpers({
 		}
 	}
 });
+
+function is_trading(other_user_id) {
+	var count = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id}).fetch().length;
+	if (count===0) {
+		return false;
+	}
+	return true;
+}
 
 Template.home.events({
     // On search submit, update the user list accordingly.
@@ -48,7 +85,6 @@ Template.home.events({
     			}
     			Session.set("filtered_user_list_status", true);
     		}
-
     		Session.set("filtered_user_list", result);
     	})
     },

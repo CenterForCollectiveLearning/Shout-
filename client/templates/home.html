@@ -26,23 +26,21 @@
 				  </div>	
 					</div>
 				</div>
-
 				<div class="row">
-					<div class="col-md-6">
-
+					<div class="recent-tweets col-md-6">
 						{{> recent_tweets}}
 					</div>
-					<div class="verticalLine">
-						<div class="col-md-6">
-							{{> user_list}}
-						</div>
+					<div id="arrow-block" hidden><img src="/gray_arrow.png" id="arrow"></div>
+					<div class="users col-md-6">
+						{{> user_list}}
 					</div>
+
 				</div>
 				{{#if trade_ready}}
 					<div id="trade-button-div"> <button class="btn btn-xlarge btn-custom" id="trade-button"> SEND RETWEET</button></div>
 				{{/if}}
 <!-- 				{{else}}
-				
+
 			{{/unless}} -->
 
 		</div>

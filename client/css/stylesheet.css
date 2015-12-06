@@ -16,9 +16,9 @@
 	margin:auto;
 }
 
-.setUpTrade {
+/*.setUpTrade {
 	float:right;
-}
+}*/
 
 .proposal-buttons {
 	margin-top: 10px;
@@ -52,6 +52,10 @@
 
 .tweet-clear {
 	float:right;
+	margin-top: -180px;
+}
+.user-list-clear {
+	float:right;
 }
 
 .hidden {
@@ -61,6 +65,25 @@
 #instructions {
 	text-align: center;
 	font-size: 30px;
+}
+
+.trade-mode-tweets-styling {
+	width: 50%;
+	margin: auto;
+}
+
+.trade-mode-users-styling {
+	width: 50%;
+	margin: auto;
+}
+
+#arrow {
+	width: 100px;
+}
+
+#arrow-block {
+	text-align: center;
+	margin-bottom: 20px;
 }
 
 .btn-custom {

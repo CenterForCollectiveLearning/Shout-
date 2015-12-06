@@ -133,18 +133,18 @@ Template.user_list.events({
         $('#dropdown-toggle').text(event.currentTarget.innerText);
     },
 
-	'mouseenter .user-panel': function(event, template) {
+	'mouseenter .user-panel-body': function(event, template) {
 		$(event.target).addClass("highlighted");
 	},
 
-	'mouseleave .user-panel': function(event, template) {
+	'mouseleave .user-panel-body': function(event, template) {
 		$(event.target).removeClass("highlighted");
 	},
 
 	// User should only be able to click on a user they can complete the trade with.
 	// TODO: If there is a selected tweet already, must check that the selected user
 	// hasn't already retweeted that tweet. 
-	'click .user-panel': function(event, template) {
+	'click .user-panel-body': function(event, template) {
 		if (is_trading(this._id)) {
 	    	Session.set("filtered_user_list", [this]);
 			Session.set("filtered_user_list_status", true);
@@ -155,7 +155,7 @@ Template.user_list.events({
 
 	'click .user-list-clear': function(event, template) {
 		Session.set("filtered_user_list_status", false);
-		Session.set("selected_user_list_status", true);
+		Session.set("selected_user_list_status", false);
 
 		event.stopPropagation();
 	}

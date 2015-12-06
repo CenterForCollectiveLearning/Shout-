@@ -1,7 +1,7 @@
 <template name="recent_tweets">
 	{{#each timeline}}
 		{{#unless retweeted_status}}
-        <div class="panel panel-default">
+        <div class="panel panel-default tweet-panel" hidden>
             <div class="panel-body tweet-panel-body">
             	<div id="{{id_str}}"> 
             		{{insert_embedded_tweet id_str}}
@@ -13,5 +13,5 @@
          </div>
          {{/unless}}
      {{/each}}
-      <div id="timeline" style="height:350px;overflow:auto;"></div>
-</template>
+<!--       <div id="timeline" style="height:350px;overflow:auto;"></div>
+ --></template>
