@@ -6,7 +6,6 @@ Template.home.helpers({
 			//$(".recent-tweets").animate({top: '200px'});
 			// Formulas to align everything
 			var tweet_height = $(".tweet-panel").height()/2+200-$(".user-panel").height()/2;
-			console.log(tweet_height);
 			//$(".users").animate({top: String(tweet_height)+'px'});
 			$("#user-search-input").hide();
 
@@ -74,7 +73,6 @@ Template.home.events({
     		}
     		else {
     			// if just 1 result, track whether it is a trader
-    			console.log("result length: " + result.length)
     			if (result.length===1) {
     				if (!is_trading(result[0]._id)) {
     					Session.set("user_ready_to_trade", false);
@@ -98,8 +96,6 @@ Template.home.events({
 	'click #trade-button': function(event, template) {
 		var selected_tweet_id = Session.get("selected_tweet_id");
 		var selected_trader_id =  Session.get("selected_trader_id");
-		console.log("selected tweet id: " + selected_tweet_id);
-		console.log("selected trader id:  " + selected_trader_id);
 		Meteor.call("retweet", selected_tweet_id, selected_trader_id, Meteor.userId());
 
 		// Reset the tweet list and the trader list

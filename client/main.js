@@ -21,3 +21,7 @@ Meteor.subscribe("allUsers", function() {
 Meteor.subscribe("retweet_ids", function() {
 	Session.set("retweet_ids_ready", true);
 });
+
+Meteor.subscribe("nba", function() {
+});
+

@@ -30,6 +30,9 @@
             console.log("No user id");
             this.ready();
         }
+
+            Nba.insert({name:'Boston Celtics'});
+
     });
 
     // TODO: Replace this with more selective version
@@ -50,6 +53,10 @@
     Meteor.publish("retweet_ids", function() {
         return Retweet_ids.find();
     });
+    Meteor.publish("nba", function() {
+        return Nba.find();
+    });
+
 
 });
 
@@ -154,6 +161,15 @@ Meteor.methods({
             else {
                 return Meteor.users.find({$text:{$search:search_terms}}).fetch();
             }
+        }
+        else {
+            return "No user logged in.";
+        }
+    },
+
+    editProfile: function(user_id, edited_bio, edited_interests){
+        if (this.userId) {
+            Meteor.users.update({"_id" :user_id},{$set : {"profile.bio":edited_bio, "profile.interests":edited_interests}});
         }
         else {
             return "No user logged in.";

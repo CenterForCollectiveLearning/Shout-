@@ -10,6 +10,9 @@ Template.recent_tweets.helpers({
 	},
 
 	partial_timeline_status: function() {
+		if (Session.get("partial_timeline_status")) {
+			$(".tweet-panel-body").addClass("highlighted");
+		}
 		return Session.get("partial_timeline_status");
 	},
 
@@ -19,9 +22,7 @@ Template.recent_tweets.helpers({
 		if (!$("#"+id_str).hasClass("tweet_embedded")) {
 			$("#"+id_str).empty();
 			twttr.ready(function(twttr) {
-				//console.log(document.getElementById(id_str).html());
 				var element = document.getElementById(id_str);
-				console.log("element: " + element)
 				style = {align: 'center'};
 				twttr.widgets.createTweet(id_str, element, style)
 			     .then(function(el) {
@@ -32,6 +33,22 @@ Template.recent_tweets.helpers({
 					 Session.set(String(id_str)+"_iframeHtmlInner", iframeHtmlInner);
 					 Session.set(String(id_str)+"_iframeHtmlOuter", iframeHtmlOuter);
 					 $("#"+id_str).parent().parent().show();
+
+
+					// Hack to disable default click functionality on tweets
+					var body = $("#"+id_str).children()[0].contentWindow.document.body;
+					var bodyChild = body.childNodes[0];
+					bodyChild.className = "EmbeddedTweet";
+					bodyChild.style.cursor = "default";
+
+					focus();
+					var listener = addEventListener('blur', function() {
+					    if(document.activeElement === document.getElementById('iframe')) {
+					        // clicked
+					        //console.log("Clicked iframe!!!");
+					    }
+					    removeEventListener(listener);
+					});
 				});	
 			});
 
@@ -47,11 +64,16 @@ Template.recent_tweets.helpers({
 
 Template.recent_tweets.events({
 	'mouseenter .tweet-panel-body': function(event, template) {
-		$(event.target).addClass("highlighted");
+		if (!Session.get("partial_timeline_status")) {
+			$(event.target).addClass("highlighted");
+		}
+		
 	},
 
 	'mouseleave .tweet-panel-body': function(event, template) {
-		$(event.target).removeClass("highlighted");
+		if (!Session.get("partial_timeline_status")) {
+			$(event.target).removeClass("highlighted");
+		}
 	},
 
 	'click .tweet-panel-body': function(event, template) {

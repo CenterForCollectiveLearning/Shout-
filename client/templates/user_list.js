@@ -133,12 +133,16 @@ Template.user_list.events({
         $('#dropdown-toggle').text(event.currentTarget.innerText);
     },
 
-	'mouseenter .user-panel-body': function(event, template) {
-		$(event.target).addClass("highlighted");
+	'mouseenter .trading-user-panel': function(event, template) {
+		if (!Session.get("selected_user_list_status")) {
+			$(event.target).addClass("highlighted");
+		}
 	},
 
-	'mouseleave .user-panel-body': function(event, template) {
-		$(event.target).removeClass("highlighted");
+	'mouseleave .trading-user-panel': function(event, template) {
+		if (!Session.get("selected_user_list_status")) {
+			$(event.target).removeClass("highlighted");
+		}
 	},
 
 	// User should only be able to click on a user they can complete the trade with.
@@ -153,15 +157,19 @@ Template.user_list.events({
 		}
 	},
 
+	'click #link_to_expand': function (event, template) {
+		$(event.target.parentElement).addClass("active");
+		$(event.target.parentElement).data("target").addClass("in");
+
+	},
+
 	'click .user-list-clear': function(event, template) {
 		Session.set("filtered_user_list_status", false);
 		Session.set("selected_user_list_status", false);
-
 		event.stopPropagation();
 	},
 
 	'click .setUpTrade': function(event, template){
-  		//console.log(this._id);
   		Session.set("proposing_trade_to", this._id);
 	}
 
