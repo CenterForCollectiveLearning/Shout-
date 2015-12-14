@@ -17,7 +17,8 @@
 }
 
 .setUpTrade {
-	/*float:right;*/
+	float:right;
+  margin-right: 10px;
 	background-color: #0084B4;
 }
 
@@ -297,4 +298,17 @@ span.tags
 
 .tt-suggestion p {
   margin: 0;
+}
+
+.collapse-icon {
+  float:right;
+  margin-right: 10px;
+  margin-top: 10px;
+}
+.remove-icon {
+  margin-top: 10px;
+}
+
+.retweet-already {
+  color: red;
 }

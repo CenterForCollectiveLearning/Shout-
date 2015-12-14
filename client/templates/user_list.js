@@ -126,6 +126,18 @@ Template.user_list.helpers({
 		return is_trading(other_user_id);
 	},
 
+	bio: function(user_id) {
+		var user_info = Meteor.users.find({"_id":user_id}).fetch();
+		var bio = user_info && user_info[0].profile && user_info[0].profile.bio;
+		return bio;
+	},
+
+	interests: function(user_id) {
+		var user_info = Meteor.users.find({"_id":user_id}).fetch();
+		var interests = user_info && user_info[0].profile && user_info[0].profile.interests;
+		return interests;
+	}
+
 });
 
 Template.user_list.events({

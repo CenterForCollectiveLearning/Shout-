@@ -11,17 +11,26 @@
               {{/if}}
             {{/each}}
           {{/with}} 
+          <span class="retweet-already" hidden>Already retweeted!</span>
           {{#if filtered_user_list_status}}
-              <a class="user-list-clear"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+              <a class="user-list-clear"><span class="glyphicon glyphicon-remove remove-icon" aria-hidden="true"></span></a>
           {{/if}} 
+
           <a data-toggle="collapse" data-target="#collapse{{_id}}" 
             id="link_to_expand" class="collapsed">
-          <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+          <span class="glyphicon glyphicon-chevron-down collapse-icon" aria-hidden="true"></span>
         </a>
 
         </div>
           <div id="collapse{{_id}}" class="panel-collapse collapse">
-            <div class="panel-body">Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richard</div>
+            <div class="panel-body">
+            {{#if bio _id}}
+              <p><strong>Bio: </strong>{{bio _id}}</p>
+            {{/if}}
+            {{#if interests _id}}
+              <p><strong>Interests: </strong>{{interests _id}}</p>
+            {{/if}}
+            </div>
         </div>
      </div>
   {{/each}}
@@ -33,6 +42,15 @@
               <b>{{profile.name}}</b> 
               @{{services.twitter.screenName}}
                         <span>
+                        {{#if filtered_user_list_status}}
+                            <a class="user-list-clear"><span class="glyphicon glyphicon-remove remove-icon" aria-hidden="true"></span></a>
+                        {{/if}} 
+          <a data-toggle="collapse" data-target="#collapse{{_id}}" 
+            id="link_to_expand" class="collapsed">
+          <span class="glyphicon glyphicon-chevron-down collapse-icon" aria-hidden="true"></span>
+        </a>
+                </span>
+                                              <span>
                         <button type="button" class="btn btn-info setUpTrade" aria-label="Left Align" id="@{{services.twitter.screenName}}" data-toggle="modal" data-target="#{{_id}}" disabled="{{is_requested _id}}">
                           {{#if is_requested _id}}
                           Request Pending
@@ -41,13 +59,16 @@
                           {{/if}}
                         </button>
                         </span>
-                        <span>
-                        {{#if filtered_user_list_status}}
-                            <a class="user-list-clear"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-                        {{/if}} 
-                      </span>
               {{> trade_modal}}
             </div>
+          <div id="collapse{{_id}}" class="panel-collapse collapse">
+            <div class="panel-body">
+
+              {{#if bio _id}}<p><strong>Bio: </strong>{{bio _id}}</p>{{/if}}
+              {{#if interests _id}}<p><strong>Interests: </strong>{{interests _id}}</p> {{/if}}
+            </div>
+        </div>
+
          </div>
   {{/each}}
 
