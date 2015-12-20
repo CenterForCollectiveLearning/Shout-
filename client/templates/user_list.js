@@ -1,10 +1,41 @@
 // Helper functions
-function is_trading(other_user_id) {
-	var count = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id}).fetch().length;
+function has_current_trade_relationship(other_user_id) {
+	var trades = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id, "trades.this_trade_num":{$gt:0}}).fetch();
+	var count = trades.length;	
 	if (count===0) {
 		return false;
 	}
 	return true;
+}
+
+function has_trades_left(other_user_id) {
+	console.log("calling has_trades_left");
+	var trades = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id, "trades.this_trade_num":{$gt:0}}).fetch();
+	var count = trades.length;
+
+	if (count===0) {
+		return false;
+	}
+
+	// Look through the trade count to determine if current user has more trades 
+	else {
+		for (var i=0; i<trades.length; i++) {
+			trade = trades[i];
+			console.log(trade);
+			for (var j=0; j<trade.trades.length; j++) {
+				specific_trade = trade.trades[i];
+				if (specific_trade.other_user_id == other_user_id) {
+
+					if (specific_trade.this_trade_num > 0) {
+						console.log("trade this trade num: " + specific_trade.this_trade_num);
+						return true;
+					}
+					return false;
+				}
+			}
+		}
+		return false;
+	}	
 }
 
 // SESSION VARIABLES
@@ -94,7 +125,7 @@ Template.user_list.helpers({
 		var non_trading_users = []
 		for (var i=0; i<users.length; i+=1) {
 			var user = users[i]
-			if (is_trading(user._id)) {
+			if (has_current_trade_relationship(user._id)) {
 				trading_users.push(user)
 			}
 			else {
@@ -122,9 +153,9 @@ Template.user_list.helpers({
 		return false;
 	},
 
-	is_trading: function(other_user_id) {
-		return is_trading(other_user_id);
-	},
+	// is_trading: function(other_user_id) {
+	// 	return is_trading(other_user_id);
+	// },
 
 	bio: function(user_id) {
 		var user_info = Meteor.users.find({"_id":user_id}).fetch();
@@ -146,7 +177,7 @@ Template.user_list.events({
     },
 
 	'mouseenter .trading-user-panel': function(event, template) {
-		if (!Session.get("selected_user_list_status")) {
+		if (!Session.get("selected_user_list_status") && has_trades_left(this._id)) {
 			$(event.target).addClass("highlighted");
 		}
 	},
@@ -161,7 +192,8 @@ Template.user_list.events({
 	// TODO: If there is a selected tweet already, must check that the selected user
 	// hasn't already retweeted that tweet. 
 	'click .user-panel-body': function(event, template) {
-		if (is_trading(this._id)) {
+		console.log("click on user panel body");
+		if (has_trades_left(this._id)) {
 	    	Session.set("filtered_user_list", [this]);
 			Session.set("filtered_user_list_status", true);
 			Session.set("selected_trader_id", this._id);
