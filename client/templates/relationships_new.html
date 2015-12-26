@@ -1,0 +1,36 @@
+<template name="relationships_new">
+	<div class="sort-by">
+		Sort by: <a>own</a> | <a>owe</a> | <a>followers</a>
+	</div>
+	<div id="relationship-search-input">
+      <div class="input-group">
+          <input type="text" class="form-control">
+          <span class="input-group-btn">
+              <button class="btn" type="button">
+                  <i class="glyphicon glyphicon-search"></i>
+              </button>
+          </span>
+       </div>
+  </div>
+
+	<div class="row row-custom">
+		<div class="col-md-8 round-trader-panel">
+			<div class="col-md-3"> 
+				<img class="user-icon" src="{{currentUser.services.twitter.profile_image_url}}">
+			</div>
+			<div class="col-md-9">
+	          <div><a data-toggle="modal" data-target="#myModal">{{currentUser.profile.name}}</a></div>
+	          <div>@{{currentUser.services.twitter.screenName}}</div>
+			</div>
+		</div>
+		<div class="col-md-2 round-trader-panel trading-num trading-num-own">
+			9
+		</div>
+		<div class="col-md-2 round-trader-panel trading-num trading-num-owe">
+			3
+		</div>
+		{{> profile_modal_new}}
+	</div>
+	<div id="start-new-text" class="heading"> Start a new relationship </div>
+
+</template>

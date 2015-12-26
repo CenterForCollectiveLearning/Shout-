@@ -1,0 +1,24 @@
+<template name="home_new">
+	<head></head>
+	<body>
+		{{#if currentUser}}
+		{{> nav_new}} 
+		<div class="row">
+			<div class="col-md-4 layout-col timeline-col"> 
+				<div class="heading"> Your Tweets </div>
+				{{> recent_tweets_new}}
+			</div>
+			<div class="col-md-4 layout-col relationships-col">
+				<div class="heading"> Relationships </div>
+				{{> relationships_new}}
+			</div>
+			<div class="col-md-4 layout-col activity-col">
+				<div class="heading"> Recent Activity </div>
+				{{> history_new}}
+			</div>
+		</div>
+		{{else}}
+			{{> signin_page_new}}
+		{{/if}}
+	</body>
+</template>

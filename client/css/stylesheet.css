@@ -60,17 +60,17 @@
 	visibility: hidden;
 }
 
-.navbar {
+/*.navbar {
 	background-color: #0084B4;
 	border-bottom: thick solid gray;
 	border-bottom-width: 3px;
-}
+}*/
 
-.navbar-brand {
+/*.navbar-brand {
 	color:black;
 	font-size:25px;
 	font-family:verdana;
-}
+}*/
 
 #instructions {
 	text-align: center;
@@ -96,10 +96,10 @@
 	margin-bottom: 20px;
 }
 
-.navbar-default .navbar-brand{
+/*.navbar-default .navbar-brand{
 	color:black;
 	margin-top: 10px;
-}
+}*/
 
 #user-dropdown {
 	margin-top:8px;
@@ -311,4 +311,162 @@ span.tags
 
 .retweet-already {
   color: red;
+}
+
+/*CSS FOR NEW LAYOUTS*/
+
+.navbar-brand-custom {
+  float: none;
+  }
+
+.navbar-center-custom
+{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    text-align: center;
+    margin: auto;
+  height:100%;
+}
+
+#nav-logo {
+  margin-top: 10px;
+  font-size: 30px;
+  color: white;
+  font-family: Oswald;
+}
+
+.nav-logged-in-user {
+  font-family: Oswald;
+  font-size: 16px;
+}
+
+.nav-color {
+  background-color: #66b2ff;
+}
+
+.user-icon {
+  border:2px solid white;
+}
+
+#nav-dropdown {
+  color: white;
+}
+
+.navbar-custom {
+  color: white;
+}
+
+.layout-col {
+  padding: 40px;
+}
+
+.heading {
+  font-size: 25px;
+  padding-bottom: 10px;
+  font-family: Oswald;
+}
+
+.tweet-panel {
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 10px;
+  padding: 2px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}
+
+.home-tweet-panel {
+  color: white;
+  background: #bfbfbf;
+}
+
+.modal-tweet-panel {
+
+}
+
+.round-trader-panel {
+  color: white;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-top: 10px;
+  padding: 2px;
+  background: #bfbfbf;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+}
+
+.tweet-search-input {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.row-custom {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.trading-num {
+  font-size: 36px;
+  text-align: center;
+}
+
+.trading-num-own {
+  background-color: #66b2ff;
+}
+
+.trading-num-owe {
+  background-color: #ff8080;
+}
+
+.date-heading {
+  font-family: Oswald;
+  font-size: 16px;
+  padding-top: 10px;
+}
+
+.profile-modal-content {
+  width: 80%;
+  margin-left: 10%;
+}
+
+.profile-modal-user {
+  text-align: center;
+}
+
+.profile-modal-name {
+
+}
+.profile-modal-screenname {
+}
+
+.profile-modal-info {
+  font-family: Oswald;
+  font-size: 15px;
+}
+
+.profile-modal-footer {
+  text-align: center;
+}
+
+.btn-make-offer {
+  background-color: #66b2ff;
+}
+
+.form-control-custom {
+  display: inline;
+  width: 10%;
+}
+
+.hobbies-list {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+@font-face {
+    font-family: Oswald;
+    src: url("/oswald/Oswald-Regular.ttf");
 }

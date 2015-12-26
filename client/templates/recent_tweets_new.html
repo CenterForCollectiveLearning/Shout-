@@ -1,0 +1,40 @@
+<template name="recent_tweets_new">
+	<div class="sort-by">
+		Sort by: <a>latest</a> | <a>retweets</a> | <a>favorites</a>
+	</div>
+	<div id="tweet-search-input">
+      <div class="input-group">
+          <input type="text" class="form-control">
+          <span class="input-group-btn">
+              <button class="btn" type="button">
+                  <i class="glyphicon glyphicon-search"></i>
+              </button>
+          </span>
+       </div>
+  </div>
+
+	<div class="row tweet-panel home-tweet-panel">
+		<div class="col-md-2"> 
+			<img class="user-icon" src="{{currentUser.services.twitter.profile_image_url}}">
+		</div>
+		<div class="col-md-10">
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec purus in ante pretium blandit. Aliquam erat volutpat. Nulla libero 
+		</div>
+	</div>
+	<div class="date-time-retweets">
+		Date: May 15, 2015, 4:12pm | Retweets: 12  
+	</div>
+
+	<div class="row tweet-panel home-tweet-panel">
+		<div class="col-md-2"> 
+			<img class="user-icon" src="{{currentUser.services.twitter.profile_image_url}}">
+		</div>
+		<div class="col-md-10">
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec purus in ante pretium blandit. Aliquam erat volutpat. Nulla libero 
+		</div>
+	</div>
+	<div class="date-time-retweets">
+		Date: May 15, 2015, 4:12pm | Retweets: 12  
+	</div>
+
+</template>
