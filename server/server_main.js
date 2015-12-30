@@ -1,9 +1,16 @@
   var T;
+  var Twit = Meteor.npmRequire('twit');
+  var consumer_key; 
+  var consumer_secret;
+
+  var user_access_token;
+  var user_access_token_secret;
+
   Meteor.startup(function () {
 
     var Twit = Meteor.npmRequire('twit');
-    var user_access_token;
-    var user_access_token_secret;
+    // var user_access_token;
+    // var user_access_token_secret;
 
 
     Meteor.publish("userData", function() {
@@ -15,10 +22,18 @@
                 _id: this.userId
             }).services.twitter.accessTokenSecret;
 
+            consumer_key = '7nnEJcadkHGw6U4jCfeM1k9rK';
+            consumer_secret = 'VEQtyxVBlaSLTTqFYjN9q4bKSeUs802Vc2FhSPkjYSvAvowwK9';
+
             // Create the twitter API connection
             T = new Twit({
-                consumer_key: '7nnEJcadkHGw6U4jCfeM1k9rK', // API key
-                consumer_secret: 'VEQtyxVBlaSLTTqFYjN9q4bKSeUs802Vc2FhSPkjYSvAvowwK9', // API secret
+                // DEPLOY keys
+                //consumer_key: '6Dnf3z7ouZOBn3guyUZ5ChhnG',
+                //consumer_secret: 'o10ilB4aO8QqqCSUOHJ0dWtjWNK8IHnPLKmatyx0ftVreDxb2d',
+
+                // LOCAL keys
+                consumer_key: consumer_key, // API key
+                consumer_secret: consumer_secret, // API secret
                 access_token: user_access_token,
                 access_token_secret: user_access_token_secret
             });
@@ -60,19 +75,42 @@
 
 });
 
+var makeTwitterCall = function(apiCall, params) {
+  var res;
+  var user = Meteor.user();
+  var client = new Twit({
+    consumer_key: consumer_key,
+    consumer_secret: consumer_secret,
+    access_token: user_access_token,
+    access_token_secret: user_access_token_secret
+  });
+
+  var twitterResultsSync = Meteor.wrapAsync(client.get, client);
+  try {
+    res = twitterResultsSync(apiCall, params);
+  }
+  catch (err) {
+    if (err.statusCode !== 404) {
+      throw err;
+    }
+    res = {};
+  }
+  return res;
+};
 
 Meteor.methods({
-    getUserTimeline: function() {
-
-        // PROBLEM: This does not wait for Users collection
+    getUserTimeline: function(user_id_for_timeline) {
         if (this.userId){
-            var getTimelineSync = Meteor.wrapAsync(T.get, T);
-            var res = getTimelineSync('statuses/user_timeline',{user_id: this.userId});
+            var res = makeTwitterCall('statuses/user_timeline', {user_id: (user_id_for_timeline).toString()});
+
+            // var getTimelineSync = Meteor.wrapAsync(T.get, T);
+            // var res = getTimelineSync('statuses/user_timeline',{user_id: (user_id_for_timeline).toString()});
+
+            //var res = getTimelineSync('statuses/user_timeline', {screen_name:"not_real_kevin"});
+
+            console.log(res[0].text);
             return res;
         }
-        // else {
-        //     return "No user logged in.";
-        // }
     },
 
     updateCurrentTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to) {

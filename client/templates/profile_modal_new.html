@@ -1,25 +1,21 @@
 <template name="profile_modal_new">
-	 <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
+	 <div class="modal fade" id="{{_id}}" tabindex="-1" role="dialog">
 	  <div class="modal-dialog">
 	    <div class="modal-content profile-modal-content">
-<!-- 	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title">Modal title</h4>
-	      </div> -->
 	      <div class="modal-body">
-
+	      	{{#with get_user_by_id _id}}
 <!-- 	    Top section-->
 			<div class="row">
 				<div class="col-md-5 profile-modal-user">
 					<div class="profile-modal-name heading">
-					{{currentUser.profile.name}}
+					{{profile.name}}
 					</div>
 					<div class="profile-modal-screenname">
-					<b>@{{currentUser.services.twitter.screenName}}</b>
+					<b>@{{services.twitter.screenName}}</b>
 					</div>
 				</div>
 				<div class="col-md-2">
-					<img class="user-icon img-rounded" src="{{currentUser.services.twitter.profile_image_url}}">
+					<img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
 				</div>
 				<div class="col-md-5 profile-modal-info">
 					<div> Followers: 5000
@@ -31,25 +27,28 @@
 					</div>
 
 				</div>
-			</div>
-	      	<div class="hobbies-list">
+			</div> 
+ 	      	<div class="hobbies-list">
 	      		Tweets about science, technology, cooking, monsters
-	      	</div>
+	      	</div> 
 
-	      	<div class="recent-tweets">
+<!--  	      	<div class="recent-tweets">
+ 	      		{{#each other_user_timeline}}
 		      	<div class="row tweet-panel modal-tweet-panel">
 					<div class="col-md-2"> 
-						<img class="user-icon img-rounded" src="{{currentUser.services.twitter.profile_image_url}}">
+						<img class="user-icon img-rounded" src="{{user.profile_image_url}}">
 					</div>
 					<div class="col-md-10">
-						Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec purus in ante pretium blandit. Aliquam erat volutpat. Nulla libero 
+						{{text}}
 					</div>
 				</div>
 				<div class="date-time-retweets">
 					Date: May 15, 2015, 4:12pm | Retweets: 12  
 				</div>
-	      	</div>
+				{{/each}}
+	      	</div>  -->
 
+	      	
 	      	<div class="profile-modal-make-deal">
 	      		<div class="heading"> Make a Deal</div>
 	      		<div> I offer you
@@ -71,11 +70,12 @@
 		                <option>5</option>
 		              </select> of your retweets
 	      		</div>
-	      	</div>
+	      	</div> 
+	     	{{/with}}
 	      </div>
 	      <div class="modal-footer profile-modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-	        <button type="button" class="btn btn-primary btn-make-offer">Make the Offer</button>
+	        <button type="button" class="btn btn-primary btn-make-offer" id="make-offer">Make the Offer</button>
 	      </div>
 	    </div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->

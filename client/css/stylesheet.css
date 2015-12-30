@@ -522,6 +522,15 @@ span.tags
   font-size: 50px;
 }
 
+.own-owe-heading {
+  padding-left: 0px;
+}
+
+.btn-request{
+  background-color: #66b2ff;
+  margin-top: 8px;
+}
+
 
 @font-face {
     font-family: Oswald;

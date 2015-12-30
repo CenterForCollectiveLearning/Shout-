@@ -13,28 +13,18 @@
        </div>
   </div>
 
+  {{#each timeline}}
 	<div class="row tweet-panel home-tweet-panel">
 		<div class="col-md-2"> 
-			<img class="user-icon" src="{{currentUser.services.twitter.profile_image_url}}">
+			<img class="user-icon img-rounded" src="{{currentUser.services.twitter.profile_image_url}}">
 		</div>
 		<div class="col-md-10">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec purus in ante pretium blandit. Aliquam erat volutpat. Nulla libero 
+			{{text}}
 		</div>
 	</div>
 	<div class="date-time-retweets">
-		Date: May 15, 2015, 4:12pm | Retweets: 12  
+		{{date_converter created_at}} | Retweets: {{retweet_count}}
 	</div>
-
-	<div class="row tweet-panel home-tweet-panel">
-		<div class="col-md-2"> 
-			<img class="user-icon" src="{{currentUser.services.twitter.profile_image_url}}">
-		</div>
-		<div class="col-md-10">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec purus in ante pretium blandit. Aliquam erat volutpat. Nulla libero 
-		</div>
-	</div>
-	<div class="date-time-retweets">
-		Date: May 15, 2015, 4:12pm | Retweets: 12  
-	</div>
+  {{/each}}
 
 </template>

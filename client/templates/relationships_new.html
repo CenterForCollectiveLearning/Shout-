@@ -13,24 +13,62 @@
        </div>
   </div>
 
+  <div class="row">
+  	<div class="col-md-8">
+  	</div>
+    <div class="col-md-2 heading own-owe-heading">
+    	Own
+  	</div>
+  	<div class="col-md-2 heading own-owe-heading">
+  		Owe
+  	</div>
+  </div>
+
+  {{#each user_list.[0]}}
 	<div class="row row-custom">
 		<div class="col-md-8 round-trader-panel">
 			<div class="col-md-3"> 
-				<img class="user-icon" src="{{currentUser.services.twitter.profile_image_url}}">
+				<img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
 			</div>
 			<div class="col-md-9">
-	          <div><a data-toggle="modal" data-target="#myModal">{{currentUser.profile.name}}</a></div>
-	          <div>@{{currentUser.services.twitter.screenName}}</div>
+	          <div><a class="profile-link" data-toggle="modal" data-target="#{{_id}}">{{profile.name}}</a></div>
+	          <div>@{{services.twitter.screenName}}</div>
 			</div>
 		</div>
-		<div class="col-md-2 round-trader-panel trading-num trading-num-own">
-			9
-		</div>
-		<div class="col-md-2 round-trader-panel trading-num trading-num-owe">
-			3
-		</div>
+
+		{{#with find_trade_with_user _id}}
+            {{#each trades}}
+              {{#if check_user_id_equality ../../_id other_user_id}}
+               
+               		<div class="col-md-2 round-trader-panel trading-num trading-num-own">{{this_trade_num}}</div>
+				<div class="col-md-2 round-trader-panel trading-num trading-num-owe">{{other_trade_num}}</div>
+              {{/if}}
+            {{/each}}
+          {{/with}}
 		{{> profile_modal_new}}
 	</div>
+	{{/each}}
 	<div id="start-new-text" class="heading"> Start a new relationship </div>
+	{{#each user_list.[1]}} 
+		<div class="row row-custom round-trader-panel">
+			<div class="col-md-2"> 
+				<img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
+			</div>
+			<div class="col-md-6">
+				<div><a class="profile-link" data-toggle="modal" data-target="#{{_id}}">{{profile.name}}</a></div>
+		         <div>@{{services.twitter.screenName}}</div>
+			</div>
+			<div class="col-md-4">
+				<button type="button" class="btn btn-primary btn-request profile-link" aria-label="Left Align" id="@{{services.twitter.screenName}}" data-toggle="modal" data-target="#{{_id}}" disabled="{{is_requested _id}}">
+                {{#if is_requested _id}}
+                    Request Pending
+                {{else}}
+                    Request
+                {{/if}}
+                </button>
+			</div>
+		</div>	
+		{{> profile_modal_new}}
+	{{/each}}
 
 </template>
