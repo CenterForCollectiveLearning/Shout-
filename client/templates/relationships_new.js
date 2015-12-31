@@ -32,6 +32,16 @@ function has_trades_left(other_user_id) {
 	}	
 }
 
+function is_eligible_trader(other_user_id) {
+	if (Session.get("partial_timeline_status")) {
+		if (Session.get("selected_user_list_status") || has_trades_left(other_user_id)) {
+			return true;
+		}
+		return false;
+	}
+	return true;
+}
+
 // SESSION VARIABLES
 
 // full_user_list: entire user list
@@ -41,6 +51,11 @@ function has_trades_left(other_user_id) {
 
 
 Template.relationships_new.helpers({
+
+	is_eligible_trader: function(user_id) {
+		return is_eligible_trader(user_id);
+	},
+
 	partial_timeline_status: function() {
 		return Session.get("partial_timeline_status");
 	},
@@ -152,23 +167,16 @@ Template.relationships_new.helpers({
 		}
 		return false;
 	},
-
-	// is_trading: function(other_user_id) {
-	// 	return is_trading(other_user_id);
-	// },
-
 });
 
 Template.relationships_new.events({
 
 	'mouseenter .round-trader-panel': function(event, template) {
-		if (Session.get("partial_timeline_status")) {
-			if (!Session.get("selected_user_list_status") && has_trades_left(this._id)) {
-				$(event.target).addClass("highlight");
-				$(event.target).removeClass("no-highlight");
-			}
+		if (is_eligible_trader(this._id) && Session.get("partial_timeline_status")) {
+			$(event.target).addClass("highlight");
+			$(event.target).removeClass("no-highlight");
 		}
-	},
+},
 
 	'mouseleave .round-trader-panel': function(event, template) {
 		if (!Session.get("selected_user_list_status")) {

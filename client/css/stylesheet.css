@@ -58,6 +58,7 @@
 }
 .user-list-clear {
 	float:right;
+  font-size: 14px;
 }
 
 .hidden {
@@ -535,6 +536,11 @@ span.tags
 
 .selected-tweet {
   margin-top: 55px;
+}
+
+.user-remove-icon {
+  margin-top: 17px;
+  margin-right: 3px;
 }
 
 
