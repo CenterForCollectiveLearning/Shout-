@@ -6,8 +6,6 @@ Template.recent_tweets_new.helpers ({
 		return Session.get("timeline");
 	},
 	partial_timeline_status: function() {
-		if (Session.get("partial_timeline_status")) {
-		}
 		return Session.get("partial_timeline_status");
 	},
 

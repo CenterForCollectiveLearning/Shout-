@@ -76,11 +76,6 @@
 	font-family:verdana;
 }*/
 
-#instructions {
-	text-align: center;
-	font-size: 30px;
-}
-
 .trade-mode-tweets-styling {
 	width: 50%;
 	margin: auto;
@@ -398,7 +393,6 @@ span.tags
   margin-right: 0px;
   margin-top: 10px;
   padding: 2px;
-  background: #bfbfbf;
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
     border-radius: 8px;
@@ -532,6 +526,15 @@ span.tags
 .btn-request{
   background-color: #66b2ff;
   margin-top: 8px;
+}
+
+.instructions {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.selected-tweet {
+  margin-top: 55px;
 }
 
 

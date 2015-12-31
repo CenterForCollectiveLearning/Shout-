@@ -1,8 +1,8 @@
 <template name="recent_tweets_new">
-	<div class="sort-by">
+	<div class="sort-by" id="tweet-sort-by" hidden="{{partial_timeline_status}}">
 		Sort by: <a>latest</a> | <a>retweets</a> | <a>favorites</a>
 	</div>
-	<div id="tweet-search-input">
+	<div id="tweet-search-input" hidden="{{partial_timeline_status}}">
       <div class="input-group">
           <input type="text" class="form-control">
           <span class="input-group-btn">
@@ -12,6 +12,9 @@
           </span>
        </div>
   </div>
+
+  <div id="select-tweet-instructions" class="instructions" hidden="{{partial_timeline_status}}"><b>Select the tweet you want to have retweeted!</b></div>
+
 
   {{#each timeline}}
   	{{#unless retweeted_status}}

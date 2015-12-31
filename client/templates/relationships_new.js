@@ -18,20 +18,17 @@ function has_trades_left(other_user_id) {
 
 	// Look through the trade count to determine if current user has more trades 
 	else {
-		for (var i=0; i<trades.length; i++) {
-			trade = trades[i];
-			for (var j=0; j<trade.trades.length; j++) {
-				specific_trade = trade.trades[i];
-				if (specific_trade.other_user_id == other_user_id) {
-
-					if (specific_trade.this_trade_num > 0) {
-						return true;
-					}
-					return false;
+		trade = trades[0];
+		for (var j=0; j<trade.trades.length; j++) {
+			specific_trade = trade.trades[j];
+			if (specific_trade.other_user_id == other_user_id) {
+				if (specific_trade.this_trade_num > 0) {
+					return true;
 				}
+				return false;
 			}
 		}
-		return false;
+	return false;
 	}	
 }
 
@@ -44,8 +41,14 @@ function has_trades_left(other_user_id) {
 
 
 Template.relationships_new.helpers({
+	partial_timeline_status: function() {
+		return Session.get("partial_timeline_status");
+	},
 	filtered_user_list_status: function() {
 		return Session.get("filtered_user_list_status");
+	},
+	selected_user_list_status: function() {
+		return Session.get("selected_user_list_status");
 	},
 
 	// return trades for logged-in user
@@ -154,32 +157,22 @@ Template.relationships_new.helpers({
 	// 	return is_trading(other_user_id);
 	// },
 
-	bio: function(user_id) {
-		var user_info = Meteor.users.find({"_id":user_id}).fetch();
-		var bio = user_info && user_info[0].profile && user_info[0].profile.bio;
-		return bio;
-	},
-
-	interests: function(user_id) {
-		var user_info = Meteor.users.find({"_id":user_id}).fetch();
-		var interests = user_info && user_info[0].profile && user_info[0].profile.interests;
-		return interests;
-	},
 });
 
 Template.relationships_new.events({
-    'click .menuitem': function (event) {
-        $('#dropdown-toggle').text(event.currentTarget.innerText);
-    },
 
-	'mouseenter .trading-user-panel': function(event, template) {
-		if (!Session.get("selected_user_list_status") && has_trades_left(this._id)) {
-			$(event.target).addClass("highlight");
+	'mouseenter .round-trader-panel': function(event, template) {
+		if (Session.get("partial_timeline_status")) {
+			if (!Session.get("selected_user_list_status") && has_trades_left(this._id)) {
+				$(event.target).addClass("highlight");
+				$(event.target).removeClass("no-highlight");
+			}
 		}
 	},
 
-	'mouseleave .trading-user-panel': function(event, template) {
+	'mouseleave .round-trader-panel': function(event, template) {
 		if (!Session.get("selected_user_list_status")) {
+			$(event.target).addClass("no-highlight");
 			$(event.target).removeClass("highlight");
 		}
 	},
@@ -187,8 +180,8 @@ Template.relationships_new.events({
 	// User should only be able to click on a user they can complete the trade with.
 	// TODO: If there is a selected tweet already, must check that the selected user
 	// hasn't already retweeted that tweet. 
-	'click .user-panel-body': function(event, template) {
-		if (has_trades_left(this._id)) {
+	'click .round-trader-panel': function(event, template) {
+		if (Session.get("partial_timeline_status") && has_trades_left(this._id)) {
 	    	Session.set("filtered_user_list", [this]);
 			Session.set("filtered_user_list_status", true);
 			Session.set("selected_trader_id", this._id);
@@ -196,15 +189,11 @@ Template.relationships_new.events({
 		}
 	},
 
-	'click #link_to_expand': function (event, template) {
-		$(event.target.parentElement).addClass("active");
-		$(event.target.parentElement).data("target").addClass("in");
-
-	},
-
 	'click .user-list-clear': function(event, template) {
 		Session.set("filtered_user_list_status", false);
 		Session.set("selected_user_list_status", false);
+		$(".round-trader-panel").addClass("no-highlight");
+		$(".round-trader-panel").removeClass("highlight");
 		event.stopPropagation();
 	},
 

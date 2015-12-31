@@ -1,8 +1,8 @@
 <template name="relationships_new">
-	<div class="sort-by">
+	<div class="sort-by" hidden="{{selected_user_list_status}}">
 		Sort by: <a>own</a> | <a>owe</a> | <a>followers</a>
 	</div>
-	<div id="relationship-search-input">
+	<div id="relationship-search-input" hidden="{{selected_user_list_status}}">
       <div class="input-group">
           <input type="text" class="form-control">
           <span class="input-group-btn">
@@ -12,6 +12,11 @@
           </span>
        </div>
   </div>
+  {{#if partial_timeline_status}}
+	  {{#unless selected_user_list_status}}
+	     <div id="select-user-instructions" class="instructions"><b>Select the trader to retweet your tweet!</b></div>
+	  {{/unless}}
+  {{/if}}
 
   <div class="row">
   	<div class="col-md-8">
@@ -26,7 +31,7 @@
 
   {{#each user_list.[0]}}
 	<div class="row row-custom">
-		<div class="col-md-8 round-trader-panel">
+		<div class="col-md-8 round-trader-panel no-highlight">
 			<div class="col-md-3"> 
 				<img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
 			</div>
@@ -46,11 +51,15 @@
             {{/each}}
           {{/with}}
 		{{> profile_modal_new}}
+		          {{#if filtered_user_list_status}}
+              <a class="user-list-clear"><span class="glyphicon glyphicon-remove remove-icon" aria-hidden="true"></span></a>
+          {{/if}} 
 	</div>
 	{{/each}}
-	<div id="start-new-text" class="heading"> Start a new relationship </div>
+	<div id="start-new-text" class="heading" hidden="{{selected_user_list_status}}"> Start a new relationship </div>
+	{{#unless selected_user_list_status}}
 	{{#each user_list.[1]}} 
-		<div class="row row-custom round-trader-panel">
+		<div class="row row-custom round-trader-panel no-highlight">
 			<div class="col-md-2"> 
 				<img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
 			</div>
@@ -70,5 +79,6 @@
 		</div>	
 		{{> profile_modal_new}}
 	{{/each}}
+	{{/unless}}
 
 </template>
