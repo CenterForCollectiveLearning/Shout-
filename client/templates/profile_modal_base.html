@@ -1,4 +1,4 @@
-<template name="profile_modal_new">
+<template name="profile_modal_base">
 	 <div class="modal fade" id="{{_id}}" tabindex="-1" role="dialog">
 	  <div class="modal-dialog">
 	    <div class="modal-content profile-modal-content">
@@ -49,7 +49,8 @@
 				</div>
 				{{/each}}
 	      	</div>  -->
-	      	{{#unless has_current_trade_relationship this._id}}
+
+	      	{{#if existstrade}}
 	      	<div class="profile-modal-make-deal">
 	      		<div class="heading"> Make a Deal</div>
 	      		<div> I offer you
@@ -72,7 +73,7 @@
 		              </select> of your retweets
 	      		</div>
 	      	</div>
-	      	{{/unless}} 
+	      	{{/if}} 
 	     	{{/with}}
 	      </div>
 	      <div class="modal-footer profile-modal-footer">

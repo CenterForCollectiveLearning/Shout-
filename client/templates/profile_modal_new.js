@@ -1,3 +1,12 @@
+function has_current_trade_relationship(other_user_id) {
+  var trades = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id, "trades.this_trade_num":{$gt:0}}).fetch();
+  var count = trades.length;  
+  if (count===0) {
+    return false;
+  }
+  return true;
+}
+
 Template.profile_modal_new.helpers({
   other_user_timeline: function() {
     return Session.get("other_user_timeline");
@@ -8,6 +17,9 @@ Template.profile_modal_new.helpers({
   get_user_by_id: function(user_id) {
     return Meteor.users.findOne({"_id":user_id});
   },
+  has_current_trade_relationship: function(user_id){
+    return has_current_trade_relationship(user_id);
+  }
 
 });
 

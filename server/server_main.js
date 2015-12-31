@@ -45,9 +45,6 @@
             console.log("No user id");
             this.ready();
         }
-
-            Nba.insert({name:'Boston Celtics'});
-
     });
 
     // TODO: Replace this with more selective version
@@ -68,11 +65,6 @@
     Meteor.publish("retweet_ids", function() {
         return Retweet_ids.find();
     });
-    Meteor.publish("nba", function() {
-        return Nba.find();
-    });
-
-
 });
 
 var makeTwitterCall = function(apiCall, params) {
@@ -108,7 +100,6 @@ Meteor.methods({
 
             //var res = getTimelineSync('statuses/user_timeline', {screen_name:"not_real_kevin"});
 
-            console.log(res[0].text);
             return res;
         }
     },
@@ -124,7 +115,6 @@ Meteor.methods({
 
     pushHistoricTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to, status) {
         if (this.userId){
-            console.log("inserting into historic trade requests");
             // Push trade request to history, and clear the current one.
             Historic_trade_requests.insert({"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "status": status});
             Current_trade_requests.remove({"user_id_from":user_id_from, "user_id_to":user_id_to});

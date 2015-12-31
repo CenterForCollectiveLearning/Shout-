@@ -9,7 +9,6 @@ function has_current_trade_relationship(other_user_id) {
 }
 
 function has_trades_left(other_user_id) {
-	console.log("calling has_trades_left");
 	var trades = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id, "trades.this_trade_num":{$gt:0}}).fetch();
 	var count = trades.length;
 
@@ -21,13 +20,11 @@ function has_trades_left(other_user_id) {
 	else {
 		for (var i=0; i<trades.length; i++) {
 			trade = trades[i];
-			console.log(trade);
 			for (var j=0; j<trade.trades.length; j++) {
 				specific_trade = trade.trades[i];
 				if (specific_trade.other_user_id == other_user_id) {
 
 					if (specific_trade.this_trade_num > 0) {
-						console.log("trade this trade num: " + specific_trade.this_trade_num);
 						return true;
 					}
 					return false;
@@ -167,8 +164,7 @@ Template.relationships_new.helpers({
 		var user_info = Meteor.users.find({"_id":user_id}).fetch();
 		var interests = user_info && user_info[0].profile && user_info[0].profile.interests;
 		return interests;
-	}
-
+	},
 });
 
 Template.relationships_new.events({
@@ -178,13 +174,13 @@ Template.relationships_new.events({
 
 	'mouseenter .trading-user-panel': function(event, template) {
 		if (!Session.get("selected_user_list_status") && has_trades_left(this._id)) {
-			$(event.target).addClass("highlighted");
+			$(event.target).addClass("highlight");
 		}
 	},
 
 	'mouseleave .trading-user-panel': function(event, template) {
 		if (!Session.get("selected_user_list_status")) {
-			$(event.target).removeClass("highlighted");
+			$(event.target).removeClass("highlight");
 		}
 	},
 
@@ -192,7 +188,6 @@ Template.relationships_new.events({
 	// TODO: If there is a selected tweet already, must check that the selected user
 	// hasn't already retweeted that tweet. 
 	'click .user-panel-body': function(event, template) {
-		console.log("click on user panel body");
 		if (has_trades_left(this._id)) {
 	    	Session.set("filtered_user_list", [this]);
 			Session.set("filtered_user_list_status", true);
@@ -220,7 +215,6 @@ Template.relationships_new.events({
 	  // Get the last 5 tweets posted by the user
   'click .profile-link': function(event, template) {
   	var user_id = this._id;
-  	console.log("user id in profile link click: " + user_id);
       Meteor.call("getUserTimeline", user_id, function(error, result){
       if (error) {
         console.log(error.reason);
@@ -228,7 +222,8 @@ Template.relationships_new.events({
       }
       var most_recent_tweets = result.slice(0, 5);
       Session.set("other_user_timeline", most_recent_tweets);
-      console.log("other user timeline: " + Session.get("other_user_timeline")[0].text);
+      
+      $('#'+this._id).modal('show');
     });
   }
 

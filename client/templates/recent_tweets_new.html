@@ -14,17 +14,24 @@
   </div>
 
   {{#each timeline}}
-	<div class="row tweet-panel home-tweet-panel">
-		<div class="col-md-2"> 
+  	{{#unless retweeted_status}}
+	<div class="row tweet-panel home-tweet-panel 
+	{{#unless partial_timeline_status}}
+	no-highlight {{else}} highlight {{/unless}}">
+		<div class="col-md-2 inner-tweet-panel"> 
 			<img class="user-icon img-rounded" src="{{currentUser.services.twitter.profile_image_url}}">
 		</div>
-		<div class="col-md-10">
+		<div class="col-md-10 inner-tweet-panel">
 			{{text}}
+			{{#if partial_timeline_status}}
+			<a class="tweet-clear"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+			{{/if}}
 		</div>
 	</div>
 	<div class="date-time-retweets">
 		{{date_converter created_at}} | Retweets: {{retweet_count}}
 	</div>
+	{{/unless}}
   {{/each}}
 
 </template>
