@@ -3,7 +3,33 @@
 	<body>
 		{{#if currentUser}}
 		{{> nav_new}} 
+		{{> trade_requests}}
 		<div class="row">
+			<div class="col-md-8">
+				<div class="row">
+					<div class="col-md-6 layout-col timeline-col">
+						<div class="heading"> Your Tweets </div>
+						{{> recent_tweets_new}}
+					</div>
+					<div class="col-md-6 layout-col relationships-col">
+						<div class="heading"> Relationships </div>
+						{{> relationships_new}}
+					</div>
+				</div>
+				{{#if trade_ready}}
+				<div class="row">
+				 	<div id="trade-button-div"> <button class="btn btn-lg btn-trade" id="trade-button"> SEND RETWEET</button></div>
+				</div>
+				{{/if}}
+			</div>
+			<div class="col-md-4 layout-col activity-col"> 
+				<div class="heading"> Recent Activity </div>
+				{{> history_new}}
+			</div>
+		</div>
+
+
+<!-- 		<div class="row">
 			<div class="col-md-4 layout-col timeline-col"> 
 				<div class="heading"> Your Tweets </div>
 				{{> recent_tweets_new}}
@@ -16,7 +42,7 @@
 				<div class="heading"> Recent Activity </div>
 				{{> history_new}}
 			</div>
-		</div>
+		</div> -->
 		{{else}}
 			{{> signin_page_new}}
 		{{/if}}
