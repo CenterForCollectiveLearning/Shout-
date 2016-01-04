@@ -535,6 +535,18 @@ span.tags
   text-align: center;
 }
 
+#profile-page-name {
+  font-family: Oswald;
+}
+
+#profile-page-screenname {
+  font-family: Oswald;
+}
+
+.edit-profile-label {
+  font-family: Oswald;
+  font-size: 20px;
+}
 
 
 @font-face {
