@@ -548,6 +548,15 @@ span.tags
   font-size: 20px;
 }
 
+.profile-modal-bio {
+  margin-top:10px;
+  text-align: center;
+}
+
+.profile-modal-interests {
+  margin-top:10px;
+  text-align: center;
+}
 
 @font-face {
     font-family: Oswald;

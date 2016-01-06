@@ -12,13 +12,15 @@
                 	<div class="btn-group proposal-buttons" role="group">
 						<button class="btn btn-default proposal-action accept">Accept</button>
 						<button class="btn btn-default proposal-action reject">Reject</button>
-						<button type="button" class="btn btn-default proposal-action modify" data-toggle="modal" data-target="#modify-modal">Modify</button>
+						<button type="button" class="btn btn-default proposal-action modify">Modify</button>
 					</div>
 
 				</div>
 			</div>
-		</p>	
-		{{> modify_trade_modal}}
-		{{/each}}
+		</p>
+		{{> profile_modal_modify}}	
+<!-- 		{{> modify_trade_modal}}
+ -->		
+ 		{{/each}}
 	{{/if}}
 </template>
