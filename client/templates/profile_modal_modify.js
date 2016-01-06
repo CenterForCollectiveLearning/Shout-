@@ -72,8 +72,8 @@ Template.profile_modal_modify.helpers({
 Template.profile_modal_modify.events({
 
   'shown.bs.modal #modify-modal': function(e, template) {
-    $("#select-num-them").val(Session.get("old_proposed_to"));
-    $("#select-num-you").val(Session.get("old_proposed_from"));
+    $("#select-num-them").val(Session.get("old_proposed_from"));
+    $("#select-num-you").val(Session.get("old_proposed_to"));
   },
 
   'click .propose-modified-trade': function(e, template) {

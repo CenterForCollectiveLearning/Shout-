@@ -1,5 +1,7 @@
 <template name="relationships_new">
-	<div class="sort-by" hidden="{{selected_user_list_status}}">
+	{{#if exist_current_traders}}
+	<div class="heading"> Relationships </div>
+		<div class="sort-by" hidden="{{selected_user_list_status}}">
 		Sort by: <a>own</a> | <a>owe</a> | <a>followers</a>
 	</div>
 	<div id="relationship-search-input" hidden="{{selected_user_list_status}}">
@@ -28,6 +30,7 @@
   		Owe
   	</div>
   </div>
+	{{/if}}
 
   {{#each user_list.[0]}}
 	<div class="row row-custom" style="{{#unless is_eligible_trader this._id}}opacity:0.5{{/unless}}">

@@ -149,7 +149,19 @@ Template.relationships_new.helpers({
 		}
 		Session.set("filtered_traders", trading_users);
 		Session.set("filtered_non_traders", non_trading_users);
+
+		if (trading_users.length <= 0) {
+			Session.set("exist_current_traders", false);
+		}
+		else {
+			Session.set("exist_current_traders", true);
+		}
+
 		return [trading_users, non_trading_users];
+	},
+
+	exist_current_traders: function() {
+		return Session.get("exist_current_traders");
 	},
 
 	// Users who are already trading w/ logged-in user
