@@ -16,7 +16,12 @@ Template.recent_tweets.helpers ({
 
 	tweetListStatus: function() {
 		return Session.get("tweetListStatus");
-	}
+	},
+
+	dateConverter: function(date) {
+		return dateConverter(date);
+	},
+
 });
 
 Template.recent_tweets.events({

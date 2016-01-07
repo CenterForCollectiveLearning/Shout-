@@ -1,39 +1,32 @@
-  var T;
-  var Twit = Meteor.npmRequire('twit');
-  var consumer_key; 
-  var consumer_secret;
+var Twit = Meteor.npmRequire('twit');
+var T;
+var consumer_key;
+var consumer_secret;
+var user_access_token;
+var user_access_token_secret;
 
-  var user_access_token;
-  var user_access_token_secret;
+// Melissa macro - LOCAL keys
+consumer_key = 'QbvpMsslQ0kbDoA4AaVIu60yx';
+consumer_secret = 'TS4n6d1HvDbnNfr8cUSThaGeiMsh0WfgBevlg6zLhfHWEmoZCl';
+//user_access_token = '4704035593-B99Kblsw9GsIJDsPWP81U8zaIhbO2ro6rhFRfly';
+//user_access_token_secret = 'cCGL3uT1ihPdmcUFegfOrLGkJCtVAbbgrSYfRmlSpBS0m';
 
-  Meteor.startup(function () {
+// DEPLOY keys
 
-    var Twit = Meteor.npmRequire('twit');
-    // var user_access_token;
-    // var user_access_token_secret;
+//consumer_key: '6Dnf3z7ouZOBn3guyUZ5ChhnG',
+//consumer_secret: 'o10ilB4aO8QqqCSUOHJ0dWtjWNK8IHnPLKmatyx0ftVreDxb2d',
 
+Meteor.startup(function () {
 
     Meteor.publish("userData", function() {
         if (this.userId) {
-            user_access_token = Meteor.users.findOne({
-                _id: this.userId
-            }).services.twitter.accessToken;
-            user_access_token_secret = Meteor.users.findOne({
-                _id: this.userId
-            }).services.twitter.accessTokenSecret;
+            user_access_token = Meteor.users.findOne({_id: this.userId}).services.twitter.accessToken;
+            user_access_token_secret = Meteor.users.findOne({_id: this.userId}).services.twitter.accessTokenSecret;
 
-            consumer_key = '7nnEJcadkHGw6U4jCfeM1k9rK';
-            consumer_secret = 'VEQtyxVBlaSLTTqFYjN9q4bKSeUs802Vc2FhSPkjYSvAvowwK9';
-
-            // Create the twitter API connection
+            // Create the twitter API connection here
             T = new Twit({
-                // DEPLOY keys
-                //consumer_key: '6Dnf3z7ouZOBn3guyUZ5ChhnG',
-                //consumer_secret: 'o10ilB4aO8QqqCSUOHJ0dWtjWNK8IHnPLKmatyx0ftVreDxb2d',
-
-                // LOCAL keys
-                consumer_key: consumer_key, // API key
-                consumer_secret: consumer_secret, // API secret
+                consumer_key: consumer_key,
+                consumer_secret: consumer_secret,
                 access_token: user_access_token,
                 access_token_secret: user_access_token_secret
             });
@@ -65,40 +58,18 @@
     Meteor.publish("retweet_ids", function() {
         return Retweet_ids.find();
     });
+    Meteor.publish("post_history", function() {
+        return Post_history.find();
+    });
 });
-
-var makeTwitterCall = function(apiCall, params) {
-  var res;
-  var user = Meteor.user();
-  var client = new Twit({
-    consumer_key: consumer_key,
-    consumer_secret: consumer_secret,
-    access_token: user_access_token,
-    access_token_secret: user_access_token_secret
-  });
-
-  var twitterResultsSync = Meteor.wrapAsync(client.get, client);
-  try {
-    res = twitterResultsSync(apiCall, params);
-  }
-  catch (err) {
-    if (err.statusCode !== 404) {
-      throw err;
-    }
-    res = {};
-  }
-  return res;
-};
 
 Meteor.methods({
     getUserTimeline: function(user_id_for_timeline) {
         if (this.userId){
-            var res = makeTwitterCall('statuses/user_timeline', {user_id: (user_id_for_timeline).toString()});
+            //var res = makeTwitterCall('statuses/user_timeline', {user_id: (user_id_for_timeline).toString()});
 
-            // var getTimelineSync = Meteor.wrapAsync(T.get, T);
-            // var res = getTimelineSync('statuses/user_timeline',{user_id: (user_id_for_timeline).toString()});
-
-            //var res = getTimelineSync('statuses/user_timeline', {screen_name:"not_real_kevin"});
+            var getTimelineSync = Meteor.wrapAsync(T.get, T);
+            var res = getTimelineSync('statuses/user_timeline',{user_id: (user_id_for_timeline).toString()});
 
             return res;
         }
@@ -138,30 +109,37 @@ Meteor.methods({
         }
     },
 
-    retweet: function(tweet_id, trader_id_posted, other_trader_id) {
+    sendRetweet: function(tweet_id, trader_id_posted, other_trader_id) {
         if (this.userId) {
-            // Make a twit object for trader
+
+            // Create a twit object for the user who is actually sending the retweet
             var trader = Meteor.users.findOne({"_id":trader_id_posted});
             var trader_access_token = trader.services.twitter.accessToken;
             var trader_access_token_secret = trader.services.twitter.accessTokenSecret;
-            var TraderTwit = Meteor.npmRequire('twit');
+            //var TraderTwit = Meteor.npmRequire('twit');
 
-            T_trader = new TraderTwit({
-                consumer_key: '7nnEJcadkHGw6U4jCfeM1k9rK', // API key
-                consumer_secret: 'VEQtyxVBlaSLTTqFYjN9q4bKSeUs802Vc2FhSPkjYSvAvowwK9', // API secret
+            traderTwit = new Twit({
+                consumer_key: consumer_key,
+                consumer_secret: consumer_secret,
                 access_token: trader_access_token,
                 access_token_secret: trader_access_token_secret
             });
-            T_trader.post('statuses/retweet/'+tweet_id, Meteor.bindEnvironment(function(err, data, response) {
+
+            traderTwit.post('statuses/retweet/' + tweet_id, Meteor.bindEnvironment(function(err, data, response) {
                 if (err) {
                     console.log("ERROR!");
                     console.log(err);
                     return;
                 } 
+                console.log(data);
                 // If successful, decrement the corresponding trade counts.           
                 Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":-1}});
                 Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":-1}}); 
                 Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
+                 
+                Post_history.insert({"user_id":trader_id_posted, "retweet_id":data.id_str, "is_original_poster":true, "time": data.created_at});
+                Post_history.insert({"user_id":other_trader_id, "retweet_id":data.id_str, "is_original_poster":false, "time": data.created_at});
+
             }, function() {
                 console.log("Failed to bind environment");
             }));
@@ -172,7 +150,7 @@ Meteor.methods({
             }
     },
 
-    getOtherUsers: function(user_id) {
+    getAllUsersExceptLoggedInUser: function(user_id) {
         if (this.userId) {
             return Meteor.users.find({"_id":{$ne:user_id}}).fetch();
         }
@@ -181,7 +159,7 @@ Meteor.methods({
         }
     },
 
-    searchUsers: function(search_terms, user_id) {
+    searchAllUsers: function(search_terms, user_id) {
         if (this.userId) {
             if (search_terms==="") {
                 return Meteor.users.find({"_id":{$ne:user_id}}).fetch();
@@ -195,7 +173,7 @@ Meteor.methods({
         }
     },
 
-    editProfile: function(user_id, edited_bio, edited_interests){
+    updateProfile: function(user_id, edited_bio, edited_interests){
         if (this.userId) {
             Meteor.users.update({"_id" :user_id},{$set : {"profile.bio":edited_bio, "profile.interests":edited_interests}});
         }

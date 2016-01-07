@@ -1,4 +1,5 @@
 // Helper functions
+
 function hasCurrentTradeRelationship(other_user_id) {
 //function has_current_trade_relationship(other_user_id) {
 	var trades = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id, "trades.this_trade_num":{$gt:0}}).fetch();
@@ -33,23 +34,31 @@ function hasTradesLeft(other_user_id) {
 	}	
 };
 
+
+// Check if the tweet in question has already been retweeted by the trader
+// TODO: Clear the selected tweet var after transaction completion
+function alreadyRetweeted (user_id) {
+	var tweet_id = Session.get("selected-tweet-id");
+	var res = Retweet_ids.find({"tweet_id":tweet_id, "trader_ids":user_id.toString()}).count();
+	if (res>0) {
+		return true;
+	}
+	return false;
+};
+
 // Rewrite this - confusing
 function isEligibleTrader(other_user_id) {
 	if (Session.get("tweetListStatus")==="selected") {
 		if (Session.get("userListStatus")==="selected" || hasTradesLeft(other_user_id)) {
-			return true;
+			if (!alreadyRetweeted(other_user_id)) {
+				return true;
+			}
+			return false;
 		}
 		return false;
 	}
 	return true;
 };
-
-// SESSION VARIABLES
-
-// full_user_list: entire user list
-// filtered_user_list: partial user list by search or click
-// filtered_user_list_status: whether there has been a partial search or click
-// selected_user_list_status: whether there is ONE user selected who logged-in user can trade with
 
 
 Template.relationships.helpers({
@@ -73,7 +82,6 @@ Template.relationships.helpers({
 		return existsCurrentSelectedUser();
 	},
 
-
 	// return trades for logged-in user
 	traderList: function() {
 		var trades = Trades.findOne({"user_id":Meteor.userId()});
@@ -87,23 +95,6 @@ Template.relationships.helpers({
 		}
 		return false;
 	},
-	// See if user has any more to send to any user
-	hasMoreTradesAggregate: function(trades) {
-		if (!Trades.findOne({"user_id":Meteor.userId()})) {
-			return false;
-		}
-		for (var i=0; i<trades.length; i+=1) {
-			if (trades[i].this_trade_num>0) {
-				return true;
-			}
-		}
-		return false;
-	},
-
-
-	findTradeWithUser: function(other_user_id) {
-		return Trades.findOne({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id});
-	},
 
 	checkUserIdEquality: function(first_user_id, second_user_id) {
 		if (first_user_id===second_user_id) {
@@ -113,17 +104,7 @@ Template.relationships.helpers({
 	},
 
 	specificUser: function(specific_user_id) {
-		return Meteor.users.findOne({"_id":specific_user_id});
-	},
-
-	// Check if the tweet in question has already been retweeted by the trader
-	alreadyRetweeted: function(user_id) {
-		var tweet_id = Session.get("selected-tweet-id");
-		var res = Retweet_ids.find({"tweet_id" : tweet_id, "trader_ids":user_id.toString()}).count();
-		if (res>0) {
-			return true;
-		}
-		return false;
+		return getSpecificUser(specific_user_id);
 	},
 
 	// Returns all users, or a filtered set if users are searched.
@@ -138,7 +119,7 @@ Template.relationships.helpers({
 	// first element of returned value is the traders, 2nd is the non-traders
 	userList: function() {
 		var users;
-		if (Session.get("filteredUserListStatus")){
+		if (Session.get("userListStatus")!=="full"){
 			users =  Session.get("filteredUserList");
 		}
 		else {
@@ -186,6 +167,10 @@ Template.relationships.helpers({
 		}
 		return false;
 	},
+
+	findTradeWithUser: function(other_user_id) {
+		return Trades.findOne({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id});
+	},
 });
 
 Template.relationships.events({
@@ -204,9 +189,6 @@ Template.relationships.events({
 		}
 	},
 
-	// User should only be able to click on a user they can complete the trade with.
-	// TODO: If there is a selected tweet already, must check that the selected user
-	// hasn't already retweeted that tweet. 
 	'click .round-trader-panel': function(event, template) {
 		if (Session.get("tweetListStatus")==="selected" && hasTradesLeft(this._id)) {
 	    	Session.set("filteredUserList", [this]);
