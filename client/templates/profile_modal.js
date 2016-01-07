@@ -7,7 +7,7 @@ function has_current_trade_relationship(other_user_id) {
   return true;
 }
 
-Template.profile_modal_new.helpers({
+Template.profile_modal.helpers({
   other_user_timeline: function() {
     return Session.get("other_user_timeline");
   },
@@ -50,12 +50,12 @@ Template.profile_modal_new.helpers({
   interests: function(user_id) {
     var user_info = Meteor.users.find({"_id":user_id}).fetch();
     var interests = user_info && user_info[0].profile && user_info[0].profile.interests;
-    return interests; 
+    return interests;
   }
 
 });
 
-Template.profile_modal_new.events({
+Template.profile_modal.events({
   'click #make-offer': function(e, template) {
     e.preventDefault();
     var user_id_to = this._id;

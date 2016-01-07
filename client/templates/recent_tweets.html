@@ -1,9 +1,9 @@
-<template name="recent_tweets_new">
+<template name="recent_tweets">
 	<div class="heading"> Your Tweets </div>
-	<div class="sort-by" id="tweet-sort-by" hidden="{{partial_timeline_status}}">
+	<div class="sort-by" id="tweet-sort-by" hidden="{{existsCurrentSelectedTweet}}">
 		Sort by: <a>latest</a> | <a>retweets</a> | <a>favorites</a>
 	</div>
-	<div id="tweet-search-input" hidden="{{partial_timeline_status}}">
+	<div id="tweet-search-input" hidden="{{existsCurrentSelectedTweet}}">
       <div class="input-group">
           <input type="text" class="form-control">
           <span class="input-group-btn">
@@ -14,26 +14,26 @@
        </div>
   </div>
 
-  <div id="select-tweet-instructions" class="instructions" hidden="{{partial_timeline_status}}"><b>Select the tweet you want to have retweeted!</b></div>
+  <div id="select-tweet-instructions" class="instructions" hidden="{{existsCurrentSelectedTweet}}"><b>Select the tweet you want to have retweeted!</b></div>
 
 
-  {{#each timeline}}
+  {{#each tweetList}}
   	{{#unless retweeted_status}}
 	<div class="row tweet-panel home-tweet-panel 
-	{{#unless partial_timeline_status}}
-	no-highlight {{else}} highlight {{/unless}}" style="{{#if partial_timeline_status}}margin-top: 55px{{/if}}">
+	{{#unless existsCurrentSelectedTweet}}
+	no-highlight {{else}} highlight {{/unless}}" style="{{#if existsCurrentSelectedTweet}}margin-top: 55px{{/if}}">
 		<div class="col-md-2 inner-tweet-panel"> 
 			<img class="user-icon img-rounded" src="{{currentUser.services.twitter.profile_image_url}}">
 		</div>
 		<div class="col-md-10 inner-tweet-panel">
 			{{text}}
-			{{#if partial_timeline_status}}
+			{{#if existsCurrentSelectedTweet}}
 			<a class="tweet-clear"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
 			{{/if}}
 		</div>
 	</div>
 	<div class="date-time-retweets">
-		{{date_converter created_at}} | Retweets: {{retweet_count}}
+		{{dateConverter created_at}} | Retweets: {{retweet_count}}
 	</div>
 	{{/unless}}
   {{/each}}

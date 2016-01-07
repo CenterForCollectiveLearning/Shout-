@@ -1,14 +1,15 @@
 // Helper functions
-function has_current_trade_relationship(other_user_id) {
+function hasCurrentTradeRelationship(other_user_id) {
+//function has_current_trade_relationship(other_user_id) {
 	var trades = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id, "trades.this_trade_num":{$gt:0}}).fetch();
 	var count = trades.length;	
 	if (count===0) {
 		return false;
 	}
 	return true;
-}
+};
 
-function has_trades_left(other_user_id) {
+function hasTradesLeft(other_user_id) {
 	var trades = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id, "trades.this_trade_num":{$gt:0}}).fetch();
 	var count = trades.length;
 
@@ -30,17 +31,18 @@ function has_trades_left(other_user_id) {
 		}
 	return false;
 	}	
-}
+};
 
-function is_eligible_trader(other_user_id) {
-	if (Session.get("partial_timeline_status")) {
-		if (Session.get("selected_user_list_status") || has_trades_left(other_user_id)) {
+// Rewrite this - confusing
+function isEligibleTrader(other_user_id) {
+	if (Session.get("tweetListStatus")==="selected") {
+		if (Session.get("userListStatus")==="selected" || hasTradesLeft(other_user_id)) {
 			return true;
 		}
 		return false;
 	}
 	return true;
-}
+};
 
 // SESSION VARIABLES
 
@@ -50,37 +52,43 @@ function is_eligible_trader(other_user_id) {
 // selected_user_list_status: whether there is ONE user selected who logged-in user can trade with
 
 
-Template.relationships_new.helpers({
+Template.relationships.helpers({
 
-	is_eligible_trader: function(user_id) {
-		return is_eligible_trader(user_id);
+	isEligibleTrader: function(user_id) {
+		return isEligibleTrader(user_id);
 	},
 
-	partial_timeline_status: function() {
-		return Session.get("partial_timeline_status");
+	// TODO: Remove this duplicate code (also in recent_tweets)
+	tweetListStatus: function() {
+		return Session.get("tweetListStatus");
 	},
-	filtered_user_list_status: function() {
-		return Session.get("filtered_user_list_status");
+	existsCurrentSelectedTweet: function() {
+		return existsCurrentSelectedTweet();
 	},
-	selected_user_list_status: function() {
-		return Session.get("selected_user_list_status");
+
+	userListStatus: function() {
+		return Session.get("userListStatus");
 	},
+	existsCurrentSelectedUser: function() {
+		return existsCurrentSelectedUser();
+	},
+
 
 	// return trades for logged-in user
-	trader_list: function() {
+	traderList: function() {
 		var trades = Trades.findOne({"user_id":Meteor.userId()});
 		return trades;
 	},
 
 	// See if specific trade has any more remaining to send 
-	has_more_trades: function(trade_num) {
+	hasMoreTrades: function(trade_num) {
 		if (trade_num > 0) {
 			return true;
 		}
 		return false;
 	},
 	// See if user has any more to send to any user
-	has_more_trades_aggregate: function(trades) {
+	hasMoreTradesAggregate: function(trades) {
 		if (!Trades.findOne({"user_id":Meteor.userId()})) {
 			return false;
 		}
@@ -93,23 +101,23 @@ Template.relationships_new.helpers({
 	},
 
 
-	find_trade_with_user: function(other_user_id) {
+	findTradeWithUser: function(other_user_id) {
 		return Trades.findOne({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id});
 	},
 
-	check_user_id_equality: function(first_user_id, second_user_id) {
+	checkUserIdEquality: function(first_user_id, second_user_id) {
 		if (first_user_id===second_user_id) {
 			return true;
 		}
 		return false;
 	},
 
-	specific_user: function(specific_user_id) {
+	specificUser: function(specific_user_id) {
 		return Meteor.users.findOne({"_id":specific_user_id});
 	},
 
 	// Check if the tweet in question has already been retweeted by the trader
-	already_retweeted: function(user_id) {
+	alreadyRetweeted: function(user_id) {
 		var tweet_id = Session.get("selected-tweet-id");
 		var res = Retweet_ids.find({"tweet_id" : tweet_id, "trader_ids":user_id.toString()}).count();
 		if (res>0) {
@@ -119,59 +127,58 @@ Template.relationships_new.helpers({
 	},
 
 	// Returns all users, or a filtered set if users are searched.
-	filtered_traders: function() {
+	filteredTraders: function() {
 		return Session.get("filtered_traders");
 	},
-	filtered_non_traders: function() {
+	filteredNonTraders: function() {
 		return Session.get("filtered_non_traders");
 	},
 
 	// Get the lists of traders and non-traders from the (possibly filtered) user list
 	// first element of returned value is the traders, 2nd is the non-traders
-	user_list: function() {
+	userList: function() {
 		var users;
-		if (Session.get("filtered_user_list_status")){
-			users =  Session.get("filtered_user_list");
+		if (Session.get("filteredUserListStatus")){
+			users =  Session.get("filteredUserList");
 		}
 		else {
-			users =  Session.get("full_user_list");
+			users =  Session.get("fullUserList");
 		}
 		var trading_users = []
 		var non_trading_users = []
 		for (var i=0; i<users.length; i+=1) {
 			var user = users[i]
-			if (has_current_trade_relationship(user._id)) {
+			if (hasCurrentTradeRelationship(user._id)) {
 				trading_users.push(user)
 			}
 			else {
 				non_trading_users.push(user)
 			}
 		}
-		Session.set("filtered_traders", trading_users);
-		Session.set("filtered_non_traders", non_trading_users);
+		Session.set("filteredTraders", trading_users);
+		Session.set("filteredNonTraders", non_trading_users);
 
 		if (trading_users.length <= 0) {
-			Session.set("exist_current_traders", false);
+			Session.set("existCurrentTraders", false);
 		}
 		else {
-			Session.set("exist_current_traders", true);
+			Session.set("existCurrentTraders", true);
 		}
-
 		return [trading_users, non_trading_users];
 	},
 
-	exist_current_traders: function() {
-		return Session.get("exist_current_traders");
+	existCurrentTraders: function() {
+		return Session.get("existCurrentTraders");
 	},
 
 	// Users who are already trading w/ logged-in user
-	trading_users: function() {
+	tradingUsers: function() {
 		return Trades.find({"user_id": Meteor.userId()}, {"trades.other_user_id":1});
 	},
 
 	// Request button should be disabled if any pending trade request exists
 	// between the two users. 
-	is_requested: function(other_user_id) {
+	isRequested: function(other_user_id) {
 		var count_1 = Current_trade_requests.find({"user_id_from": Meteor.userId(), "user_id_to": other_user_id}).fetch().length;
 		var count_2 = Current_trade_requests.find({"user_id_from": other_user_id, "user_id_to": Meteor.userId()}).fetch().length;
 		if (count_1>0 || count_2>0) {
@@ -181,17 +188,17 @@ Template.relationships_new.helpers({
 	},
 });
 
-Template.relationships_new.events({
+Template.relationships.events({
 
 	'mouseenter .round-trader-panel': function(event, template) {
-		if (is_eligible_trader(this._id) && Session.get("partial_timeline_status")) {
+		if (isEligibleTrader(this._id) && Session.get("tweetListStatus")==="selected") {
 			$(event.target).addClass("highlight");
 			$(event.target).removeClass("no-highlight");
 		}
 },
 
 	'mouseleave .round-trader-panel': function(event, template) {
-		if (!Session.get("selected_user_list_status")) {
+		if (Session.get("userListStatus")!="selected") {
 			$(event.target).addClass("no-highlight");
 			$(event.target).removeClass("highlight");
 		}
@@ -201,27 +208,26 @@ Template.relationships_new.events({
 	// TODO: If there is a selected tweet already, must check that the selected user
 	// hasn't already retweeted that tweet. 
 	'click .round-trader-panel': function(event, template) {
-		if (Session.get("partial_timeline_status") && has_trades_left(this._id)) {
-	    	Session.set("filtered_user_list", [this]);
-			Session.set("filtered_user_list_status", true);
-			Session.set("selected_trader_id", this._id);
-    		Session.set("selected_user_list_status", true);
+		if (Session.get("tweetListStatus")==="selected" && hasTradesLeft(this._id)) {
+	    	Session.set("filteredUserList", [this]);
+			Session.set("selectedTraderId", this._id);
+    		Session.set("userListStatus", "selected");
 		}
 	},
 
 	'click .user-list-clear': function(event, template) {
-		Session.set("filtered_user_list_status", false);
-		Session.set("selected_user_list_status", false);
+		Session.set("userListStatus", "full");
 		$(".round-trader-panel").addClass("no-highlight");
 		$(".round-trader-panel").removeClass("highlight");
 		event.stopPropagation();
 	},
 
 	'click .setUpTrade': function(event, template){
-  		Session.set("proposing_trade_to", this._id);
+  		Session.set("proposingTradeTo", this._id);
 	},
 
 	  // Get the last 5 tweets posted by the user
+	  // Currently this is not working!
   'click .profile-link': function(event, template) {
   	var user_id = this._id;
       Meteor.call("getUserTimeline", user_id, function(error, result){
@@ -230,7 +236,7 @@ Template.relationships_new.events({
         return;
       }
       var most_recent_tweets = result.slice(0, 5);
-      Session.set("other_user_timeline", most_recent_tweets);
+      Session.set("otherUserTimeline", most_recent_tweets);
       
       $('#'+this._id).modal('show');
     });
@@ -238,17 +244,16 @@ Template.relationships_new.events({
 
 });
 
-Template.relationships_new.onCreated(function() {
+Template.relationships.onCreated(function() {
 	// Populate the user list initially
-	var users = Meteor.call("getOtherUsers", Meteor.userId(), function(err, result) {
+	var users = Meteor.call("getAllUsersExceptLoggedInUser", Meteor.userId(), function(err, result) {
 		if (err) {
 			console.log(err.reason);
 			return;
 		 }
-		 Session.set("full_user_list", result);
-		 Session.set("filtered_user_list", result);
-		 Session.set("filtered_user_list_status", false);
-		 Session.set("selected_user_list_status", false);
+
+		 Session.set("fullUserList", result);
+		 Session.set("userListStatus", "full");
 
 	});
 });

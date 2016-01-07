@@ -3,7 +3,7 @@
 <body>
 	{{#if currentUser}}
 
-	{{> nav_new}}    
+	{{> nav}}    
 
 	<div class="content-container">
 		<div id="main-container">
@@ -13,7 +13,7 @@
 
 </div>
 	{{else}}
-		{{>signin_page}}
+		{{> signin_page}}
 	{{/if}}
 </body>
 </template>
