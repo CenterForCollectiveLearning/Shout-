@@ -4,7 +4,22 @@ Template.home.helpers({
 			return true;
 		}
 		return false;
+	},
+
+	userLoggedIn: function() {
+		console.log("in userLoggedIn, Meteor.user is " + Meteor.user());
+		if (Meteor.user()) {
+			Session.set("userLoggedIn", true);
+		}
+		else {
+			Session.set("userLoggedIn", false);
+
+		}
+
+		console.log(Session.get("userLoggedIn"));
+		return Session.get("userLoggedIn");
 	}
+
 });
 
 Template.home.events({

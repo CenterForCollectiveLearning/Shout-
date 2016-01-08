@@ -1,7 +1,4 @@
 <template name="home">
-	<head></head>
-	<body>
-		{{#if currentUser}}
 			{{> nav}} 
 			{{> trade_requests}}
 			<div class="row">
@@ -24,8 +21,5 @@
 					{{> history}}
 				</div>
 			</div>
-		{{else}}
-			{{> signin_page}}
-		{{/if}}
-	</body>
+
 </template>

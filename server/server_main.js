@@ -137,8 +137,8 @@ Meteor.methods({
                 Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":-1}}); 
                 Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
                  
-                Post_history.insert({"user_id":trader_id_posted, "retweet_id":data.id_str, "is_original_poster":true, "time": data.created_at});
-                Post_history.insert({"user_id":other_trader_id, "retweet_id":data.id_str, "is_original_poster":false, "time": data.created_at});
+                Post_history.insert({"user_id":trader_id_posted, "retweet_id":data.id_str, "is_original_poster":true, "other_user_id": other_trader_id, "time": data.created_at});
+                Post_history.insert({"user_id":other_trader_id, "retweet_id":data.id_str, "is_original_poster":false, "other_user_id": trader_id_posted, "time": data.created_at});
 
             }, function() {
                 console.log("Failed to bind environment");

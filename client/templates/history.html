@@ -2,15 +2,27 @@
 	<div class="heading"> Recent Activity </div>
 	<div hidden="{{existsRecentHistory}}"> You have no recent activity. </div>
 	{{#each retweetEvents}}
-		<div class="date-heading">Today</div>
-		<div class="row"> 
-			<div class="col-md-3">
-				1:15 pm
-			</div>		
-			<div class="col-md-9">
-				<!-- {{#if }} -->
-				You retweeted Alberto Cairo (@albertocairo)
-			</div>
-		</div>
+		<div class="date-heading">{{dateConverter time}}</div>
+<!-- 		<div class="row"> 
+ --><!-- 			<div class="col-md-3">
+			</div>	 -->	
+<!-- 			<div class="col-md-9">
+ -->				{{#if isLoggedInUser user_id}}
+					You
+				{{else}}
+					{{#with getSpecificUser user_id}}
+					{{profile.name}}
+					{{/with}}
+				{{/if}}
+				retweeted 
+				{{#if isLoggedInUser other_user_id}}
+					You
+				{{else}}
+					{{#with getSpecificUser other_user_id}}
+					{{profile.name}}
+					{{/with}}
+				{{/if}}
+<!-- 			</div>
+ -->		<!-- </div> -->
 	{{/each}}
 </template>

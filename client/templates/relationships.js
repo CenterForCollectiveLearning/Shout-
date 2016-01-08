@@ -125,6 +125,11 @@ Template.relationships.helpers({
 		else {
 			users =  Session.get("fullUserList");
 		}
+
+		if (typeof users === 'undefined') {
+			return;
+		}
+		
 		var trading_users = []
 		var non_trading_users = []
 		for (var i=0; i<users.length; i+=1) {

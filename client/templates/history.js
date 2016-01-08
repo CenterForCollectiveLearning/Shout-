@@ -11,4 +11,16 @@ Template.history.helpers({
 		return Session.get("existsRecentHistory");
 	},
 
+	isLoggedInUser: function(user_id) {
+		return isLoggedInUser(user_id);
+	},
+
+	getSpecificUser: function(user_id) {
+		return getSpecificUser(user_id);
+	},
+
+	dateConverter: function(date) {
+		return dateConverter(date);
+	}
+
 });
