@@ -35,15 +35,16 @@ Template.recent_tweets.events({
 
 	'mouseenter .home-tweet-panel': function(event, template) {
 		if (!existsCurrentSelectedTweet()) {
-			$(event.target).addClass("highlight");
-			$(event.target).removeClass("no-highlight");
+			$(event.currentTarget).addClass("highlight");
+			$(event.currentTarget).removeClass("no-highlight");
 		}
 	},
 
 	'mouseleave .home-tweet-panel': function(event, template) {
 		if (!existsCurrentSelectedTweet()) {
-			$(event.target).removeClass("highlight");
-			$(event.target).addClass("no-highlight");
+			$(event.currentTarget).removeClass("highlight");
+			$(event.currentTarget).addClass("no-highlight");
+
 		}
 	},
 
@@ -53,11 +54,34 @@ Template.recent_tweets.events({
 		Session.set("filteredTweetList", timeline_arr);
 		Session.set("tweetListStatus", "selected");
 		Session.set("selectedTweetId", this.id_str);
+		$(event.currentTarget).addClass("highlight");
 	},
 
 	'click .tweet-clear': function(event, template) {
 		Session.set("tweetListStatus", "full");
+		$(".home-tweet-panel").removeClass("highlight");
+		$(".home-tweet-panel").addClass("no-highlight");
 		event.stopPropagation();
+	},
+
+	'click #search-tweets': function(event, template) {
+		var search_terms = $("#tweet-search-input").val();
+		var username = getSpecificUser(Meteor.userId()).services.twitter.screenName;
+		Meteor.call("getSearchedUserTimeline", search_terms, username, function(error, result) {
+			if (error) {
+				console.log("Error getting user timeline");
+				console.log(error.reason);
+				return;
+			}
+			Session.set("tweetListStatus", "partial");
+			Session.set("filteredTweetList", result.statuses);
+		});
+	},
+
+	'keypress #tweet-search-input': function(event) {
+		if (event.which==13) {
+			$("#search-tweets").click();
+		}
 	}
 
 });

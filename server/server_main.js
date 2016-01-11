@@ -66,11 +66,17 @@ Meteor.startup(function () {
 Meteor.methods({
     getUserTimeline: function(user_id_for_timeline) {
         if (this.userId){
-            //var res = makeTwitterCall('statuses/user_timeline', {user_id: (user_id_for_timeline).toString()});
-
             var getTimelineSync = Meteor.wrapAsync(T.get, T);
             var res = getTimelineSync('statuses/user_timeline',{user_id: (user_id_for_timeline).toString()});
+            return res;
+        }
+    },
 
+    // TODO: Fill this in with actual query
+    getSearchedUserTimeline: function(search_terms, username_for_timeline) {
+        if (this.userId){
+            var getTimelineSync = Meteor.wrapAsync(T.get, T);
+            var res = getTimelineSync('search/tweets', {q: search_terms, from: username_for_timeline});
             return res;
         }
     },
@@ -131,7 +137,6 @@ Meteor.methods({
                     console.log(err);
                     return;
                 } 
-                console.log(data);
                 // If successful, decrement the corresponding trade counts.           
                 Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":-1}});
                 Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":-1}}); 

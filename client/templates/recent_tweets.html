@@ -3,11 +3,11 @@
 	<div class="sort-by" id="tweet-sort-by" hidden="{{existsCurrentSelectedTweet}}">
 		Sort by: <a>latest</a> | <a>retweets</a> | <a>favorites</a>
 	</div>
-	<div id="tweet-search-input" hidden="{{existsCurrentSelectedTweet}}">
+	<div id="tweet-search-div" hidden="{{existsCurrentSelectedTweet}}">
       <div class="input-group">
-          <input type="text" class="form-control">
+          <input type="text" class="form-control" id="tweet-search-input">
           <span class="input-group-btn">
-              <button class="btn" type="button">
+              <button class="btn" type="button" id="search-tweets">
                   <i class="glyphicon glyphicon-search"></i>
               </button>
           </span>
