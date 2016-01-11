@@ -61,6 +61,8 @@ Meteor.startup(function () {
     Meteor.publish("post_history", function() {
         return Post_history.find();
     });
+
+    
 });
 
 Meteor.methods({

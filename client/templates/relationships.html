@@ -1,14 +1,20 @@
 <template name="relationships">
+		{{#unless existCurrentTraders}}
+		{{#if existCurrentNonTradingUsers}}
+	<div id="start-new-text" class="heading"> Start a new relationship </div>
+		{{/if}}
+	{{/unless}}
 	{{#if existCurrentTraders}}
 	<div class="heading"> Relationships </div>
 		<div class="sort-by" hidden="{{existsCurrentSelectedUser}}">
 		Sort by: <a>own</a> | <a>owe</a> | <a>followers</a>
 	</div>
-	<div id="relationship-search-input" hidden="{{existsCurrentSelectedUser}}">
+	{{/if}}
+	<div id="relationship-search-div">
       <div class="input-group">
-          <input type="text" class="form-control">
+          <input type="text" class="form-control" id="relationship-search-input">
           <span class="input-group-btn">
-              <button class="btn" type="button">
+              <button class="btn" type="button" id="relationship-search-submit">
                   <i class="glyphicon glyphicon-search"></i>
               </button>
           </span>
@@ -20,47 +26,52 @@
 	  {{/unless}}
   {{/if}}
 
-  <div class="row">
-  	<div class="col-md-8">
-  	</div>
-    <div class="col-md-2 heading own-owe-heading">
-    	Own
-  	</div>
-  	<div class="col-md-2 heading own-owe-heading">
-  		Owe
-  	</div>
-  </div>
+{{#if existCurrentTraders}}
 	{{/if}}
 
   {{#each userList.[0]}}
-	<div class="row row-custom" style="{{#unless isEligibleTrader this._id}}opacity:0.5{{/unless}}">
-		<div class="col-md-8 round-trader-panel no-highlight">
-			<div class="col-md-3"> 
-				<img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
-			</div>
-			<div class="col-md-9">
-	          <div><a class="profile-link" data-toggle="modal" data-target="#{{_id}}">{{profile.name}}</a></div>
-	          <div>@{{services.twitter.screenName}}</div>
-			</div>
-		</div>
+		<div class="round-trader-panel no-highlight row row-custom" style="{{#unless isEligibleTrader this._id}}opacity:0.5{{/unless}}">
 
-		{{#with findTradeWithUser _id}}
-            {{#each trades}}
-              {{#if checkUserIdEquality ../../_id other_user_id}}
+			<div class="col-md-8">
+				<div class="row">
+					<div class="col-md-3"> 
+						<img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
+					</div>
+					<div class="col-md-9">
+			          <div><a class="profile-link" data-toggle="modal" data-target="#{{_id}}">{{profile.name}}</a></div>
+			          <div>@{{services.twitter.screenName}}</div>
+					</div>
+				</div>
+			</div>
+
+			{{#with findTradeWithUser _id}}
+            	{{#each trades}}
+              		{{#if checkUserIdEquality ../../_id other_user_id}}
+						<div class="col-md-2 trading-num"> 
+							+{{this_trade_num}}
+						</div>
+						<div class="col-md-2 trading-num"> 
+							-{{other_trade_num}}
+						</div>
+			        {{/if}}
+            	{{/each}}
+          	{{/with}}
+		{{> profile_modal}}
+		</div>
+	{{/each}}
+
                
-               		<div class="col-md-2 round-trader-panel trading-num trading-num-own">{{this_trade_num}}</div>
+<!--                		<div class="col-md-2 round-trader-panel trading-num trading-num-own">{{this_trade_num}}</div>
 				<div class="col-md-2 round-trader-panel trading-num trading-num-owe">{{other_trade_num}}
 				{{#if existsCurrentSelectedUser}}
               		<a class="user-list-clear"><span class="glyphicon glyphicon-remove user-remove-icon" aria-hidden="true"></span></a>
           		{{/if}} 
-          		</div>
-              {{/if}}
-            {{/each}}
-          {{/with}}
-		{{> profile_modal}}
-	</div>
-	{{/each}}
-	<div id="start-new-text" class="heading" hidden="{{existsCurrentSelectedUser}}"> Start a new relationship </div>
+          		</div> -->
+	{{#if existCurrentNonTradingUsers}}
+		{{#if existCurrentTraders}}
+	<div id="start-new-text" class="heading"> Start a new relationship</div>
+		{{/if}}
+	{{/if}}
 	{{#unless existsCurrentSelectedUser}}
 		{{#each userList.[1]}} 
 			<div class="row row-custom round-trader-panel no-highlight">

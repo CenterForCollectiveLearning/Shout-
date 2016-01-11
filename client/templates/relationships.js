@@ -150,11 +150,22 @@ Template.relationships.helpers({
 		else {
 			Session.set("existCurrentTraders", true);
 		}
+
+		if (non_trading_users.length <= 0) {
+			Session.set("existCurrentNonTradingUsers", false);
+		}
+		else {
+			Session.set("existCurrentNonTradingUsers", true);
+		}
 		return [trading_users, non_trading_users];
 	},
 
 	existCurrentTraders: function() {
 		return Session.get("existCurrentTraders");
+	},
+
+	existCurrentNonTradingUsers: function() {
+		return Session.get("existCurrentNonTradingUsers");
 	},
 
 	// Users who are already trading w/ logged-in user
@@ -227,6 +238,24 @@ Template.relationships.events({
       
       $('#'+this._id).modal('show');
     });
+  },
+
+  'click #relationship-search-submit': function(event) {
+  	var search_terms = $("#relationship-search-input").val();
+  	var users = Meteor.call("searchAllUsers", search_terms, Meteor.userId(), function(err, result) {
+  		if (err) {
+  			console.log(err.reason);
+  			return;
+  		}
+  		Session.set("filteredUserList", result);
+  		Session.set("userListStatus", "partial");
+  	})
+  },
+
+  'keypress #relationship-search-input': function(event) {
+	if (event.which==13) {
+		$("#relationship-search-submit").click();
+	}
   }
 
 });

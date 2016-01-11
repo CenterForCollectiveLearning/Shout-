@@ -48,7 +48,7 @@
 }
 
 .no-highlight {
- background: #bfbfbf;
+ background: #F0F4F7;
 }
 
 .tweet-clear {
@@ -303,6 +303,10 @@ span.tags
   float: none;
   }
 
+#navbar-collapse-custom {
+  border-bottom: 2px solid white;
+}
+
 .navbar-center-custom
 {
     position: absolute;
@@ -316,18 +320,21 @@ span.tags
 
 #nav-logo {
   margin-top: 10px;
-  font-size: 30px;
-  color: white;
-  font-family: Oswald;
+  height: 60px;
 }
 
 .nav-logged-in-user {
-  font-family: Oswald;
   font-size: 16px;
 }
 
+#text-under-logo {
+  font-size:18px;
+  margin-left:5px;
+  margin-bottom:5px;
+}
+
 .nav-color {
-  background-color: #66b2ff;
+  background-color: #DFE5EA;
 }
 
 .user-icon {
@@ -335,11 +342,10 @@ span.tags
 }
 
 #nav-dropdown {
-  color: white;
+  margin-top:10px;
 }
 
 .navbar-custom {
-  color: white;
 }
 
 .layout-col {
@@ -349,7 +355,6 @@ span.tags
 .heading {
   font-size: 25px;
   padding-bottom: 10px;
-  font-family: Oswald;
 }
 
 .tweet-panel {
@@ -363,7 +368,6 @@ span.tags
 }
 
 .home-tweet-panel {
-  color: white;
 }
 
 .modal-tweet-panel {
@@ -371,7 +375,6 @@ span.tags
 }
 
 .round-trader-panel {
-  color: white;
   margin-left: 0px;
   margin-right: 0px;
   margin-top: 10px;
@@ -405,7 +408,6 @@ span.tags
 }
 
 .date-heading {
-  font-family: Oswald;
   font-size: 16px;
   padding-top: 10px;
 }
@@ -426,7 +428,6 @@ span.tags
 }
 
 .profile-modal-info {
-  font-family: Oswald;
   font-size: 15px;
 }
 
@@ -528,7 +529,6 @@ span.tags
 .btn-trade {
   width: 400px;
   background-color: #66b2ff;
-  font-family: Oswald;
 }
 
 .trade-request-panel {
@@ -536,15 +536,12 @@ span.tags
 }
 
 #profile-page-name {
-  font-family: Oswald;
 }
 
 #profile-page-screenname {
-  font-family: Oswald;
 }
 
 .edit-profile-label {
-  font-family: Oswald;
   font-size: 20px;
 }
 
@@ -566,4 +563,19 @@ span.tags
 @font-face {
     font-family: OpenSans-light;
     src: url("/open-sans/OpenSans-Light.ttf");
+}
+
+body {
+  background-color: #DFE5EA;
+  font-family: Oswald;
+}
+
+object {
+  pointer-events:none;
+}
+
+#navbar-brand-custom {
+  padding: 0px 0px 0px 15px;
+  height: 105px;
+  color: black;
 }

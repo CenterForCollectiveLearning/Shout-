@@ -9,11 +9,18 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a id="nav-logo" class="navbar-brand" href="{{pathFor '/'}}">Shout!</a>
+<!--       <a id="nav-logo" class="navbar-brand" href="{{pathFor '/'}}">
+      </a> -->
+      <a class="navbar-brand" id="navbar-brand-custom" href="{{pathFor '/'}}">
+        <object data="/ShoutLogoWithText.svg" type="image/svg+xml" id="nav-logo">
+        <img src="/ShoutLogoWithText.png" />
+        </object>
+        <div id="text-under-logo">The global marketplace for retweets</div>
+      </a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <div class="collapse navbar-collapse" id="navbar-collapse-custom">
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
             <a href="#" id="nav-dropdown" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
