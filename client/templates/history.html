@@ -2,27 +2,26 @@
 	<div class="heading"> Recent Activity </div>
 	<div hidden="{{existsRecentHistory}}"> You have no recent activity. </div>
 	{{#each retweetEvents}}
-		<div class="date-heading">{{dateConverter time}}</div>
-<!-- 		<div class="row"> 
- --><!-- 			<div class="col-md-3">
-			</div>	 -->	
-<!-- 			<div class="col-md-9">
- -->				{{#if isLoggedInUser user_id}}
-					You
-				{{else}}
-					{{#with getSpecificUser user_id}}
+		{{#if isNewDay time}}
+			<div class="date-heading">{{getDate time}}</div>
+		{{/if}}
+		<div class="history-line-item">
+			{{getTime time}}
+			{{#if isLoggedInUser user_id}}
+				You
+			{{else}}
+				{{#with getSpecificUser user_id}}
 					{{profile.name}}
-					{{/with}}
-				{{/if}}
-				retweeted 
-				{{#if isLoggedInUser other_user_id}}
-					You
-				{{else}}
-					{{#with getSpecificUser other_user_id}}
-					{{profile.name}}
-					{{/with}}
-				{{/if}}
-<!-- 			</div>
- -->		<!-- </div> -->
+				{{/with}}
+			{{/if}}
+			<a href="https://twitter.com/statuses/{{retweet_id}}" target="_blank" >sent a Shout!</a> through
+			{{#if isLoggedInUser other_user_id}}
+				You
+			{{else}}
+				{{#with getSpecificUser other_user_id}}
+				{{profile.name}}
+				{{/with}}
+			{{/if}}
+		</div>
 	{{/each}}
 </template>

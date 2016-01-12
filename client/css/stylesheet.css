@@ -44,7 +44,7 @@
 }
 
 .highlight {
-	background: #66b2ff;
+	background: #bfbfbf;
 }
 
 .no-highlight {
@@ -324,7 +324,7 @@ span.tags
 }
 
 .nav-logged-in-user {
-  font-size: 16px;
+  font-size: 22px;
 }
 
 #text-under-logo {
@@ -343,6 +343,7 @@ span.tags
 
 #nav-dropdown {
   margin-top:10px;
+  color:black;
 }
 
 .navbar-custom {
@@ -353,11 +354,12 @@ span.tags
 }
 
 .heading {
-  font-size: 25px;
+  font-size: 30px;
   padding-bottom: 10px;
 }
 
 .tweet-panel {
+  font-size: 15px;
   margin-left: 0px;
   margin-right: 0px;
   margin-top: 10px;
@@ -374,6 +376,11 @@ span.tags
 
 }
 
+#start-new-text {
+  margin-top: 15px;
+  font-size: 22px;
+}
+
 .round-trader-panel {
   margin-left: 0px;
   margin-right: 0px;
@@ -382,6 +389,7 @@ span.tags
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
     border-radius: 8px;
+  font-size: 16px;
 }
 
 .tweet-search-div {
@@ -400,15 +408,15 @@ span.tags
 }
 
 .trading-num-own {
-  background-color: #66b2ff;
+  color: #00cc00;
 }
 
 .trading-num-owe {
-  background-color: #ff8080;
+  color: #cc3300;
 }
 
 .date-heading {
-  font-size: 16px;
+  font-size: 18px;
   padding-top: 10px;
 }
 
@@ -508,17 +516,13 @@ span.tags
 }
 
 .btn-request{
-  background-color: #66b2ff;
+  background-color: #DFE5EA;
   margin-top: 8px;
 }
 
 .instructions {
   margin-top: 10px;
   text-align: center;
-}
-
-.selected-tweet {
-  margin-top: 55px;
 }
 
 .user-remove-icon {
@@ -561,6 +565,11 @@ span.tags
 }
 
 @font-face {
+    font-family: Oswald-Light;
+    src: url("/oswald/Oswald-Light.ttf");
+}
+
+@font-face {
     font-family: OpenSans-light;
     src: url("/open-sans/OpenSans-Light.ttf");
 }
@@ -578,4 +587,45 @@ object {
   padding: 0px 0px 0px 15px;
   height: 105px;
   color: black;
+}
+
+#footer-custom {
+  border-top: 2px solid white;
+}
+
+.macro-media-logo {
+  height: 60px; 
+  float:left;
+  padding: 5px;
+  margin-left: 5px;
+}
+
+#about-shout {
+  float:right;
+  text-align: right;
+  padding: 5px;
+  margin-top: 15px;
+}
+
+.history-line-item {
+  font-size: 16px;
+  margin-top: 5px;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
 }

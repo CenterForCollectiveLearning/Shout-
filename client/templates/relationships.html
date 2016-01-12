@@ -22,7 +22,9 @@
   </div>
   {{#if existsCurrentSelectedTweet}}
 	  {{#unless existsCurrentSelectedUser}}
-	     <div id="select-user-instructions" class="instructions"><b>Select the trader to retweet your tweet!</b></div>
+	  		{{#if existCurrentTraders}}
+	     		<div id="select-user-instructions" class="instructions"><b>Select the trader to retweet your tweet!</b></div>
+	     	{{/if}}
 	  {{/unless}}
   {{/if}}
 
@@ -47,10 +49,10 @@
 			{{#with findTradeWithUser _id}}
             	{{#each trades}}
               		{{#if checkUserIdEquality ../../_id other_user_id}}
-						<div class="col-md-2 trading-num"> 
+						<div class="col-md-2 trading-num trading-num-own"> 
 							+{{this_trade_num}}
 						</div>
-						<div class="col-md-2 trading-num"> 
+						<div class="col-md-2 trading-num trading-num-owe"> 
 							-{{other_trade_num}}
 						</div>
 			        {{/if}}
@@ -83,7 +85,7 @@
 			         <div>@{{services.twitter.screenName}}</div>
 				</div>
 				<div class="col-md-4">
-					<button type="button" class="btn btn-primary btn-request profile-link" aria-label="Left Align" id="@{{services.twitter.screenName}}" data-toggle="modal" data-target="#{{_id}}" disabled="{{isRequested _id}}">
+					<button type="button" class="btn btn-default btn-request profile-link" aria-label="Left Align" id="@{{services.twitter.screenName}}" data-toggle="modal" data-target="#{{_id}}" disabled="{{isRequested _id}}">
 	                {{#if isRequested _id}}
 	                    Pending
 	                {{else}}

@@ -3,7 +3,7 @@
 	<div class="sort-by" id="tweet-sort-by" hidden="{{existsCurrentSelectedTweet}}">
 		Sort by: <a>latest</a> | <a>retweets</a> | <a>favorites</a>
 	</div>
-	<div id="tweet-search-div" hidden="{{existsCurrentSelectedTweet}}">
+	<div id="tweet-search-div">
       <div class="input-group">
           <input type="text" class="form-control" id="tweet-search-input">
           <span class="input-group-btn">
@@ -21,15 +21,12 @@
   	{{#unless retweeted_status}}
 	<div class="row tweet-panel home-tweet-panel 
 	{{#unless existsCurrentSelectedTweet}}
-	no-highlight {{else}} highlight {{/unless}}" style="{{#if existsCurrentSelectedTweet}}margin-top: 55px{{/if}}">
+	no-highlight {{else}} highlight {{/unless}}">
 		<div class="col-md-2 inner-tweet-panel"> 
 			<img class="user-icon img-rounded" src="{{currentUser.services.twitter.profile_image_url}}">
 		</div>
 		<div class="col-md-10 inner-tweet-panel">
 			{{text}}
-			{{#if existsCurrentSelectedTweet}}
-			<a class="tweet-clear"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-			{{/if}}
 		</div>
 	</div>
 	<div class="date-time-retweets">

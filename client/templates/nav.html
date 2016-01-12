@@ -9,11 +9,9 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-<!--       <a id="nav-logo" class="navbar-brand" href="{{pathFor '/'}}">
-      </a> -->
       <a class="navbar-brand" id="navbar-brand-custom" href="{{pathFor '/'}}">
         <object data="/ShoutLogoWithText.svg" type="image/svg+xml" id="nav-logo">
-        <img src="/ShoutLogoWithText.png" />
+          <img src="/ShoutLogoWithText.png" />
         </object>
         <div id="text-under-logo">The global marketplace for retweets</div>
       </a>
@@ -29,8 +27,8 @@
                   <img class="user-icon" src="{{currentUser.services.twitter.profile_image_url}}">
               </div>
               <div class="col-md-6 nav-logged-in-user"> 
-                  <div>{{currentUser.profile.name}}</div>
-                  <div>@{{currentUser.services.twitter.screenName}}</div>
+                  <div id="nav-logged-in-user-name">{{currentUser.profile.name}}</div>
+                  <div id="nav-logged-in-user-screenname">@{{currentUser.services.twitter.screenName}}</div>
               </div>
               <div class="col-md-2"> 
                   <span class="caret"></span>

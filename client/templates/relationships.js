@@ -193,15 +193,15 @@ Template.relationships.events({
 
 	'mouseenter .round-trader-panel': function(event, template) {
 		if (isEligibleTrader(this._id) && Session.get("tweetListStatus")==="selected") {
-			$(event.target).addClass("highlight");
-			$(event.target).removeClass("no-highlight");
+			$(event.currentTarget).addClass("highlight");
+			$(event.currentTarget).removeClass("no-highlight");
 		}
 },
 
 	'mouseleave .round-trader-panel': function(event, template) {
 		if (Session.get("userListStatus")!="selected") {
-			$(event.target).addClass("no-highlight");
-			$(event.target).removeClass("highlight");
+			$(event.currentTarget).addClass("no-highlight");
+			$(event.currentTarget).removeClass("highlight");
 		}
 	},
 

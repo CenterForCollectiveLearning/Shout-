@@ -1,3 +1,6 @@
+
+var lastDay; 
+
 Template.history.helpers({
 	retweetEvents: function() {
 		var events = Post_history.find({"user_id":Meteor.userId()});
@@ -19,8 +22,23 @@ Template.history.helpers({
 		return getSpecificUser(user_id);
 	},
 
-	dateConverter: function(date) {
-		return dateConverter(date);
+	getDate: function(timestamp) {
+		return getDate(timestamp);
+	},
+
+	getTime: function(timestamp) {
+		return getTime(timestamp);
+	},
+
+	isNewDay: function(timestamp) {
+		var date = getDate(timestamp);
+		if (date !== lastDay) {
+			lastDay = date;
+			console.log("new date! " + date + " returning true");
+			return true;
+		}
+		console.log("not a new date " + date + ", returning false");
+		return false;
 	}
 
 });
