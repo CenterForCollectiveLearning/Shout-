@@ -23,7 +23,11 @@
 }
 
 .proposal-buttons {
+  padding-left: 10px;
+}
 
+.proposal-action {
+  font-size: 16px;
 }
 
 .verticalLine {
@@ -430,7 +434,7 @@ span.tags
 }
 
 .profile-modal-name {
-
+  font-size: 22px;
 }
 .profile-modal-screenname {
 }
@@ -444,7 +448,7 @@ span.tags
 }
 
 .btn-make-offer {
-  background-color: #66b2ff;
+  background-color: #DFE5EA;
 }
 
 .form-control-custom {
@@ -531,12 +535,22 @@ span.tags
 }
 
 .btn-trade {
+  font-size: 30px;
+  color: black;
   width: 400px;
   background-color: #66b2ff;
 }
 
 .trade-request-panel {
   text-align: center;
+  background-color: #F0F4F7;
+  font-size: 16px;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.deal-heading {
+  font-size: 22px;
 }
 
 #profile-page-name {
@@ -610,6 +624,17 @@ object {
 .history-line-item {
   font-size: 16px;
   margin-top: 5px;
+}
+
+#reset-button {
+  font-size: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin: 15px;
+}
+
+#reset-button-div {
+  text-align: center;
 }
 
 /* Sticky footer styles

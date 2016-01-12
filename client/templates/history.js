@@ -34,10 +34,8 @@ Template.history.helpers({
 		var date = getDate(timestamp);
 		if (date !== lastDay) {
 			lastDay = date;
-			console.log("new date! " + date + " returning true");
 			return true;
 		}
-		console.log("not a new date " + date + ", returning false");
 		return false;
 	}
 

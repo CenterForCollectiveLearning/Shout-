@@ -23,12 +23,21 @@ Template.home.helpers({
 });
 
 Template.home.events({
-	'click #trade-button': function(event, template){
+	'click #trade-button': function(event){
 		var selected_tweet_id = Session.get("selectedTweetId");
 		var selected_trader_id =  Session.get("selectedTraderId");
 		Meteor.call("sendRetweet", selected_tweet_id, selected_trader_id, Meteor.userId());
 
 		Session.set("userListStatus", "full");
 		Session.set("tweetListStatus", "full");
+		$(".round-trader-panel").addClass("no-highlight");
+		$(".round-trader-panel").removeClass("highlight");
+	},
+
+	'click #reset-button': function(event) {
+		Session.set("userListStatus", "full");
+		Session.set("tweetListStatus", "full");
+		$(".round-trader-panel").addClass("no-highlight");
+		$(".round-trader-panel").removeClass("highlight");
 	}
 });

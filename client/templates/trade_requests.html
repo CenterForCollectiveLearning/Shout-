@@ -5,7 +5,7 @@
 			<div class="panel panel-default trade-request-panel">
 				<div class="panel-body">
 					{{#with specific_user user_id_from}} 
-					 <img src="{{services.twitter.profile_image_url}}">
+					 <img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
                 	 <b>{{profile.name}}</b> @{{services.twitter.screenName}} proposes a trade
                 	{{/with}}
                 	- You retweet <b>{{proposed_from}}</b> tweets on {{name_lookup user_id_from}}'s behalf, and {{name_lookup user_id_from}} retweets <b>{{proposed_to}}</b> tweets on your behalf!

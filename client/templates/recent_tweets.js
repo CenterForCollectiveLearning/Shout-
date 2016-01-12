@@ -1,3 +1,52 @@
+function compareRetweetCounts(tweet1, tweet2) {
+  if (tweet1.retweet_count < tweet2.retweet_count)
+    return 1;
+  else if (tweet1.retweet_count > tweet2.retweet_count)
+    return -1;
+  else
+    return 0;
+}
+
+function compareFavoriteNums(tweet1, tweet2) {
+  if (tweet1.favorite_count < tweet2.favorite_count)
+    return 1;
+  else if (tweet1.favorite_count > tweet2.favorite_count)
+    return -1;
+  else
+    return 0;
+}
+
+// Duplicate! 
+function getTweetList() {
+	var state = Session.get("tweetListStatus");
+	if (state=="full") {
+		return Session.get("fullTweetList");
+	}
+	else {
+		return Session.get("filteredTweetList")
+	}
+}
+
+function sortTweets(sort_type) {
+	var tweetList = getTweetList();
+	if (sort_type==="latest") {
+		tweetList = Session.get("fullTweetListByDate");
+	}
+	else if (sort_type==="retweets") {
+		tweetList.sort(compareRetweetCounts);
+	}
+	else {
+		tweetList.sort(compareFavoriteCounts)
+	}
+
+	if (Session.get("tweetListStatus")==="full") {
+		Session.set("fullTweetList", tweetList);
+	}
+	else {
+		Session.set("filteredTweetList", tweetList);
+	}
+}
+
 Template.recent_tweets.helpers ({
 
 	existsCurrentSelectedTweet: function() {
@@ -82,8 +131,15 @@ Template.recent_tweets.events({
 		if (event.which==13) {
 			$("#search-tweets").click();
 		}
-	}
+	},
 
+	'click #sort-latest': function() {
+		sortTweets("latest");
+	},
+
+	'click #sort-retweets': function() {
+		sortTweets("retweets");
+	} 
 });
 
 
@@ -95,6 +151,7 @@ Template.recent_tweets.onCreated(function() {
 		return;
 	}
 	Session.set("fullTweetList", result);
+	Session.set("fullTweetListByDate", result);
 	Session.set("tweetListStatus", "full");
 
 	//??

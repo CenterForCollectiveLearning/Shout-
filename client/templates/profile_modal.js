@@ -64,5 +64,5 @@ Template.profile_modal.events({
     var proposed_to = template.find('.num-them').value;
 
     Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, proposed_from, proposed_to);
-  }
+  },
 });

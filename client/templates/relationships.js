@@ -10,57 +10,6 @@ function hasCurrentTradeRelationship(other_user_id) {
 	return true;
 };
 
-function hasTradesLeft(other_user_id) {
-	var trades = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id, "trades.this_trade_num":{$gt:0}}).fetch();
-	var count = trades.length;
-
-	if (count===0) {
-		return false;
-	}
-
-	// Look through the trade count to determine if current user has more trades 
-	else {
-		trade = trades[0];
-		for (var j=0; j<trade.trades.length; j++) {
-			specific_trade = trade.trades[j];
-			if (specific_trade.other_user_id == other_user_id) {
-				if (specific_trade.this_trade_num > 0) {
-					return true;
-				}
-				return false;
-			}
-		}
-	return false;
-	}	
-};
-
-
-// Check if the tweet in question has already been retweeted by the trader
-// TODO: Clear the selected tweet var after transaction completion
-function alreadyRetweeted (user_id) {
-	var tweet_id = Session.get("selected-tweet-id");
-	var res = Retweet_ids.find({"tweet_id":tweet_id, "trader_ids":user_id.toString()}).count();
-	if (res>0) {
-		return true;
-	}
-	return false;
-};
-
-// Rewrite this - confusing
-function isEligibleTrader(other_user_id) {
-	if (Session.get("tweetListStatus")==="selected") {
-		if (Session.get("userListStatus")==="selected" || hasTradesLeft(other_user_id)) {
-			if (!alreadyRetweeted(other_user_id)) {
-				return true;
-			}
-			return false;
-		}
-		return false;
-	}
-	return true;
-};
-
-
 Template.relationships.helpers({
 
 	isEligibleTrader: function(user_id) {
@@ -206,11 +155,7 @@ Template.relationships.events({
 	},
 
 	'click .round-trader-panel': function(event, template) {
-		if (Session.get("tweetListStatus")==="selected" && hasTradesLeft(this._id)) {
-	    	Session.set("filteredUserList", [this]);
-			Session.set("selectedTraderId", this._id);
-    		Session.set("userListStatus", "selected");
-		}
+		clickTraderAction(this);
 	},
 
 	'click .user-list-clear': function(event, template) {
@@ -233,10 +178,11 @@ Template.relationships.events({
         console.log(error.reason);
         return;
       }
+      event.stopImmediatePropagation();
       var most_recent_tweets = result.slice(0, 5);
       Session.set("otherUserTimeline", most_recent_tweets);
-      
       $('#'+this._id).modal('show');
+      
     });
   },
 

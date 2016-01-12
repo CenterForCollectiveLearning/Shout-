@@ -1,7 +1,7 @@
 <template name="recent_tweets">
 	<div class="heading"> Your Latest Tweets </div>
 	<div class="sort-by" id="tweet-sort-by" hidden="{{existsCurrentSelectedTweet}}">
-		Sort by: <a>latest</a> | <a>retweets</a> | <a>favorites</a>
+		Sort by: <a id="sort-latest">latest</a> | <a id="sort-retweets">retweets</a> | <a id="sort-favorites">favorites</a>
 	</div>
 	<div id="tweet-search-div">
       <div class="input-group">
@@ -30,7 +30,7 @@
 		</div>
 	</div>
 	<div class="date-time-retweets">
-		{{dateConverter created_at}} | Retweets: {{retweet_count}}
+		{{dateConverter created_at}} | Retweets: {{retweet_count}} | Favorites: {{favorite_count}}
 	</div>
 	{{/unless}}
   {{/each}}
