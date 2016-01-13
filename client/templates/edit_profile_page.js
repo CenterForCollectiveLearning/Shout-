@@ -17,12 +17,12 @@ Template.edit_profile_page.events({
 		var edited_bio = template.find('#bio').value;
 		var edited_interests = template.find('#interests').value;
 		var user_id = Meteor.userId();
-		Meteor.call("editProfile", user_id, edited_bio, edited_interests);
+		Meteor.call("updateProfile", user_id, edited_bio, edited_interests);
 		$("#edit-success-alert").show();
 	},
 
-	'click #reset-edits': function(event, template) {
-
+	'click #cancel-edits': function(event, template) {
+		FlowRouter.go('/profile');
 	}
 });
 

@@ -6,17 +6,17 @@
 			<div class="date-heading">{{getDate time}}</div>
 		{{/if}}
 		<div class="history-line-item">
-			{{getTime time}}
-			{{#if isLoggedInUser user_id}}
+			{{getTime time}} - 
+			{{#unless is_original_poster}}
 				You
 			{{else}}
-				{{#with getSpecificUser user_id}}
+				{{#with getSpecificUser other_user_id}}
 					{{profile.name}}
 				{{/with}}
-			{{/if}}
+			{{/unless}}
 			<a href="https://twitter.com/statuses/{{retweet_id}}" target="_blank" >sent a Shout!</a> through
-			{{#if isLoggedInUser other_user_id}}
-				You
+			{{#if is_original_poster}}
+				you
 			{{else}}
 				{{#with getSpecificUser other_user_id}}
 				{{profile.name}}

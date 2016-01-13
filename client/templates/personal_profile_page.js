@@ -7,9 +7,12 @@ Template.personal_profile_page.helpers({
 
 	interests: function() {
 		var user_info = Meteor.users.find({"_id":Meteor.userId()}).fetch();
+		console.log(user_info[0].profile);
 		var interests = user_info && user_info[0].profile && user_info[0].profile.interests;
-		interests_list = interests.split(",");
-		return interests_list;
+		if (interests) {
+			interests_list = interests.split(",");
+			return interests_list;
+		}
 	}
 });
 

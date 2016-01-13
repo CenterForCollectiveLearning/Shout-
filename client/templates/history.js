@@ -3,10 +3,10 @@ var lastDay;
 
 Template.history.helpers({
 	retweetEvents: function() {
-		var events = Post_history.find({"user_id":Meteor.userId()});
+		var events = Post_history.find({"user_id":Meteor.userId()}).fetch();
 		if (events) {
-			Session.set("existsRecentHistory", true)
-			return Post_history.find({"user_id":Meteor.userId()});
+			Session.set("existsRecentHistory", true);
+			return events.reverse();
 		}
 		Session.set("existsRecentHistory", false);
 	},

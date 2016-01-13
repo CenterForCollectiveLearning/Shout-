@@ -2,10 +2,6 @@
 	padding: 20px;
 }
 
-#trade-button-div {
-	text-align: center;
-}
-
 .trade-select {
 	height: 45px;
 	width: 100%;
@@ -14,6 +10,10 @@
 
 #user_list {
 	margin:auto;
+}
+
+.trade-buttons {
+  text-align: center;
 }
 
 .setUpTrade {
@@ -161,8 +161,9 @@
 .profile 
 {
     min-height: 355px;
-    display: inline-block;
-    }
+    display: inline-block
+    background-color: #F0F4F7;
+}
 figcaption.ratings
 {
     margin-top:20px;
@@ -328,7 +329,7 @@ span.tags
 }
 
 .nav-logged-in-user {
-  font-size: 22px;
+  font-size: 18px;
 }
 
 #text-under-logo {
@@ -396,6 +397,11 @@ span.tags
   font-size: 16px;
 }
 
+.inner-trader-panel {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
 .tweet-search-div {
   padding-top: 10px;
   padding-bottom: 10px;
@@ -404,9 +410,12 @@ span.tags
 .row-custom {
   margin-left: 0px;
   margin-right: 0px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .trading-num {
+  margin-top: 5px;
   font-size: 36px;
   text-align: center;
 }
@@ -535,7 +544,7 @@ span.tags
 }
 
 .btn-trade {
-  font-size: 30px;
+  font-size: 20px;
   color: black;
   width: 400px;
   background-color: #66b2ff;
@@ -571,6 +580,11 @@ span.tags
 .profile-modal-interests {
   margin-top:10px;
   text-align: center;
+}
+
+.inner-tweet-panel {
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 @font-face {
@@ -635,6 +649,18 @@ object {
 
 #reset-button-div {
   text-align: center;
+}
+
+#spacing-div {
+  height: 35px;
+}
+
+#save-edited-profile {
+  background-color: #b3b3b3;
+}
+
+.profile-button {
+  background-color: #b3b3b3;
 }
 
 /* Sticky footer styles

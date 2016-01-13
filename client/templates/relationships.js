@@ -195,6 +195,9 @@ Template.relationships.events({
   		}
   		Session.set("filteredUserList", result);
   		Session.set("userListStatus", "partial");
+
+  		$(".round-trader-panel").addClass("no-highlight");
+		$(".round-trader-panel").removeClass("highlight");
   	})
   },
 

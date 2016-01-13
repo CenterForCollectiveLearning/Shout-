@@ -18,6 +18,12 @@ Template.home.helpers({
 
 		console.log(Session.get("userLoggedIn"));
 		return Session.get("userLoggedIn");
+	},
+
+	getRetweetingTrader: function() {
+		var selected_trader_id =  Session.get("selectedTraderId");
+		var trader_screenname = getSpecificUser(selected_trader_id).services.twitter.screenName; 
+		return trader_screenname;
 	}
 
 });
