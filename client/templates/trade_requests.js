@@ -7,7 +7,6 @@ Template.trade_requests.helpers({
 
 	name_lookup: function(user_id) {
 		var user = Meteor.users.findOne({"_id": user_id});
-		console.log("User id in name lookup: " + user_id);
 		if (user) {
 			return user.profile.name;
 		}
@@ -18,7 +17,6 @@ Template.trade_requests.helpers({
 });
 
 Template.trade_requests.events({
-	// Todo: update current trade request, push historic trade request.
 
 	'click .proposal-action': function(e, template) {
 		// Update the current trade request
@@ -36,8 +34,6 @@ Template.trade_requests.events({
 
 		}
 		else {
-			console.log("modify variables are set here");
-			console.log(this);
 			new_status = "modified";
 			Session.set("modify_trade_from_id", this.user_id_from);
 			Session.set("old_proposed_from", this.proposed_from);

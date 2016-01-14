@@ -155,7 +155,9 @@ Template.relationships.events({
 	},
 
 	'click .round-trader-panel': function(event, template) {
-		clickTraderAction(this);
+		if (Session.get("isInProfileModal")!==true) {
+			clickTraderAction(this);
+		}
 	},
 
 	'click .user-list-clear': function(event, template) {
@@ -172,13 +174,13 @@ Template.relationships.events({
 	  // Get the last 5 tweets posted by the user
 	  // Currently this is not working!
   'click .profile-link': function(event, template) {
+  	Session.set("isInProfileModal", true);
   	var user_id = this._id;
       Meteor.call("getUserTimeline", user_id, function(error, result){
       if (error) {
         console.log(error.reason);
         return;
       }
-      event.stopImmediatePropagation();
       var most_recent_tweets = result.slice(0, 5);
       Session.set("otherUserTimeline", most_recent_tweets);
       $('#'+this._id).modal('show');
@@ -205,6 +207,10 @@ Template.relationships.events({
 	if (event.which==13) {
 		$("#relationship-search-submit").click();
 	}
+  },
+
+  'hidden.bs.modal .modal': function() {
+  	Session.set("isInProfileModal", false);
   }
 
 });
