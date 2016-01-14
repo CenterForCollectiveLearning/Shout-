@@ -663,6 +663,15 @@ object {
   background-color: #b3b3b3;
 }
 
+#btn-login {
+  padding: 0px;
+}
+
+.single-login-button {
+  padding: 10px;
+}
+
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {

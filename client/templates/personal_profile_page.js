@@ -17,7 +17,7 @@ Template.personal_profile_page.helpers({
 });
 
 Template.personal_profile_page.events({
-	'click go-to-edit': function() {
-		FlowRouter.go('/profile/edit');
-	}
+	// 'click go-to-edit': function() {
+	// 	FlowRouter.go('/profile/edit');
+	// }
 });

@@ -115,6 +115,13 @@ Template.recent_tweets.events({
 
 	'click #search-tweets': function(event, template) {
 		var search_terms = $("#tweet-search-input").val();
+		console.log("search_terms: " + search_terms);
+
+		if (search_terms.length===0) {
+			Session.set("tweetListStatus", "full");
+			return;
+		}
+
 		var username = getSpecificUser(Meteor.userId()).services.twitter.screenName;
 		Meteor.call("getSearchedUserTimeline", search_terms, username, function(error, result) {
 			if (error) {
