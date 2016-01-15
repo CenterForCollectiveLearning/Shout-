@@ -1,4 +1,5 @@
 <template name="relationships">
+	{{#if Template.subscriptionsReady}}
 		{{#unless existCurrentTraders}}
 		{{#if existCurrentNonTradingUsers}}
 	<div id="start-new-text" class="heading"> Start a new relationship </div>
@@ -98,5 +99,5 @@
 			{{> profile_modal}}
 		{{/each}}
 	{{/unless}}
-
+{{/if}}
 </template>

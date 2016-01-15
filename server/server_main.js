@@ -18,49 +18,72 @@ user_access_token_secret = 'cCGL3uT1ihPdmcUFegfOrLGkJCtVAbbgrSYfRmlSpBS0m';
 // user_access_token = '4704035593-Du5t0Ls2kmXQkwEwe8ighZP2nBdDTy970JIp4hi';
 // user_access_token_secret = 'KPpMD4k2MtRsT0ey0oIPSB1Bu3IYCwMzV5fK2LGJMkQp1';
 
+Meteor.users.publicFields = {
+    "services.twitter.accessToken":0,
+    "services.twitter.accessTokenSecret":0
+};
+
+
 Meteor.startup(function () {
 
     Meteor.publish("userData", function() {
-        if (this.userId) {
-            user_access_token = Meteor.users.findOne({_id: this.userId}).services.twitter.accessToken;
-            user_access_token_secret = Meteor.users.findOne({_id: this.userId}).services.twitter.accessTokenSecret;
-
-            // Create the twitter API connection here
-            T = new Twit({
-                consumer_key: consumer_key,
-                consumer_secret: consumer_secret,
-                access_token: user_access_token,
-                access_token_secret: user_access_token_secret
-            });
-
-            return Meteor.users.find({
-                _id: this.userId
-            });
-        } else {
-            console.log("No user id");
-            this.ready();
+        if (!this.userId) {
+            return this.ready();
         }
+        user_access_token = Meteor.users.findOne({_id: this.userId}).services.twitter.accessToken;
+        user_access_token_secret = Meteor.users.findOne({_id: this.userId}).services.twitter.accessTokenSecret;
+
+        // Create the twitter API connection here
+        T = new Twit({
+            consumer_key: consumer_key,
+            consumer_secret: consumer_secret,
+            access_token: user_access_token,
+            access_token_secret: user_access_token_secret
+        });
+
+        return Meteor.users.find({
+            _id: this.userId
+        });
     });
+
 
     // TODO: Replace this with more selective version
     Meteor.publish("allUsers", function() {
-        return Meteor.users.find();
+        if (!this.userId) {
+            return this.ready();
+        }
+        return Meteor.users.find({}, Meteor.users.publicFields);
     });
 
     Meteor.publish("trades", function() {
+        if (!this.userId) {
+            return this.ready();
+        }
         return Trades.find();
     });
 
     Meteor.publish("current_trade_requests", function() {
+        if (!this.userId) {
+            return this.ready();
+        }
         return Current_trade_requests.find();
     });
     Meteor.publish("historic_trade_requests", function() {
+        if (!this.userId) {
+            return this.ready();
+        }
         return Historic_trade_requests.find();
     });
     Meteor.publish("retweet_ids", function() {
+        if (!this.userId) {
+            return this.ready();
+        }
         return Retweet_ids.find();
     });
     Meteor.publish("post_history", function() {
+        if (!this.userId) {
+            return this.ready();
+        }
         return Post_history.find();
     });
 

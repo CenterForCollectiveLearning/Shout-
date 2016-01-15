@@ -1,4 +1,5 @@
 <template name="recent_tweets">
+	{{#if Template.subscriptionsReady}}
 	<div class="heading"> Your Latest Tweets </div>
 	<div class="sort-by" id="tweet-sort-by" hidden="{{existsCurrentSelectedTweet}}">
 		Sort by: <a id="sort-latest">latest</a> | <a id="sort-retweets">retweets</a> | <a id="sort-favorites">favorites</a>
@@ -34,5 +35,5 @@
 	</div>
 	{{/unless}}
   {{/each}}
-
+{{/if}}
 </template>

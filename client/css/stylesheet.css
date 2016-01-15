@@ -152,12 +152,6 @@
     color: gray;
 }
 
-/*@import url(http://fonts.googleapis.com/css?family=Lato:400,700);
-*/
-/*body
-{
-    font-family: 'Lato', 'sans-serif';
-    }*/
 .profile 
 {
     min-height: 355px;
@@ -382,8 +376,8 @@ span.tags
 }
 
 #start-new-text {
-/*  margin-top: 15px;*/
-/*  font-size: 22px;*/
+/*  margin-top: 15px;
+  font-size: 22px;*/
 }
 
 .round-trader-panel {
@@ -589,17 +583,17 @@ span.tags
 
 @font-face {
     font-family: Oswald;
-    src: url("/oswald/Oswald-Regular.ttf");
+    src: url("/fonts/oswald/Oswald-Regular.ttf");
 }
 
 @font-face {
     font-family: Oswald-Light;
-    src: url("/oswald/Oswald-Light.ttf");
+    src: url("/fonts/oswald/Oswald-Light.ttf");
 }
 
 @font-face {
     font-family: OpenSans-light;
-    src: url("/open-sans/OpenSans-Light.ttf");
+    src: url("/fonts/open-sans/OpenSans-Light.ttf");
 }
 
 body {

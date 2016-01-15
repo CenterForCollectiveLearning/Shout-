@@ -151,6 +151,10 @@ Template.recent_tweets.events({
 
 
 Template.recent_tweets.onCreated(function() {
+  	this.autorun(() => {
+		this.subscribe('userData');
+	});
+
 	Meteor.call("getUserTimeline", Meteor.userId(), function(error, result){
 	if (error) {
 		console.log("Error getting user timeline");

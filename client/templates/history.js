@@ -6,6 +6,7 @@ Template.history.helpers({
 		var events = Post_history.find({"user_id":Meteor.userId()}).fetch();
 		if (events) {
 			Session.set("existsRecentHistory", true);
+			console.log(events.reverse());
 			return events.reverse();
 		}
 		Session.set("existsRecentHistory", false);
@@ -39,4 +40,11 @@ Template.history.helpers({
 		return false;
 	}
 
+});
+
+Template.history.onCreated(function() {
+	  this.autorun(() => {
+    	this.subscribe('allUsers');
+    	this.subscribe('post_history');
+  	  });
 });
