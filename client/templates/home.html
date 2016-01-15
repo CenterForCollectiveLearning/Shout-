@@ -1,28 +1,28 @@
 <template name="home">
-			{{> nav}} 
-			{{> trade_requests}}
+	{{> nav}} 
+	{{> trade_requests}}
+	<div class="row">
+		<div class="col-md-8">
 			<div class="row">
-				<div class="col-md-8">
-					<div class="row">
-						
-						<div class="col-md-6 layout-col timeline-col">
-							{{> recent_tweets}}
-						</div>
-						<div class="col-md-6 layout-col relationships-col">
-							{{> relationships}}
-						</div>
-					</div>
-					{{#if tradeReady}}
-						<div class="row trade-buttons" >
-						 	 <button class="btn btn-lg btn-primary btn-trade" id="trade-button"> Send retweet through @{{getRetweetingTrader}}</button>
-						 	 <button class="btn btn-default btn-lg" id="reset-button"> Reset </button>
-						</div>
-					{{/if}}
+				
+				<div class="col-md-6 layout-col timeline-col">
+					{{> recent_tweets}}
 				</div>
-				<div class="col-md-4 layout-col activity-col"> 
-					{{> history}}
+				<div class="col-md-6 layout-col relationships-col">
+					{{> relationships}}
 				</div>
 			</div>
-			{{> footer}}
+			{{#if tradeReady}}
+				<div class="row trade-buttons" >
+				 	 <button class="btn btn-lg btn-primary btn-trade" id="trade-button"> Send retweet through @{{getRetweetingTrader}}</button>
+				 	 <button class="btn btn-default btn-lg" id="reset-button"> Reset </button>
+				</div>
+			{{/if}}
+		</div>
+		<div class="col-md-4 layout-col activity-col"> 
+			{{> history}}
+		</div>
+	</div>
+	{{> footer}}
 
 </template>
