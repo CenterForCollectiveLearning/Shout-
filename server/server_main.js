@@ -52,7 +52,8 @@ Meteor.startup(function () {
         if (!this.userId) {
             return this.ready();
         }
-        return Meteor.users.find({}, Meteor.users.publicFields);
+        //console.log(Meteor.users.findOne({},{fields:Meteor.users.publicFields}));
+        return Meteor.users.find({},{fields:Meteor.users.publicFields});
     });
 
     Meteor.publish("trades", function() {
