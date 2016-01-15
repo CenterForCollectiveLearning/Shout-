@@ -43,8 +43,10 @@ Template.history.helpers({
 });
 
 Template.history.onCreated(function() {
-	  this.autorun(() => {
-    	this.subscribe('allUsers');
-    	this.subscribe('post_history');
-  	  });
+  	this.autorun(() => {
+		this.subscribe('allUsers');
+		this.subscribe('post_history');
+
+	});
 });
+

@@ -43,6 +43,10 @@ Template.edit_profile_page.events({
   };
 
   Template.edit_profile_page.onCreated(function() {
+
+  	  	this.autorun(() => {
+		this.subscribe('userData');
+	});
 	$("#edit-success-alert").hide();
 
 });

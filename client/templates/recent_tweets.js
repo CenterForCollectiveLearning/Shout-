@@ -167,5 +167,5 @@ Template.recent_tweets.onCreated(function() {
 
 	//??
 	Session.set("panels_ready", false);
-});
+	});
 });
