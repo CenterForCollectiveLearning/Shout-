@@ -23,7 +23,8 @@ function getTweetList() {
 		return Session.get("fullTweetList");
 	}
 	else {
-		return Session.get("filteredTweetList")
+		console.log("Tweetliststatus is filtered - Getting the filtered list");
+		return Session.get("filteredTweetList");
 	}
 }
 
@@ -59,7 +60,9 @@ Template.recent_tweets.helpers ({
 			return Session.get("fullTweetList");
 		}
 		else {
-			return Session.get("filteredTweetList")
+			console.log("Tweetliststatus is filtered - Getting the filtered list");
+			console.log(Session.get("filteredTweetList"));
+			return Session.get("filteredTweetList");
 		}
 	},
 
@@ -115,8 +118,6 @@ Template.recent_tweets.events({
 
 	'click #search-tweets': function(event, template) {
 		var search_terms = $("#tweet-search-input").val();
-		console.log("search_terms: " + search_terms);
-
 		if (search_terms.length===0) {
 			Session.set("tweetListStatus", "full");
 			return;
@@ -129,6 +130,10 @@ Template.recent_tweets.events({
 				console.log(error.reason);
 				return;
 			}
+			console.log("result: ");
+			console.log(result);
+			console.log("result statuses");
+			console.log(result.statuses);
 			Session.set("tweetListStatus", "partial");
 			Session.set("filteredTweetList", result.statuses);
 		});

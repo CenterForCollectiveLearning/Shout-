@@ -6,17 +6,17 @@ var user_access_token;
 var user_access_token_secret;
 
 // Melissa macro - LOCAL keys
-// consumer_key = 'QbvpMsslQ0kbDoA4AaVIu60yx';
-// consumer_secret = 'TS4n6d1HvDbnNfr8cUSThaGeiMsh0WfgBevlg6zLhfHWEmoZCl';
-// user_access_token = '4704035593-B99Kblsw9GsIJDsPWP81U8zaIhbO2ro6rhFRfly';
-// user_access_token_secret = 'cCGL3uT1ihPdmcUFegfOrLGkJCtVAbbgrSYfRmlSpBS0m';
+consumer_key = 'QbvpMsslQ0kbDoA4AaVIu60yx';
+consumer_secret = 'TS4n6d1HvDbnNfr8cUSThaGeiMsh0WfgBevlg6zLhfHWEmoZCl';
+user_access_token = '4704035593-B99Kblsw9GsIJDsPWP81U8zaIhbO2ro6rhFRfly';
+user_access_token_secret = 'cCGL3uT1ihPdmcUFegfOrLGkJCtVAbbgrSYfRmlSpBS0m';
 
 // DEPLOY keys
 
-consumer_key =  'g3nSn1Yp2l8fVQ61ewnUUWQKc';
-consumer_secret = 'rRcgLXGaObicF7aLo7QiNpbjVZ5zIAJpTp7eRJrKVwsPd7IYv6';
-user_access_token = '4704035593-Du5t0Ls2kmXQkwEwe8ighZP2nBdDTy970JIp4hi';
-user_access_token_secret = 'KPpMD4k2MtRsT0ey0oIPSB1Bu3IYCwMzV5fK2LGJMkQp1';
+// consumer_key =  'g3nSn1Yp2l8fVQ61ewnUUWQKc';
+// consumer_secret = 'rRcgLXGaObicF7aLo7QiNpbjVZ5zIAJpTp7eRJrKVwsPd7IYv6';
+// user_access_token = '4704035593-Du5t0Ls2kmXQkwEwe8ighZP2nBdDTy970JIp4hi';
+// user_access_token_secret = 'KPpMD4k2MtRsT0ey0oIPSB1Bu3IYCwMzV5fK2LGJMkQp1';
 
 Meteor.users.publicFields = {
     "services.twitter.accessToken":0,
@@ -107,6 +107,8 @@ Meteor.methods({
         if (this.userId){
             var getTimelineSync = Meteor.wrapAsync(T.get, T);
             var res = getTimelineSync('search/tweets', {q: search_terms, from: username_for_timeline});
+            console.log("Searched user timeline");
+            console.log(res);
             return res;
         }
         else {
@@ -175,8 +177,8 @@ Meteor.methods({
                 Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":-1}}); 
                 Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
                  
-                Post_history.insert({"user_id":trader_id_posted, "retweet_id":data.id_str, "is_original_poster":true, "other_user_id": other_trader_id, "time": data.created_at});
-                Post_history.insert({"user_id":other_trader_id, "retweet_id":data.id_str, "is_original_poster":false, "other_user_id": trader_id_posted, "time": data.created_at});
+                Post_history.insert({"user_id":trader_id_posted, "retweet_id":data.id_str, "is_original_poster":true, "other_user_id": other_trader_id, "time": new Date(data.created_at)});
+                Post_history.insert({"user_id":other_trader_id, "retweet_id":data.id_str, "is_original_poster":false, "other_user_id": trader_id_posted, "time": new Date(data.created_at)});
 
             }, function() {
                 console.log("Failed to bind environment");

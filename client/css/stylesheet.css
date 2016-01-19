@@ -471,7 +471,7 @@ span.tags
   font-size: 30px;
   padding-left: 20px;
   color: white;
-  background-color: #66b2ff;
+  background-color: #293235;
   height: 70px;
   padding-top: 15px;
 }
@@ -665,6 +665,9 @@ object {
   padding: 10px;
 }
 
+.faq-question {
+  font-size: 18px;
+}
 
 /* Sticky footer styles
 -------------------------------------------------- */

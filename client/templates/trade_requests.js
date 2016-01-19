@@ -44,3 +44,11 @@ Template.trade_requests.events({
 		e.preventDefault;
 	}
 });
+
+Template.trade_requests.onCreated(function() {
+  	this.autorun(() => {
+		this.subscribe('allUsers');
+		this.subscribe('current_trade_requests');
+	});
+});
+
