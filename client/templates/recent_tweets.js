@@ -18,12 +18,10 @@ function compareFavoriteNums(tweet1, tweet2) {
 
 // Duplicate! 
 function getTweetList() {
-	var state = Session.get("tweetListStatus");
-	if (state=="full") {
+	if (Session.equals("tweetListStatus", "full")) {
 		return Session.get("fullTweetList");
 	}
 	else {
-		console.log("Tweetliststatus is filtered - Getting the filtered list");
 		return Session.get("filteredTweetList");
 	}
 }
@@ -37,10 +35,10 @@ function sortTweets(sort_type) {
 		tweetList.sort(compareRetweetCounts);
 	}
 	else {
-		tweetList.sort(compareFavoriteCounts)
+		tweetList.sort(compareFavoriteCounts);
 	}
 
-	if (Session.get("tweetListStatus")==="full") {
+	if (Session.equals("tweetListStatus", "full")) {
 		Session.set("fullTweetList", tweetList);
 	}
 	else {
@@ -55,13 +53,10 @@ Template.recent_tweets.helpers ({
 	},
 
 	tweetList: function() {
-		var state = Session.get("tweetListStatus");
-		if (state=="full") {
+		if (Session.equals("tweetListStatus","full")) {
 			return Session.get("fullTweetList");
 		}
 		else {
-			console.log("Tweetliststatus is filtered - Getting the filtered list");
-			console.log(Session.get("filteredTweetList"));
 			return Session.get("filteredTweetList");
 		}
 	},

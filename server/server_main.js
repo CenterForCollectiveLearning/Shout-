@@ -95,8 +95,13 @@ Meteor.methods({
     getUserTimeline: function(user_id_for_timeline) {
         if (this.userId){
             var getTimelineSync = Meteor.wrapAsync(T.get, T);
-            var res = getTimelineSync('statuses/user_timeline',{user_id: (user_id_for_timeline).toString()});
-            return res;
+            var user = Meteor.users.findOne({"_id":user_id_for_timeline});
+            if (user) {
+                var screenName = user.services.twitter.screenName;
+                var res = getTimelineSync('statuses/user_timeline',{screen_name: screenName, include_rts: false});
+                return res;
+            }
+            return "Could not find user with id";
         }
         else {
             return "No user logged in.";
@@ -107,8 +112,6 @@ Meteor.methods({
         if (this.userId){
             var getTimelineSync = Meteor.wrapAsync(T.get, T);
             var res = getTimelineSync('search/tweets', {q: search_terms, from: username_for_timeline});
-            console.log("Searched user timeline");
-            console.log(res);
             return res;
         }
         else {

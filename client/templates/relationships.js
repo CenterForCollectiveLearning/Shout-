@@ -1,4 +1,3 @@
-// Helper functions
 
 function hasCurrentTradeRelationship(other_user_id) {
 //function has_current_trade_relationship(other_user_id) {
@@ -68,7 +67,7 @@ Template.relationships.helpers({
 	// first element of returned value is the traders, 2nd is the non-traders
 	userList: function() {
 		var users;
-		if (Session.get("userListStatus")!=="full"){
+		if (!Session.equals("userListStatus","full")){
 			users =  Session.get("filteredUserList");
 		}
 		else {
@@ -141,21 +140,21 @@ Template.relationships.helpers({
 Template.relationships.events({
 
 	'mouseenter .round-trader-panel': function(event, template) {
-		if (isEligibleTrader(this._id) && Session.get("tweetListStatus")==="selected") {
+		if (isEligibleTrader(this._id) && Session.equals("tweetListStatus","selected")) {
 			$(event.currentTarget).addClass("highlight");
 			$(event.currentTarget).removeClass("no-highlight");
 		}
 },
 
 	'mouseleave .round-trader-panel': function(event, template) {
-		if (Session.get("userListStatus")!="selected") {
+		if (!Session.equals("userListStatus", "selected")) {
 			$(event.currentTarget).addClass("no-highlight");
 			$(event.currentTarget).removeClass("highlight");
 		}
 	},
 
 	'click .round-trader-panel': function(event, template) {
-		if (Session.get("isInProfileModal")!==true) {
+		if (Session.equals("isInProfileModal",true)) {
 			clickTraderAction(this);
 		}
 	},
@@ -171,8 +170,7 @@ Template.relationships.events({
   		Session.set("proposingTradeTo", this._id);
 	},
 
-	  // Get the last 5 tweets posted by the user
-	  // Currently this is not working!
+
   'click .profile-link': function(event, template) {
   	Session.set("isInProfileModal", true);
   	var user_id = this._id;
@@ -211,6 +209,7 @@ Template.relationships.events({
 
   'hidden.bs.modal .modal': function() {
   	Session.set("isInProfileModal", false);
+  	Session.set("otherUserTimeline", undefined);
   }
 
 });
@@ -222,6 +221,7 @@ Template.relationships.onCreated(function() {
     	this.subscribe('trades');
     	this.subscribe('retweet_ids');
   	  });
+
 	// Populate the user list initially
 	var users = Meteor.call("getAllUsersExceptLoggedInUser", Meteor.userId(), function(err, result) {
 		if (err) {

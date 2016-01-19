@@ -17,7 +17,6 @@
 
   <div id="select-tweet-instructions" class="instructions" hidden="{{existsCurrentSelectedTweet}}"><b>Select the tweet you want to have retweeted!</b></div>
    {{#each tweetList}}
-  	{{#unless retweeted_status}}
 	<div class="row tweet-panel home-tweet-panel 
 	{{#unless existsCurrentSelectedTweet}}
 	no-highlight {{else}} highlight {{/unless}}">
@@ -31,7 +30,6 @@
 	<div class="date-time-retweets">
 		{{dateConverter created_at}} | Retweets: {{retweet_count}} | Favorites: {{favorite_count}}
 	</div>
-	{{/unless}}
   {{/each}}
 {{/if}}
 </template>

@@ -9,7 +9,7 @@ function has_current_trade_relationship(other_user_id) {
 
 Template.profile_modal.helpers({
   other_user_timeline: function() {
-    return Session.get("other_user_timeline");
+    return Session.get("otherUserTimeline");
   },
 	proposing_trade_to: function() {
 		return Meteor.users.findOne({"_id":Session.get("proposing_trade_to")}).profile.name;
