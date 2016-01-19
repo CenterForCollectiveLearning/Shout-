@@ -1,35 +1,35 @@
 <template name="recent_tweets">
 	{{#if Template.subscriptionsReady}}
-	<div class="heading"> Your Latest Tweets </div>
-	<div class="sort-by" id="tweet-sort-by" hidden="{{existsCurrentSelectedTweet}}">
-		Sort by: <a id="sort-latest">latest</a> | <a id="sort-retweets">retweets</a> | <a id="sort-favorites">favorites</a>
-	</div>
-	<div id="tweet-search-div">
-      <div class="input-group">
-          <input type="text" class="form-control" id="tweet-search-input">
-          <span class="input-group-btn">
-              <button class="btn" type="button" id="search-tweets">
-                  <i class="glyphicon glyphicon-search"></i>
-              </button>
-          </span>
-       </div>
-  </div>
+		<div class="heading"> Your Latest Tweets </div>
+		<div class="sort-by" id="tweet-sort-by" hidden="{{existsCurrentSelectedTweet}}">
+			Sort by: <a id="sort-latest">latest</a> | <a id="sort-retweets">retweets</a> | <a id="sort-favorites">favorites</a>
+		</div>
+		<div id="tweet-search-div">
+			<div class="input-group">
+				<input type="text" class="form-control" id="tweet-search-input">
+				<span class="input-group-btn">
+				<button class="btn" type="button" id="search-tweets">
+				<i class="glyphicon glyphicon-search"></i>
+				</button>
+				</span>
+			</div>
+		</div>
+		<div id="select-tweet-instructions" class="instructions" hidden="{{existsCurrentSelectedTweet}}"><b>Select the tweet you want to have retweeted!</b></div>
+		{{#each tweetList}}
+			<div class="row tweet-panel home-tweet-panel 
+				{{#unless existsCurrentSelectedTweet}}
+				no-highlight {{else}} highlight {{/unless}}">
+				<div class="col-md-2 inner-tweet-panel"> 
+					<img class="user-icon img-rounded" src="{{currentUser.services.twitter.profile_image_url}}">
+				</div>
+				<div class="col-md-10 inner-tweet-panel">
+					{{text}}
+				</div>
+			</div>
+			<div class="date-time-retweets">
+				{{dateConverter created_at}} | Retweets: {{retweet_count}} | Favorites: {{favorite_count}}
+			</div>
+		{{/each}}
+	{{/if}}
 
-  <div id="select-tweet-instructions" class="instructions" hidden="{{existsCurrentSelectedTweet}}"><b>Select the tweet you want to have retweeted!</b></div>
-   {{#each tweetList}}
-	<div class="row tweet-panel home-tweet-panel 
-	{{#unless existsCurrentSelectedTweet}}
-	no-highlight {{else}} highlight {{/unless}}">
-		<div class="col-md-2 inner-tweet-panel"> 
-			<img class="user-icon img-rounded" src="{{currentUser.services.twitter.profile_image_url}}">
-		</div>
-		<div class="col-md-10 inner-tweet-panel">
-			{{text}}
-		</div>
-	</div>
-	<div class="date-time-retweets">
-		{{dateConverter created_at}} | Retweets: {{retweet_count}} | Favorites: {{favorite_count}}
-	</div>
-  {{/each}}
-{{/if}}
 </template>

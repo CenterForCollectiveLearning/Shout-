@@ -2,29 +2,28 @@
 	{{#if Template.subscriptionsReady}}
 		<div class="heading"> Recent Activity </div>
 		<div hidden="{{existsRecentHistory}}"> You have no recent activity. </div>
-		{{#each retweetEvents}}
-			{{#if isNewDay time}}
-				<div class="date-heading">{{getDate time}}</div>
-			{{/if}}
-			<div class="history-line-item">
-				{{getTime time}} - 
-				{{#unless is_original_poster}}
-					You
-				{{else}}
-					{{#with getSpecificUser other_user_id}}
-						{{profile.name}}
-					{{/with}}
-				{{/unless}}
-				<a href="https://twitter.com/statuses/{{retweet_id}}" target="_blank" >sent a Shout!</a> through
-				{{#if is_original_poster}}
-					you
-				{{else}}
-					{{#with getSpecificUser other_user_id}}
-					{{profile.name}}
-					{{/with}}
+			{{#each retweetEvents}}
+				{{#if isNewDay time}}
+					<div class="date-heading">{{getDate time}}</div>
 				{{/if}}
-			</div>
-		{{/each}}
-
+				<div class="history-line-item">
+					{{getTime time}} - 
+					{{#unless is_original_poster}}
+						You
+					{{else}}
+						{{#with getSpecificUser other_user_id}}
+							{{profile.name}}
+						{{/with}}
+					{{/unless}}
+					<a href="https://twitter.com/statuses/{{retweet_id}}" target="_blank" >sent a Shout!</a> through
+					{{#if is_original_poster}}
+						you
+					{{else}}
+						{{#with getSpecificUser other_user_id}}
+						{{profile.name}}
+						{{/with}}
+					{{/if}}
+				</div>
+			{{/each}}
 	{{/if}}
 </template>

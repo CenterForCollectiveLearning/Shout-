@@ -5,7 +5,7 @@ var consumer_secret;
 var user_access_token;
 var user_access_token_secret;
 
-// Melissa macro - LOCAL keys
+// LOCAL keys
 consumer_key = 'QbvpMsslQ0kbDoA4AaVIu60yx';
 consumer_secret = 'TS4n6d1HvDbnNfr8cUSThaGeiMsh0WfgBevlg6zLhfHWEmoZCl';
 user_access_token = '4704035593-B99Kblsw9GsIJDsPWP81U8zaIhbO2ro6rhFRfly';
@@ -18,6 +18,8 @@ user_access_token_secret = 'cCGL3uT1ihPdmcUFegfOrLGkJCtVAbbgrSYfRmlSpBS0m';
 // user_access_token = '4704035593-Du5t0Ls2kmXQkwEwe8ighZP2nBdDTy970JIp4hi';
 // user_access_token_secret = 'KPpMD4k2MtRsT0ey0oIPSB1Bu3IYCwMzV5fK2LGJMkQp1';
 
+
+// For now, only omit these two fields.
 Meteor.users.publicFields = {
     "services.twitter.accessToken":0,
     "services.twitter.accessTokenSecret":0
@@ -46,13 +48,10 @@ Meteor.startup(function () {
         });
     });
 
-
-    // TODO: Replace this with more selective version
     Meteor.publish("allUsers", function() {
         if (!this.userId) {
             return this.ready();
         }
-        //console.log(Meteor.users.findOne({},{fields:Meteor.users.publicFields}));
         return Meteor.users.find({},{fields:Meteor.users.publicFields});
     });
 
@@ -119,6 +118,7 @@ Meteor.methods({
         }
     },
 
+    // Updates the current trade requests if a modification is made.
     updateCurrentTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to) {
         if (this.userId){
             Current_trade_requests.update({"user_id_from":user_id_from, "user_id_to":user_id_to}, {"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to}, {"upsert":true});
@@ -128,9 +128,10 @@ Meteor.methods({
         }
     },
 
+    // Once a trade proposal is accepted/rejected, push the trade request to the historic trade request collection
+    // and clear the current request.
     pushHistoricTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to, status) {
         if (this.userId){
-            // Push trade request to history, and clear the current one.
             Historic_trade_requests.insert({"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "status": status});
             Current_trade_requests.remove({"user_id_from":user_id_from, "user_id_to":user_id_to});
         }
@@ -156,11 +157,10 @@ Meteor.methods({
     sendRetweet: function(tweet_id, trader_id_posted, other_trader_id) {
         if (this.userId) {
 
-            // Create a twit object for the user who is actually sending the retweet
+            // Create a Twit object for the user who is actually sending the retweet.
             var trader = Meteor.users.findOne({"_id":trader_id_posted});
             var trader_access_token = trader.services.twitter.accessToken;
             var trader_access_token_secret = trader.services.twitter.accessTokenSecret;
-            //var TraderTwit = Meteor.npmRequire('twit');
 
             traderTwit = new Twit({
                 consumer_key: consumer_key,
@@ -175,7 +175,7 @@ Meteor.methods({
                     console.log(err);
                     return;
                 } 
-                // If successful, decrement the corresponding trade counts.           
+                // If the retweet is successful, decrement the corresponding trade counts.           
                 Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":-1}});
                 Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":-1}}); 
                 Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          

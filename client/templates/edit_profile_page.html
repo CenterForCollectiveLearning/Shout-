@@ -3,54 +3,49 @@
 <body>
   {{#if currentUser}}
   {{> nav}}    
-
   <div class="content-container">
     <div id="main-container">
-<div class="container">
-   <div class="alert alert-success alert-dismissable" id="edit-success-alert" hidden>
-        <a class="panel-close close" data-dismiss="alert">×</a> 
-        <i class="fa fa-coffee"></i>
-        Changes saved!
-  </div> 
-    <h1 id="profile-page-name">{{currentUser.profile.name}}</h1>
-    <hr>
-    <div class="personal-info">   
+      <div class="container">
+        <div class="alert alert-success alert-dismissable" id="edit-success-alert" hidden>
+          <a class="panel-close close" data-dismiss="alert">×</a> 
+          <i class="fa fa-coffee"></i>
+          Changes saved!
+        </div>
+        <h1 id="profile-page-name">{{currentUser.profile.name}}</h1>
+        <hr>
+        <div class="personal-info">
           <h3 id="profile-page-screenname">@{{currentUser.services.twitter.screenName}}</h3>
-        <form class="form-horizontal" role="form">
-           <div class="form-group">
-          </div>
-          <div class="form-group">
-            <label class="col-lg-3 control-label edit-profile-label">Bio:</label>
-            <div class="col-lg-6">
-              <textarea class="form-control comment" id="bio" rows="5">{{bio}}</textarea>
+          <form class="form-horizontal" role="form">
+            <div class="form-group">
             </div>
-          </div>
-
-          <div class="form-group">
-            <label class="col-md-3 control-label edit-profile-label">Interests:</label>
-            <div class="col-md-6">
-              <input type="text" class="form-control tokenfield-typeahead" id="interests" value="{{interests}}"/>
+            <div class="form-group">
+              <label class="col-lg-3 control-label edit-profile-label">Bio:</label>
+              <div class="col-lg-6">
+                <textarea class="form-control comment" id="bio" rows="5">{{bio}}</textarea>
+              </div>
             </div>
-          </div>
-          <div class="form-group">
-            <label class="col-md-3 control-label"></label>
-            <div class="col-md-8">
-              <input type="button" class="btn btn-default" id="save-edited-profile" value="Save Changes">
-              <span></span>
-              <input type="reset" class="btn btn-default" id="cancel-edits" value="Cancel">
+            <div class="form-group">
+              <label class="col-md-3 control-label edit-profile-label">Interests:</label>
+              <div class="col-md-6">
+                <input type="text" class="form-control tokenfield-typeahead" id="interests" value="{{interests}}"/>
+              </div>
             </div>
-          </div>
-        </form>
+            <div class="form-group">
+              <label class="col-md-3 control-label"></label>
+              <div class="col-md-8">
+                <input type="button" class="btn btn-default" id="save-edited-profile" value="Save Changes">
+                <span></span>
+                <input type="reset" class="btn btn-default" id="cancel-edits" value="Cancel">
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
-</div>
-
     </div>
-
-</div>
+  </div>
   {{else}}
     {{>signin_page}}
   {{/if}}
-
   {{>footer}}
 </body>
 </template>

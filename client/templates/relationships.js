@@ -1,6 +1,5 @@
 
 function hasCurrentTradeRelationship(other_user_id) {
-//function has_current_trade_relationship(other_user_id) {
 	var trades = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id, "trades.this_trade_num":{$gt:0}}).fetch();
 	var count = trades.length;	
 	if (count===0) {
@@ -15,7 +14,6 @@ Template.relationships.helpers({
 		return isEligibleTrader(user_id);
 	},
 
-	// TODO: Remove this duplicate code (also in recent_tweets)
 	tweetListStatus: function() {
 		return Session.get("tweetListStatus");
 	},
@@ -30,7 +28,7 @@ Template.relationships.helpers({
 		return existsCurrentSelectedUser();
 	},
 
-	// return trades for logged-in user
+	// return trades for the logged-in user
 	traderList: function() {
 		var trades = Trades.findOne({"user_id":Meteor.userId()});
 		return trades;
@@ -154,7 +152,7 @@ Template.relationships.events({
 	},
 
 	'click .round-trader-panel': function(event, template) {
-		if (Session.equals("isInProfileModal",true)) {
+		if (!Session.equals("isInProfileModal",true)) {
 			clickTraderAction(this);
 		}
 	},

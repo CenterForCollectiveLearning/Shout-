@@ -2,20 +2,15 @@
 <head></head>
 <body>
 	{{#if currentUser}}
-
 	{{> nav}}    
-
 	<div class="content-container">
 		<div id="main-container">
 			{{> personal_profile_page}}
-
 		</div>
-
 </div>
 	{{else}}
 		{{> signin_page}}
 	{{/if}}
-	
 	{{>footer}}
 </body>
 </template>
