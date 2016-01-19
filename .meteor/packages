@@ -29,3 +29,11 @@ check
 kadira:flow-router
 kadira:blaze-layout
 accounts-ui-unstyled
+arillo:flow-router-helpers
+ajduke:bootstrap-tokenfield
+mizzao:autocomplete
+sergeyt:typeahead
+lawshe:full-page
+momentjs:moment
+reactive-var
+ecmascript
