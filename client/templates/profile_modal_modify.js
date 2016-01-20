@@ -45,8 +45,7 @@ Template.profile_modal_modify.helpers({
     }
   },
   exists_interests: function(user_id){
-    var user_info = Meteor.users.find({"_id":user_id}).fetch();
-    var profile = user_info[0].profile;
+    var profile = Meteor.user().profile;
     if (profile.interests) {
       return true;
     }
@@ -56,15 +55,11 @@ Template.profile_modal_modify.helpers({
   },
 
   bio: function(user_id) {
-    var user_info = Meteor.users.find({"_id":user_id}).fetch();
-    var bio = user_info && user_info[0].profile && user_info[0].profile.bio;
-    return bio;
+    return Meteor.user() && Meteor.user().profile && Meteor.user().profile.bio;
   },
 
   interests: function(user_id) {
-    var user_info = Meteor.users.find({"_id":user_id}).fetch();
-    var interests = user_info && user_info[0].profile && user_info[0].profile.interests;
-    return interests; 
+    return Meteor.user() && Meteor.user().profile && Meteor.user().profile.interests;
   }
 
 });
@@ -85,7 +80,6 @@ Template.profile_modal_modify.events({
     var old_proposed_from = Session.get("old_proposed_from");
     var old_proposed_to = Session.get("old_proposed_to");
     
-    // UNCOMMENT THIS
     Meteor.call("pushHistoricTradeRequest", user_id_from, user_id_to, old_proposed_from, old_proposed_to, "modified");
 
     // Update the current trade request
@@ -94,7 +88,6 @@ Template.profile_modal_modify.events({
     var new_proposed_from = template.find('.num-you').value;
     var new_proposed_to = template.find('.num-them').value;
 
-    // UNCOMMENT THIS
     Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, new_proposed_from, new_proposed_to);
 
     $('#modify-modal').modal('hide');

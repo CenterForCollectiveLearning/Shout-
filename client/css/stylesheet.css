@@ -442,6 +442,10 @@ span.tags
 .profile-modal-screenname {
 }
 
+.profile-modal-make-deal {
+  text-align:left;
+}
+
 .profile-modal-info {
   font-size: 15px;
 }
@@ -566,14 +570,20 @@ span.tags
   font-size: 20px;
 }
 
+.date-time-retweets-modal {
+  margin-left: 12px;
+}
+
 .profile-modal-bio {
   margin-top:10px;
   text-align: center;
+  font-size: 16px;
 }
 
 .profile-modal-interests {
   margin-top:10px;
   text-align: center;
+  font-size: 16px;
 }
 
 .inner-tweet-panel {

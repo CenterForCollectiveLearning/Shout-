@@ -21,8 +21,7 @@ Template.profile_modal.helpers({
     return has_current_trade_relationship(user_id);
   },
   exists_bio: function(user_id) {
-    var user_info = Meteor.users.find({"_id":user_id}).fetch();
-    var profile = user_info[0].profile;
+    var profile = Meteor.user() && Meteor.user.profile;
     if (profile.bio) {
       return true;
     }
@@ -31,8 +30,7 @@ Template.profile_modal.helpers({
     }
   },
   exists_interests: function(user_id){
-    var user_info = Meteor.users.find({"_id":user_id}).fetch();
-    var profile = user_info[0].profile;
+    var profile = Meteor.user() && Meteor.user.profile;
     if (profile.interests) {
       return true;
     }
@@ -42,16 +40,17 @@ Template.profile_modal.helpers({
   },
 
   bio: function(user_id) {
-    var user_info = Meteor.users.find({"_id":user_id}).fetch();
-    var bio = user_info && user_info[0].profile && user_info[0].profile.bio;
-    return bio;
+    return Meteor.user() && Meteor.user().profile && Meteor.user().profile.bio;
   },
 
   interests: function(user_id) {
-    var user_info = Meteor.users.find({"_id":user_id}).fetch();
-    var interests = user_info && user_info[0].profile && user_info[0].profile.interests;
-    return interests;
+    return Meteor.user() && Meteor.user().profile && Meteor.user().profile.interests;
+  },
+    dateConverter: function(date) {
+    return dateConverter(date);
   }
+
+
 
 });
 

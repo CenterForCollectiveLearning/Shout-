@@ -7,7 +7,6 @@ Template.home.helpers({
 	},
 
 	userLoggedIn: function() {
-		console.log("in userLoggedIn, Meteor.user is " + Meteor.user());
 		if (Meteor.user()) {
 			Session.set("userLoggedIn", true);
 		}

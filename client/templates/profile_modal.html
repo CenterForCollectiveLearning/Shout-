@@ -17,19 +17,15 @@
 						<img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
 					</div>
 					<div class="col-md-5 profile-modal-info">
-						<div> Followers: 5000
+						<div> Followers: 147
 						</div>
-						<div> Tweets: 157
+						<div> Tweets: 159
 						</div>
 						<div>
 							Mutual Followers: 18
 						</div>
 					</div>
 				</div>
-				{{/with}} 
-			</div>
-			<div class="modal-body">
-				{{#with get_user_by_id _id}}
 				{{#if exists_bio this._id}}
 				<div class="profile-modal-bio">
 					<b>Bio: </b>{{bio this._id}}
@@ -40,6 +36,10 @@
 					<b>Interests:</b> {{interests this._id}}
 				</div>
 				{{/if}}
+				{{/with}} 
+			</div>
+			<div class="modal-body">
+				{{#with get_user_by_id _id}}
 				<div class="recent-tweets">
 					{{#each other_user_timeline}}
 					<div class="row tweet-panel modal-tweet-panel">
@@ -50,11 +50,16 @@
 							{{text}}
 						</div>
 					</div>
-					<div class="date-time-retweets">
-						Date: May 15, 2015, 4:12pm | Retweets: 12  
+					<div class="date-time-retweets-modal">
+						{{dateConverter created_at}} | Retweets: {{retweet_count}} | Favorites: {{favorite_count}}
 					</div>
 					{{/each}}
 				</div>
+				{{/with}}
+			</div>
+			<div class="modal-footer profile-modal-footer">
+
+				{{#with get_user_by_id _id}}
 				{{#unless has_current_trade_relationship this._id}}
 				<div class="profile-modal-make-deal">
 					<div class="deal-heading"> Make a Deal</div>
@@ -82,8 +87,7 @@
 				</div>
 				{{/unless}} 
 				{{/with}}
-			</div>
-			<div class="modal-footer profile-modal-footer">
+
 				{{#unless has_current_trade_relationship this._id}}
 				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 				<button type="button" class="btn btn-default btn-make-offer" id="make-offer" data-dismiss="modal">Make the Offer</button>
