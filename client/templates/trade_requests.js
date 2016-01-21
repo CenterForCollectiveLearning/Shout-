@@ -38,8 +38,8 @@ Template.trade_requests.events({
 			Session.set("modify_trade_from_id", this.user_id_from);
 			Session.set("old_proposed_from", this.proposed_from);
 			Session.set("old_proposed_to", this.proposed_to);
-
-			$('#modify-modal').modal('show');
+			Session.set("modifyStatus", true);
+			$('#'+this.user_id_from).modal('show');
 		}
 		e.preventDefault;
 	}
