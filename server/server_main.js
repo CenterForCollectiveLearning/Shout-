@@ -147,6 +147,8 @@ Meteor.methods({
 	},
 
 	createNewTrade: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to) {
+		// Pulls out any existing trade with the other user; inserts the new one. 
+		// TODO: Revise this logic - Should not be a need to pull out an existing trade
 		if (this.userId) {
 			Trades.update({"user_id":user_id_from}, {$pull: {"trades":{"other_user_id":user_id_to}}});
 			Trades.update({"user_id":user_id_from}, {$push: {"trades":{"other_user_id":user_id_to, "this_trade_num":parseInt(num_proposed_from), "other_trade_num":parseInt(num_proposed_to)}}}, {"upsert":true});
@@ -157,6 +159,33 @@ Meteor.methods({
 		else {
 			throw new Meteor.error("logged-out");
 		}
+	},
+
+	addToExistingTrade: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to) {
+		if (this.userId) {
+
+			// First, find the existing trade and parse out the trade numbers
+			var user_trades = Trades.findOne({"user_id": user_id_from, "trades.other_user_id": user_id_to});
+			var old_this_trade_num;
+			var old_other_trade_num;
+			for (var i=0; i<user_trades.trades.length; i++) {
+				var trade = user_trades.trades[i];
+				if (trade.other_user_id ===user_id_to) {
+					old_this_trade_num = trade.this_trade_num;
+					old_other_trade_num = trade.other_trade_num;
+					break;
+				}
+			}
+
+			Trades.update({"user_id":user_id_from}, {$pull: {"trades":{"other_user_id":user_id_to}}});
+			Trades.update({"user_id":user_id_from}, {$push: {"trades":{"other_user_id":user_id_to, "this_trade_num":parseInt(num_proposed_from)+parseInt(old_this_trade_num), "other_trade_num":parseInt(num_proposed_to)+parseInt(old_other_trade_num)}}}, {"upsert":true});
+
+			Trades.update({"user_id":user_id_to}, {$pull: {"trades":{"other_user_id":user_id_from}}});
+			Trades.update({"user_id":user_id_to}, {$push: {"trades":{"other_user_id":user_id_from, "this_trade_num":parseInt(num_proposed_to)+parseInt(old_other_trade_num), "other_trade_num":parseInt(num_proposed_from)+parseInt(old_this_trade_num)}}}, {"upsert":true});
+		}
+		else {
+			throw new Meteor.error("logged-out");
+		}	
 	},
 
 	sendRetweet: function(tweet_id, trader_id_posted, other_trader_id) {

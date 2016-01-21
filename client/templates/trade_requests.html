@@ -4,15 +4,24 @@
 		<p>
 			<div class="panel panel-default trade-request-panel">
 				<div class="panel-body">
+					{{#if has_current_trade_relationship user_id_from}}
+	                	<div class="alert alert-warning">
+							<span class="glyphicon glyphicon-warning-sign"></span>
+							You have an existing trade relationship with {{name_lookup user_id_from}}. Creating a new one will add the new deal onto the old. 
+						</div>
+					{{/if}}
 					{{#with specific_user user_id_from}} 
+
 					 <img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
                 	 <b>{{profile.name}}</b> @{{services.twitter.screenName}} proposes a trade
                 	{{/with}}
                 	- You retweet <b>{{proposed_from}}</b> tweets on {{name_lookup user_id_from}}'s behalf, and {{name_lookup user_id_from}} retweets <b>{{proposed_to}}</b> tweets on your behalf!
-                	<div class="btn-group proposal-buttons" role="group">
-						<button class="btn btn-default proposal-action accept">Accept</button>
-						<button class="btn btn-default proposal-action reject">Reject</button>
-						<button type="button" class="btn btn-default proposal-action modify">Modify</button>
+                	<div class="btn-group-wrapper">
+	                	<div class="btn-group proposal-buttons" role="group">
+							<button class="btn btn-default proposal-action accept">Accept</button>
+							<button class="btn btn-default proposal-action reject">Reject</button>
+							<button type="button" class="btn btn-default proposal-action modify">Modify</button>
+						</div>
 					</div>
 
 				</div>

@@ -58,9 +58,13 @@
 				{{/with}}
 			</div>
 			<div class="modal-footer profile-modal-footer">
-
+					{{#if has_current_trade_relationship this._id}}
+						<div class="alert alert-warning">
+							<span class="glyphicon glyphicon-warning-sign"></span>
+							You have an existing trade relationship with {{name_lookup this._id}}. Creating a new one will add the new deal onto the old. 
+						</div>
+					{{/if}}
 				{{#with get_user_by_id _id}}
-				{{#unless has_current_trade_relationship this._id}}
 				{{#if exists_param_error}}
 				<div class="param-error-text">
 					Please enter integers between {{get_min_trade_param}} and {{get_max_trade_param}}.
@@ -77,18 +81,13 @@
 						tweets on my behalf.
 					</div>
 				</div>
-				{{/unless}} 
 				{{/with}}
 				{{#if modify_status}} <!-- if modify modal -->
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 					<button type="button" class="btn btn-default btn-make-offer" id="propose-modified-trade" data-dismiss="modal">Make the Offer</button>
 				{{else}}
-					{{#unless has_current_trade_relationship this._id}}
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-						<button type="button" class="btn btn-default btn-make-offer" id="make-offer">Make the Offer</button>
-					{{else}}
-						<button type="button" class="btn btn-default" data-dismiss="modal" id="modal-dismiss">Close</button>
-					{{/unless}}
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-default btn-make-offer" id="make-offer">Make the Offer</button>
 				{{/if}}
 
 			</div>

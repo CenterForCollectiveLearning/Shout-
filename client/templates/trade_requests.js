@@ -6,14 +6,15 @@ Template.trade_requests.helpers({
 	},
 
 	name_lookup: function(user_id) {
-		var user = Meteor.users.findOne({"_id": user_id});
-		if (user) {
-			return user.profile.name;
-		}
+		return nameLookup(user_id);
 	},
 	specific_user: function(specific_user_id) {
 		return Meteor.users.findOne({"_id":specific_user_id});
-	}
+	},
+
+	has_current_trade_relationship: function(user_id){
+   		return has_current_trade_relationship(user_id);
+  	},
 });
 
 Template.trade_requests.events({
@@ -24,7 +25,12 @@ Template.trade_requests.events({
 		var new_status;
 		if ($(e.currentTarget).hasClass("accept")) {
 			new_status = "approved";
-			Meteor.call("createNewTrade", this.user_id_from, this.user_id_to, this.proposed_from, this.proposed_to);
+			if (has_current_trade_relationship(this.user_id_from)) {
+				Meteor.call("addToExistingTrade", this.user_id_from, this.user_id_to, this.proposed_from, this.proposed_to);
+			}
+			else {
+				Meteor.call("createNewTrade", this.user_id_from, this.user_id_to, this.proposed_from, this.proposed_to);
+			}
 			Meteor.call("pushHistoricTradeRequest", this.user_id_from, this.user_id_to, this.proposed_from, this.proposed_to, new_status);
 
 		}

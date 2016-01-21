@@ -544,6 +544,10 @@ span.tags
   margin-right: 3px;
 }
 
+.btn-group-wrapper {
+  text-align: center;
+}
+
 .btn-trade {
   font-size: 20px;
   color: black;
@@ -552,7 +556,6 @@ span.tags
 }
 
 .trade-request-panel {
-  text-align: center;
   background-color: #F0F4F7;
   font-size: 16px;
   margin-left: 15px;

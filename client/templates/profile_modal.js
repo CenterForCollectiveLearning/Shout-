@@ -1,15 +1,6 @@
 var MIN_TRADE_PARAM = 0;
 var MAX_TRADE_PARAM = 25;
 
-function has_current_trade_relationship(other_user_id) {
-  var trades = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id, "trades.this_trade_num":{$gt:0}}).fetch();
-  var count = trades.length;  
-  if (count===0) {
-    return false;
-  }
-  return true;
-}
-
 function checkOfferParam(param) {
   if (isNaN(parseInt(param)) || param < MIN_TRADE_PARAM || param > MAX_TRADE_PARAM)
   {
@@ -28,6 +19,10 @@ Template.profile_modal.helpers({
 
   modify_status: function() {
     return Session.get("modifyStatus");
+  },
+
+  name_lookup: function(user_id) {
+    return nameLookup(user_id);
   },
 
   exists_param_error: function() {
@@ -111,13 +106,14 @@ Template.profile_modal.events({
     var proposed_from = template.find('.num-you').value;
     var proposed_to = template.find('.num-them').value;
 
-    if (checkOfferParam(proposed_from) && checkOfferParam(proposed_to)) {
-      Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, proposed_from, proposed_to);
-      $('.modal').modal('hide');
+    if (!(checkOfferParam(proposed_from) && checkOfferParam(proposed_to))) {
+        Session.set("paramError", true);
+        $('.modal').modal('hide');
+        return;
     }
-    else {
-      Session.set("paramError", true);
-    }
+
+    Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, proposed_from, proposed_to);
+    $('.modal').modal('hide');
   },
 
   'hidden.bs.modal .modal': function() {
