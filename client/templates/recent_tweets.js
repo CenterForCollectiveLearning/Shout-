@@ -118,20 +118,17 @@ Template.recent_tweets.events({
 			return;
 		}
 
-		var username = getSpecificUser(Meteor.userId()).services.twitter.screenName;
-		Meteor.call("getSearchedUserTimeline", search_terms, username, function(error, result) {
+		var username = Meteor.user().services.twitter.screenName;
+		Meteor.call("searchTweets", search_terms, function(error, result) {
 			if (error) {
-				console.log("Error getting user timeline");
+				console.log("Error getting searched user timeline");
 				console.log(error.reason);
 				return;
 			}
-			console.log("result: ");
-			console.log(result);
-			console.log("result statuses");
-			console.log(result.statuses);
 			Session.set("tweetListStatus", "partial");
-			Session.set("filteredTweetList", result.statuses);
+			Session.set("filteredTweetList", result);
 		});
+
 	},
 
 	'keypress #tweet-search-input': function(event) {

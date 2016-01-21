@@ -3,9 +3,6 @@ var T;
 
 var TWITTER_API_KEY = Meteor.settings.consumer_key;
 var TWITTER_API_SECRET = Meteor.settings.consumer_secret;
-// var user_access_token = Meteor.settings.user_access_token;
-// var user_access_token_secret = Meteor.settings.user_access_token_secret;
-
 
 // For now, only omit these two fields when publishing the Users collection.
 Meteor.users.publicFields = {
@@ -87,13 +84,30 @@ Meteor.publish("post_history", function() {
 	}
 	return Post_history.find();
 });
+Meteor.publish("tweets", function() {
+	if (!this.userId) {
+		return this.ready();
+	}
+	return Tweets.find();
+});
 
 Meteor.methods({
 	getUserTimeline: function(user_id_for_timeline) {
 		var user = Meteor.users.findOne({"_id":user_id_for_timeline});
 		if (user.services.twitter) {
-			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false}
-			return makeTwitterCall('statuses/user_timeline', twitterParams)
+			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:200}
+			var res =  makeTwitterCall('statuses/user_timeline', twitterParams);
+			if (user._id === Meteor.userId()) {
+
+				// Store the timeline. Wipe out the current one for now and replace it
+				Tweets.remove({"user.screen_name":Meteor.user().services.twitter.screenName});
+				Tweets.insert(res);
+
+				_.each(res, function(tweet) { 
+				  Tweets.insert(tweet);
+				});
+			}
+			return res;
 		}		
 	},
 
@@ -197,6 +211,20 @@ Meteor.methods({
 			}
 			else {
 				return Meteor.users.find({$text:{$search:search_terms}}).fetch();
+			}
+		}
+		else {
+			throw new Meteor.error("logged-out");
+		}
+	},
+
+	searchTweets: function(search_terms) {
+		if (this.userId) {
+			if (search_terms==="") {
+				return Tweets.find({"user.screen_name":Meteor.user().services.twitter.screenName}).fetch();
+			}
+			else {
+				return Tweets.find({"user.screen_name":Meteor.user().services.twitter.screenName,$text:{$search: search_terms}}).fetch();			
 			}
 		}
 		else {

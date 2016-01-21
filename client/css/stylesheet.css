@@ -683,6 +683,14 @@ object {
   color: red;
 }
 
+#tweet-scroll {
+  height:100vh;
+}
+
+.pre-scrollable {
+  max-height: none;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
