@@ -23,7 +23,19 @@ Template.home.helpers({
 		var selected_trader_id =  Session.get("selectedTraderId");
 		var trader_screenname = getSpecificUser(selected_trader_id).services.twitter.screenName; 
 		return trader_screenname;
-	}
+	},
+
+	existsCurrentSelectedTweet: function() {
+		return existsCurrentSelectedTweet();
+	},
+
+	existsCurrentSelectedUser: function() {
+		return existsCurrentSelectedUser();
+	},
+
+	existCurrentTraders: function() {
+		return Session.get("existCurrentTraders");
+	},
 
 });
 

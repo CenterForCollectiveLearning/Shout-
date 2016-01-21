@@ -1,6 +1,20 @@
 <template name="home">
 {{> nav}} 
 {{> trade_requests}}
+<div id="row">
+	<div class="col-md-4">
+		<div id="select-tweet-instructions" class="instructions" hidden="{{existsCurrentSelectedTweet}}"><b>Select the tweet you want to have retweeted!</b></div>
+	</div>
+	<div class="col-md-4">
+	  {{#if existsCurrentSelectedTweet}}
+		  {{#unless existsCurrentSelectedUser}}
+		  		{{#if existCurrentTraders}}
+		     		<div id="select-user-instructions" class="instructions"><b>Select the trader to retweet your tweet!</b></div>
+		     	{{/if}}
+		  {{/unless}}
+	  {{/if}}
+	</div>
+</div>
 <div class="row">
 	<div class="col-md-8">
 		<div class="row">

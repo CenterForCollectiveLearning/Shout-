@@ -1,10 +1,15 @@
 <template name="relationships">
 	{{#if Template.subscriptionsReady}}
 		{{#unless existCurrentTraders}}
-		{{#if existCurrentNonTradingUsers}}
-	<div id="start-new-text" class="heading"> Start a new relationship </div>
-		{{/if}}
-	{{/unless}}
+			{{#if existCurrentNonTradingUsers}}
+				<div id="start-new-text" class="heading"> Start a new relationship </div>
+				{{#unless existsCurrentSelectedTweet}}
+				<div class="sort-by sort-by-filler">
+					Sort by: <a>own</a> | <a>owe</a> | <a>followers</a>
+				</div>
+				{{/unless}}
+			{{/if}}
+		{{/unless}}
 	{{#if existCurrentTraders}}
 	<div class="heading"> Relationships </div>
 		<div class="sort-by" hidden="{{existsCurrentSelectedUser}}">
@@ -22,54 +27,41 @@
           </span>
        </div>
   </div>
-  {{#unless existsCurrentSelectedTweet}}
-  	{{#unless existsCurrentSelectedUser}}
-  		<div id="spacing-div"> </div>
-  	{{/unless}}
-  {{/unless}}
-
-  {{#if existsCurrentSelectedTweet}}
-	  {{#unless existsCurrentSelectedUser}}
-	  		{{#if existCurrentTraders}}
-	     		<div id="select-user-instructions" class="instructions"><b>Select the trader to retweet your tweet!</b></div>
-	     	{{/if}}
-	  {{/unless}}
-  {{/if}}
 
 {{#if existCurrentTraders}}
 	{{/if}}
+	<div id="current-traders"> 
+	  {{#each userList.[0]}}
+			<div class="round-trader-panel no-highlight row row-custom" style="{{#unless isEligibleTrader this._id}}opacity:0.5{{/unless}}">
 
-  {{#each userList.[0]}}
-		<div class="round-trader-panel no-highlight row row-custom" style="{{#unless isEligibleTrader this._id}}opacity:0.5{{/unless}}">
-
-			<div class="col-md-8">
-				<div class="row inner-trader-panel">
-					<div class="col-md-3"> 
-						<img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
-					</div>
-					<div class="col-md-9">
-			          <div><a class="profile-link" data-toggle="modal" data-target="#{{_id}}">{{profile.name}}</a></div>
-			          <div>@{{services.twitter.screenName}}</div>
+				<div class="col-md-8">
+					<div class="row inner-trader-panel">
+						<div class="col-md-3"> 
+							<img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
+						</div>
+						<div class="col-md-9">
+				          <div><a class="profile-link" data-toggle="modal" data-target="#{{_id}}">{{profile.name}}</a></div>
+				          <div>@{{services.twitter.screenName}}</div>
+						</div>
 					</div>
 				</div>
+
+				{{#with findTradeWithUser _id}}
+	            	{{#each trades}}
+	              		{{#if checkUserIdEquality ../../_id other_user_id}}
+							<div class="col-md-2 trading-num trading-num-own"> 
+								+{{this_trade_num}}
+							</div>
+							<div class="col-md-2 trading-num trading-num-owe"> 
+								-{{other_trade_num}}
+							</div>
+				        {{/if}}
+	            	{{/each}}
+	          	{{/with}}
 			</div>
-
-			{{#with findTradeWithUser _id}}
-            	{{#each trades}}
-              		{{#if checkUserIdEquality ../../_id other_user_id}}
-						<div class="col-md-2 trading-num trading-num-own"> 
-							+{{this_trade_num}}
-						</div>
-						<div class="col-md-2 trading-num trading-num-owe"> 
-							-{{other_trade_num}}
-						</div>
-			        {{/if}}
-            	{{/each}}
-          	{{/with}}
-		</div>
-		{{> profile_modal}}
-	{{/each}}
-
+			{{> profile_modal}}
+		{{/each}}
+	</div>
   
 	{{#if existCurrentNonTradingUsers}}
 		{{#if existCurrentTraders}}
