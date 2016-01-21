@@ -460,7 +460,7 @@ span.tags
 
 .form-control-custom {
   display: inline;
-  width: 10%;
+  width: 12%;
 }
 
 .hobbies-list {
@@ -677,6 +677,10 @@ object {
 
 .faq-question {
   font-size: 18px;
+}
+
+.param-error-text {
+  color: red;
 }
 
 /* Sticky footer styles
