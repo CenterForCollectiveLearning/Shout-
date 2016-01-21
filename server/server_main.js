@@ -4,6 +4,8 @@ var T;
 var TWITTER_API_KEY = Meteor.settings.consumer_key;
 var TWITTER_API_SECRET = Meteor.settings.consumer_secret;
 
+var BATCH_TWEET_SIZE = 100;
+
 // For now, only omit these two fields when publishing the Users collection.
 Meteor.users.publicFields = {
 	"services.twitter.accessToken":0,
@@ -95,7 +97,7 @@ Meteor.methods({
 	getUserTimeline: function(user_id_for_timeline) {
 		var user = Meteor.users.findOne({"_id":user_id_for_timeline});
 		if (user.services.twitter) {
-			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:200}
+			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE}
 			var res =  makeTwitterCall('statuses/user_timeline', twitterParams);
 			if (user._id === Meteor.userId()) {
 
