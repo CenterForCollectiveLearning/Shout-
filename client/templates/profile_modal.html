@@ -58,37 +58,41 @@
 				{{/with}}
 			</div>
 			<div class="modal-footer profile-modal-footer">
+				{{#unless exists_pending_trade_request this._id}}
 					{{#if has_current_trade_relationship this._id}}
-						<div class="alert alert-warning">
-							<span class="glyphicon glyphicon-warning-sign"></span>
-							You have an existing trade relationship with {{name_lookup this._id}}. Creating a new one will add the new deal onto the old. 
-						</div>
-					{{/if}}
-				{{#with get_user_by_id _id}}
-				{{#if exists_param_error}}
-				<div class="param-error-text">
-					Please enter integers between {{get_min_trade_param}} and {{get_max_trade_param}}.
-				</div>
-				{{/if}}
-
-				<div class="profile-modal-make-deal">
-					<div class="deal-heading"> {{#if modify_status}}Modify the Deal{{else}}Make a Deal{{/if}}</div>
-					<div>
-						I will retweet
-						<input type="number" min="{{get_min_trade_param}}" max="{{get_max_trade_param}}" class="form-control form-control-custom num-them">
-						tweets on your behalf if you retweet
-						<input type="number" min="0" max="25" class="form-control form-control-custom num-you">
-						tweets on my behalf.
+							<div class="alert alert-warning">
+								<span class="glyphicon glyphicon-warning-sign"></span>
+								You have an existing trade relationship with {{name_lookup this._id}}. Creating a new one will add the new deal onto the old. 
+							</div>
+						{{/if}}
+					{{#with get_user_by_id _id}}
+					{{#if exists_param_error}}
+					<div class="param-error-text">
+						Please enter integers between {{get_min_trade_param}} and {{get_max_trade_param}}.
 					</div>
-				</div>
-				{{/with}}
-				{{#if modify_status}} <!-- if modify modal -->
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-					<button type="button" class="btn btn-default btn-make-offer" id="propose-modified-trade" data-dismiss="modal">Make the Offer</button>
+					{{/if}}
+
+					<div class="profile-modal-make-deal">
+						<div class="deal-heading"> {{#if modify_status}}Modify the Deal{{else}}Make a Deal{{/if}}</div>
+						<div>
+							I will retweet
+							<input type="number" min="{{get_min_trade_param}}" max="{{get_max_trade_param}}" class="form-control form-control-custom num-them">
+							tweets on your behalf if you retweet
+							<input type="number" min="0" max="25" class="form-control form-control-custom num-you">
+							tweets on my behalf.
+						</div>
+					</div>
+					{{/with}}
+					{{#if modify_status}} <!-- if modify modal -->
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button type="button" class="btn btn-default btn-make-offer" id="propose-modified-trade" data-dismiss="modal">Make the Offer</button>
+					{{else}}
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button type="button" class="btn btn-default btn-make-offer" id="make-offer">Make the Offer</button>
+					{{/if}}
 				{{else}}
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-					<button type="button" class="btn btn-default btn-make-offer" id="make-offer">Make the Offer</button>
-				{{/if}}
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				{{/unless}}
 
 			</div>
 		</div>

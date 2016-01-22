@@ -40,6 +40,9 @@ Template.profile_modal.helpers({
   has_current_trade_relationship: function(user_id){
     return has_current_trade_relationship(user_id);
   },
+  exists_pending_trade_request: function(user_id) {
+    return existsPendingTradeRequest(user_id);
+  },
   exists_bio: function(user_id) {
     var profile = Meteor.user() && Meteor.user().profile;
     if (profile.bio) {
