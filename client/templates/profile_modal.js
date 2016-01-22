@@ -44,7 +44,8 @@ Template.profile_modal.helpers({
     return existsPendingTradeRequest(user_id);
   },
   exists_bio: function(user_id) {
-    var profile = Meteor.user() && Meteor.user().profile;
+    var user = getSpecificUser(user_id);
+    var profile = user && user.profile;
     if (profile.bio) {
       return true;
     }
@@ -53,7 +54,8 @@ Template.profile_modal.helpers({
     }
   },
   exists_interests: function(user_id){
-    var profile = Meteor.user() && Meteor.user().profile;
+    var user = getSpecificUser(user_id);
+    var profile = user && user.profile;
     if (profile.interests) {
       return true;
     }
@@ -63,11 +65,13 @@ Template.profile_modal.helpers({
   },
 
   bio: function(user_id) {
-    return Meteor.user() && Meteor.user().profile && Meteor.user().profile.bio;
+    var user = getSpecificUser(user_id);
+    return user && user.profile && user.profile.bio;
   },
 
   interests: function(user_id) {
-    return Meteor.user() && Meteor.user().profile && Meteor.user().profile.interests;
+    var user = getSpecificUser(user_id);
+    return user && user.profile && user.profile.interests;
   },
   dateConverter: function(date) {
     return dateConverter(date);

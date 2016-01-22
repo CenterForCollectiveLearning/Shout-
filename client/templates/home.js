@@ -21,8 +21,10 @@ Template.home.helpers({
 
 	getRetweetingTrader: function() {
 		var selected_trader_id =  Session.get("selectedTraderId");
-		var trader_screenname = getSpecificUser(selected_trader_id).services.twitter.screenName; 
-		return trader_screenname;
+		if (selected_trader_id) {
+			var trader_screen_name = getSpecificUser(selected_trader_id).services.twitter.screenName; 
+			return trader_screen_name;
+		}
 	},
 
 	existsCurrentSelectedTweet: function() {
@@ -58,3 +60,13 @@ Template.home.events({
 		$(".round-trader-panel").removeClass("highlight");
 	}
 });
+
+Meteor.startup(function() {
+	console.log("In meteor.startup");
+	Meteor.call("updateUserTimeline", function(err, result) {
+		if (err) {
+			console.log(err.reason);
+			return;
+		}
+	})
+})

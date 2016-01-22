@@ -4,7 +4,14 @@ var T;
 var TWITTER_API_KEY = Meteor.settings.consumer_key;
 var TWITTER_API_SECRET = Meteor.settings.consumer_secret;
 
-var BATCH_TWEET_SIZE = 100;
+// Batch size of tweets to return from Twitter API.
+// Max is 200.
+var BATCH_TWEET_SIZE = 5;
+
+// Number of times to query the Twitter API for timeliner results.
+// Total number of tweets it can return is 3200
+// So BATCH_TWEET_SIZE * NUM_TWEET_ITERATIONS <= 3200
+var NUM_TWEET_ITERATIONS = 3;
 
 // For now, only omit these two fields when publishing the Users collection.
 Meteor.users.publicFields = {
@@ -94,9 +101,21 @@ Meteor.publish("tweets", function() {
 });
 
 Meteor.methods({
-	getUserTimeline: function(user_id_for_timeline) {
+	// TODO: Change getUserTimeline to just return from the Tweets collection
+	// Only populate tweets at Meteor.startup()
+	getUserTimeline: function(user_id) {
+		console.log("in getUserTimeline");
+		var user = Meteor.users.findOne({"_id":user_id});
+		if (user && user.services.twitter) {
+			var screenName = user.services.twitter.screenName;
+		}
+		return Tweets.find({"user.screen_name":screenName}).fetch();		
+	},
+
+	// TODO: Pull down the timeline data from Twitter here.
+	updateUserTimeline: function(user_id_for_timeline) {
 		var user = Meteor.users.findOne({"_id":user_id_for_timeline});
-		if (user.services.twitter) {
+		if (user && user.services.twitter) {
 			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE}
 			var res =  makeTwitterCall('statuses/user_timeline', twitterParams);
 			if (user._id === Meteor.userId()) {
@@ -110,7 +129,7 @@ Meteor.methods({
 				});
 			}
 			return res;
-		}		
+		}	
 	},
 
 	getSearchedUserTimeline: function(search_terms, username_for_timeline) {
