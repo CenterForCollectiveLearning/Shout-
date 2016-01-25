@@ -6,12 +6,12 @@ var TWITTER_API_SECRET = Meteor.settings.consumer_secret;
 
 // Batch size of tweets to return from Twitter API.
 // Max is 200.
-var BATCH_TWEET_SIZE = 5;
+var BATCH_TWEET_SIZE = 200;
 
 // Number of times to query the Twitter API for timeliner results.
 // Total number of tweets it can return is 3200
 // So BATCH_TWEET_SIZE * NUM_TWEET_ITERATIONS <= 3200
-var NUM_TWEET_ITERATIONS = 3;
+var NUM_BATCH_ITERATIONS = 5;
 
 // For now, only omit these two fields when publishing the Users collection.
 Meteor.users.publicFields = {
@@ -101,10 +101,9 @@ Meteor.publish("tweets", function() {
 });
 
 Meteor.methods({
-	// TODO: Change getUserTimeline to just return from the Tweets collection
-	// Only populate tweets at Meteor.startup()
+	// Returns the tweets stored for a particular user
+	// Does not query the Twitter API
 	getUserTimeline: function(user_id) {
-		console.log("in getUserTimeline");
 		var user = Meteor.users.findOne({"_id":user_id});
 		if (user && user.services.twitter) {
 			var screenName = user.services.twitter.screenName;
@@ -112,23 +111,70 @@ Meteor.methods({
 		return Tweets.find({"user.screen_name":screenName}).fetch();		
 	},
 
-	// TODO: Pull down the timeline data from Twitter here.
-	updateUserTimeline: function(user_id_for_timeline) {
-		var user = Meteor.users.findOne({"_id":user_id_for_timeline});
-		if (user && user.services.twitter) {
-			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE}
-			var res =  makeTwitterCall('statuses/user_timeline', twitterParams);
-			if (user._id === Meteor.userId()) {
+	// Pull down the timeline data from Twitter here.
+	// If first user login, pull tweets in batches. 
+	// Else, pull most recent tweets.
+	updateUserTimeline: function(user_id) {
+		var user = Meteor.users.findOne({"_id":user_id});
+		if (!(user && user.services.twitter)) {
+			throw new Meteor.error("no user");
+		}
+		 if (!user.profile.has_logged_in) {
+			// Pull down batches of tweets
+			var num_batches_processed = 0;
+			var lowest_id;
+			var highest_id;
+			while (num_batches_processed < NUM_BATCH_ITERATIONS) {
+				var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, max_id: lowest_id}
+				var res =  makeTwitterCall('statuses/user_timeline', twitterParams);
 
-				// Store the timeline. Wipe out the current one for now and replace it
-				Tweets.remove({"user.screen_name":Meteor.user().services.twitter.screenName});
-				Tweets.insert(res);
+				_.each(res, function(tweet, j) { 
+					// If we aren't on the first batch, skip the first tweet. 
 
-				_.each(res, function(tweet) { 
-				  Tweets.insert(tweet);
-				});
-			}
-			return res;
+					if (typeof(lowest_id)==="undefined") {
+						lowest_id = tweet.id-1;
+					}
+					if (typeof(highest_id)==="undefined") {
+						highest_id = tweet.id;
+					}
+
+					if (num_batches_processed===0 || j!==0) {
+						Tweets.insert(tweet);
+					}
+
+					  if (tweet.id < lowest_id) {
+					  	lowest_id = tweet.id-1;
+					  };
+					  if (tweet.id > highest_id) {
+					  	highest_id = tweet.id;
+					  }
+					});
+					num_batches_processed += 1;
+			};			
+
+			// User is no longer a first-time user
+			// Update profile accordingly and store the ids corresponding to the tweets we have downloaded
+			Meteor.users.update({"_id":user_id}, {"$set":{"profile.has_logged_in":true, "profile.highest_tweet_id": highest_id, "profile.lowest_tweet_id": lowest_id}});
+
+		}
+		else {
+			var highest_id = user.profile.highest_tweet_id;
+
+			// Pull only most recent tweets
+			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, since_id: highest_id}
+			//var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, since_id: highest_id}
+
+			var res =  makeTwitterCall('statuses/user_timeline', twitterParams); 
+			console.log(res);
+			_.each(res, function(tweet) { 
+			  Tweets.insert(tweet);
+			  if (tweet.id < lowest_id) {
+			  	lowest_id = tweet.id;
+			  };
+			  if (tweet.id > highest_id) {
+			  	highest_id = tweet.id;
+			  }
+			});
 		}	
 	},
 

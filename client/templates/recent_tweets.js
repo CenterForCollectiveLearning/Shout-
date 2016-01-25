@@ -158,6 +158,8 @@ Template.recent_tweets.onCreated(function() {
 		console.log(error.reason);
 		return;
 	}
+	console.log("full tweet list result: ");
+	console.log(result);
 	Session.set("fullTweetList", result);
 	Session.set("fullTweetListByDate", result);
 	Session.set("tweetListStatus", "full");

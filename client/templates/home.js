@@ -62,8 +62,7 @@ Template.home.events({
 });
 
 Meteor.startup(function() {
-	console.log("In meteor.startup");
-	Meteor.call("updateUserTimeline", function(err, result) {
+	Meteor.call("updateUserTimeline", Meteor.userId(), function(err, result) {
 		if (err) {
 			console.log(err.reason);
 			return;
