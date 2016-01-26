@@ -34,12 +34,12 @@
 	  {{#each userList.[0]}}
 			<div class="round-trader-panel no-highlight row row-custom" style="{{#unless isEligibleTrader this._id}}opacity:0.5{{/unless}}">
 
-				<div class="col-md-8">
+				<div class="col-xs-8">
 					<div class="row inner-trader-panel">
-						<div class="col-md-3"> 
+						<div class="col-xs-3"> 
 							<img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
 						</div>
-						<div class="col-md-9">
+						<div class="col-xs-9">
 				          <div><a class="profile-link" data-toggle="modal" data-target="#{{_id}}">{{profile.name}}</a></div>
 				          <div>@{{services.twitter.screenName}}</div>
 						</div>
@@ -49,10 +49,10 @@
 				{{#with findTradeWithUser _id}}
 	            	{{#each trades}}
 	              		{{#if checkUserIdEquality ../../_id other_user_id}}
-							<div class="col-md-2 trading-num trading-num-own"> 
+							<div class="col-xs-2 trading-num trading-num-own"> 
 								+{{this_trade_num}}
 							</div>
-							<div class="col-md-2 trading-num trading-num-owe"> 
+							<div class="col-xs-2 trading-num trading-num-owe"> 
 								-{{other_trade_num}}
 							</div>
 				        {{/if}}
@@ -72,14 +72,14 @@
 		<div id="user-scroll" class="pre-scrollable">
 		{{#each userList.[1]}} 
 			<div class="row row-custom round-trader-panel no-highlight">
-				<div class="col-md-2 inner-trader-panel"> 
+				<div class="col-xs-2 inner-trader-panel"> 
 					<img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
 				</div>
-				<div class="col-md-6 inner-trader-panel">
+				<div class="col-xs-6 inner-trader-panel">
 					<div><a class="profile-link" data-toggle="modal" data-target="#{{_id}}">{{profile.name}}</a></div>
 			         <div>@{{services.twitter.screenName}}</div>
 				</div>
-				<div class="col-md-4 inner-trader-panel">
+				<div class="col-xs-4 inner-trader-panel">
 					<button type="button" class="btn btn-default btn-request profile-link" aria-label="Left Align" id="@{{services.twitter.screenName}}" data-toggle="modal" data-target="#{{_id}}" disabled="{{isRequested _id}}">
 	                {{#if isRequested _id}}
 	                    Pending

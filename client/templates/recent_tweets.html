@@ -19,11 +19,11 @@
 			<div class="row tweet-panel home-tweet-panel 
 				{{#unless existsCurrentSelectedTweet}}
 				no-highlight {{else}} highlight {{/unless}}">
-				<div class="col-md-2 inner-tweet-panel"> 
+				<div class="col-xs-2 inner-tweet-panel"> 
 					<img class="user-icon img-rounded" src="{{currentUser.services.twitter.profile_image_url}}">
 				</div>
-				<div class="col-md-10 tweet-text inner-tweet-panel">
-					{{text}}
+				<div class="col-xs-10 tweet-text inner-tweet-panel">
+					<div class="tweet-text">{{text}}</div>
 				</div>
 			</div>
 			<div class="date-time-retweets">
