@@ -108,7 +108,7 @@ Meteor.methods({
 		if (user && user.services.twitter) {
 			var screenName = user.services.twitter.screenName;
 		}
-		return Tweets.find({"user.screen_name":screenName}).fetch();		
+		return Tweets.find({"user.screen_name":screenName}, {sort: {"id":-1}}).fetch();		
 	},
 
 	// Pull down the timeline data from Twitter here.
@@ -116,8 +116,9 @@ Meteor.methods({
 	// Else, pull most recent tweets.
 	updateUserTimeline: function(user_id) {
 		var user = Meteor.users.findOne({"_id":user_id});
-		if (!(user && user.services.twitter)) {
+		if (!(user && user.services && user.services.twitter)) {
 			throw new Meteor.error("no user");
+			return;
 		}
 		 if (!user.profile.has_logged_in) {
 			// Pull down batches of tweets
@@ -165,15 +166,16 @@ Meteor.methods({
 			//var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, since_id: highest_id}
 
 			var res =  makeTwitterCall('statuses/user_timeline', twitterParams); 
-			console.log(res);
 			_.each(res, function(tweet) { 
-			  Tweets.insert(tweet);
-			  if (tweet.id < lowest_id) {
-			  	lowest_id = tweet.id;
-			  };
-			  if (tweet.id > highest_id) {
-			  	highest_id = tweet.id;
-			  }
+				  if (!tweet.id === highest_id) {
+			  		Tweets.insert(tweet);
+				  }
+				  if (tweet.id < lowest_id) {
+				  	lowest_id = tweet.id;
+				  };
+				  if (tweet.id > highest_id) {
+				  	highest_id = tweet.id;
+				  }
 			});
 		}	
 	},
@@ -338,6 +340,4 @@ Meteor.methods({
 	}
 
 });
-
-
 

@@ -61,7 +61,7 @@ Template.home.events({
 	}
 });
 
-Meteor.startup(function() {
+Accounts.onLogin(function() {
 	Meteor.call("updateUserTimeline", Meteor.userId(), function(err, result) {
 		if (err) {
 			console.log(err.reason);
@@ -69,3 +69,4 @@ Meteor.startup(function() {
 		}
 	})
 })
+

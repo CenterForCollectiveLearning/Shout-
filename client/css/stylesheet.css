@@ -713,6 +713,12 @@ object {
   visibility: hidden;
 }
 
+.trade-request-success {
+  margin: 20px;
+  font-size: 18px;
+  text-align: center;
+}
+
 /*.pre-scrollable {
   max-height: none;
 }*/

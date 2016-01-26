@@ -1,4 +1,5 @@
-Template.nav.onRendered(function() {
-	// Adjust default Meteor loginbuttons format
-	$(".login-display-name").remove();
+Template.nav.events({
+	'click #logout-button': function() {
+		Meteor.logout();
+	}
 });
