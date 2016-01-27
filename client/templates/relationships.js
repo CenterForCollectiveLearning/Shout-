@@ -208,7 +208,12 @@ Template.relationships.events({
   'hidden.bs.modal .modal': function() {
   	Session.set("isInProfileModal", false);
   	Session.set("otherUserTimeline", undefined);
-  }
+  },
+
+  	'click #search-clear-users': function() {
+		$("#relationship-search-input").val('');
+		Session.set("userListStatus", "full");
+	}
 
 });
 

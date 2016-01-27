@@ -73,7 +73,6 @@ Template.trade_requests.onCreated(function() {
 		this.subscribe('allUsers');
 		this.subscribe('current_trade_requests');
 	});
-	console.log("tryna do something about this panel");
 	$("#link-to-expand").attr("aria-expanded","false");
 });
 

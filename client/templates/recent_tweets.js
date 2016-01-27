@@ -143,7 +143,12 @@ Template.recent_tweets.events({
 
 	'click #sort-retweets': function() {
 		sortTweets("retweets");
-	} 
+	},
+
+	'click #search-clear-tweets': function() {
+		$("#tweet-search-input").val('');
+		Session.set("tweetListStatus", "full");
+	}
 });
 
 
