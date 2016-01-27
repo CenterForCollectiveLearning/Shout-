@@ -372,7 +372,7 @@ span.tags
 }
 
 .modal-tweet-panel {
-
+  margin-top: 10px;
 }
 
 #start-new-text {
@@ -533,6 +533,10 @@ span.tags
   margin-top: 8px;
 }
 
+#requests-table {
+  width: 100%;
+}
+
 .instructions {
   margin-top: 10px;
   margin-left: 10px;
@@ -545,7 +549,7 @@ span.tags
 }
 
 .btn-group-wrapper {
-  text-align: center;
+  float: right;
 }
 
 .btn-trade {
@@ -722,6 +726,15 @@ object {
 /*.pre-scrollable {
   max-height: none;
 }*/
+
+#panel-header {
+  margin-bottom: 0px;
+  text-align: center;
+}
+
+#requests-arrow {
+  float: right;
+}
 
 /* Sticky footer styles
 -------------------------------------------------- */

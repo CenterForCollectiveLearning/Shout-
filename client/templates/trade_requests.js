@@ -5,6 +5,11 @@ Template.trade_requests.helpers({
 		return Current_trade_requests.find({"user_id_to": Meteor.userId()}).fetch();
 	},
 
+	num_requests: function() {
+		return Current_trade_requests.find({"user_id_to": Meteor.userId()}).count();
+
+	},
+
 	name_lookup: function(user_id) {
 		return nameLookup(user_id);
 	},
@@ -68,5 +73,7 @@ Template.trade_requests.onCreated(function() {
 		this.subscribe('allUsers');
 		this.subscribe('current_trade_requests');
 	});
+	console.log("tryna do something about this panel");
+	$("#link-to-expand").attr("aria-expanded","false");
 });
 
