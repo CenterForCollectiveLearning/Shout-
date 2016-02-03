@@ -131,7 +131,6 @@ Meteor.methods({
 
 				_.each(res, function(tweet, j) { 
 					// If we aren't on the first batch, skip the first tweet. 
-
 					if (typeof(lowest_id)==="undefined") {
 						lowest_id = tweet.id-1;
 					}
@@ -163,20 +162,15 @@ Meteor.methods({
 
 			// Pull only most recent tweets
 			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, since_id: highest_id}
-			//var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, since_id: highest_id}
 
 			var res =  makeTwitterCall('statuses/user_timeline', twitterParams); 
 			_.each(res, function(tweet) { 
-				  if (!tweet.id === highest_id) {
-			  		Tweets.insert(tweet);
-				  }
-				  if (tweet.id < lowest_id) {
-				  	lowest_id = tweet.id;
-				  };
 				  if (tweet.id > highest_id) {
-				  	highest_id = tweet.id;
+			  		Tweets.insert(tweet);
+			  		highest_id = tweet.id;
 				  }
 			});
+			Meteor.users.update({"_id":user_id}, {"$set":{"profile.highest_tweet_id": highest_id}});
 		}	
 	},
 

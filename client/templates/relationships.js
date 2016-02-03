@@ -177,7 +177,7 @@ Template.relationships.events({
         console.log(error.reason);
         return;
       }
-      var most_recent_tweets = result.slice(0, 5);
+      var most_recent_tweets = result.slice(0, 3);
       Session.set("otherUserTimeline", most_recent_tweets);
       $('#'+this._id).modal('show');
       
