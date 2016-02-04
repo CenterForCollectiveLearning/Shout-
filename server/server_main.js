@@ -43,6 +43,13 @@ var makeTwitterCall = function (apiCall, params) {
 	return res;
 };
 
+var checkTradeParams = function(user_id_from, user_id_to, num_proposed_from, num_proposed_to) {
+	check(user_id_from, String);
+	check(user_id_to, String);
+	check(num_proposed_from, String);
+	check(num_proposed_to, String);		
+};
+
 // PUBLICATIONS
 
 Meteor.publish("userData", function() {
@@ -104,6 +111,8 @@ Meteor.methods({
 	// Returns the tweets stored for a particular user
 	// Does not query the Twitter API
 	getUserTimeline: function(user_id) {
+		check(user_id, String);
+
 		var user = Meteor.users.findOne({"_id":user_id});
 		if (user && user.services.twitter) {
 			var screenName = user.services.twitter.screenName;
@@ -115,6 +124,8 @@ Meteor.methods({
 	// If first user login, pull tweets in batches. 
 	// Else, pull most recent tweets.
 	updateUserTimeline: function(user_id) {
+		check(user_id, String);
+
 		var user = Meteor.users.findOne({"_id":user_id});
 		if (!(user && user.services && user.services.twitter)) {
 			throw new Meteor.error("no user");
@@ -176,6 +187,8 @@ Meteor.methods({
 
 	getSearchedUserTimeline: function(search_terms, username_for_timeline) {
 		if (this.userId){
+			check(search_terms, String);
+			check(username_for_timeline, String);
 			var twitterParams = {q: search_terms, from: username_for_timeline};
 			return makeTwitterCall('search/tweets', twitterParams)
 		}
@@ -187,6 +200,7 @@ Meteor.methods({
 	// Updates the current trade requests if a modification is made.
 	updateCurrentTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to) {
 		if (this.userId){
+			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
 			Current_trade_requests.update({"user_id_from":user_id_from, "user_id_to":user_id_to}, {"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to}, {"upsert":true});
 		}
 		else {
@@ -198,6 +212,9 @@ Meteor.methods({
 	// and clear the current request.
 	pushHistoricTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to, status) {
 		if (this.userId){
+			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
+			check(status, String);
+
 			Historic_trade_requests.insert({"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "status": status});
 			Current_trade_requests.remove({"user_id_from":user_id_from, "user_id_to":user_id_to});
 		}
@@ -211,6 +228,8 @@ Meteor.methods({
 		// Pulls out any existing trade with the other user; inserts the new one. 
 		// TODO: Revise this logic - Should not be a need to pull out an existing trade
 		if (this.userId) {
+			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
+
 			Trades.update({"user_id":user_id_from}, {$pull: {"trades":{"other_user_id":user_id_to}}});
 			Trades.update({"user_id":user_id_from}, {$push: {"trades":{"other_user_id":user_id_to, "this_trade_num":parseInt(num_proposed_from), "other_trade_num":parseInt(num_proposed_to)}}}, {"upsert":true});
 
@@ -224,6 +243,7 @@ Meteor.methods({
 
 	addToExistingTrade: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to) {
 		if (this.userId) {
+			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
 
 			// First, find the existing trade and parse out the trade numbers
 			var user_trades = Trades.findOne({"user_id": user_id_from, "trades.other_user_id": user_id_to});
@@ -250,6 +270,10 @@ Meteor.methods({
 	},
 
 	sendRetweet: function(tweet_id, trader_id_posted, other_trader_id) {
+		check(tweet_id, String);
+		check(trader_id_posted, String);
+		check(other_trader_id, String);
+
 		if (this.userId) {
 
 			// Create a Twit object for the user who is actually sending the retweet.
@@ -289,6 +313,7 @@ Meteor.methods({
 
 	getAllUsersExceptLoggedInUser: function(user_id) {
 		if (this.userId) {
+			check(user_id, String);
 			return Meteor.users.find({"_id":{$ne:user_id}}).fetch();
 		}
 		else {
@@ -298,6 +323,8 @@ Meteor.methods({
 
 	searchAllUsers: function(search_terms, user_id) {
 		if (this.userId) {
+			check(search_terms, String);
+			check(user_id, String);
 			if (search_terms==="") {
 				return Meteor.users.find({"_id":{$ne:user_id}}).fetch();
 			}
@@ -312,6 +339,7 @@ Meteor.methods({
 
 	searchTweets: function(search_terms) {
 		if (this.userId) {
+			check(search_terms, String);
 			if (search_terms==="") {
 				return Tweets.find({"user.screen_name":Meteor.user().services.twitter.screenName}).fetch();
 			}
@@ -326,6 +354,9 @@ Meteor.methods({
 
 	updateProfile: function(user_id, edited_bio, edited_interests){
 		if (this.userId) {
+			check(user_id, String);
+			check(edited_bio, String);
+			check(edited_interests, String);
 			Meteor.users.update({"_id" :user_id},{$set : {"profile.bio":edited_bio, "profile.interests":edited_interests}});
 		}
 		else {
