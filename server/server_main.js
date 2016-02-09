@@ -22,6 +22,9 @@ Meteor.users.publicFields = {
 var makeTwitterCall = function (apiCall, params) {
 	var res;
 	var user = Meteor.user();
+	console.log("API Key: " + TWITTER_API_KEY + ", API_SECRET: " + TWITTER_API_SECRET);
+	console.log("Access token: " + user.services.twitter.accessToken);
+	console.log("Access token secret: " + user.services.twitter.accessTokenSecret);
 	var client = new Twit({
 		consumer_key: TWITTER_API_KEY,
 		consumer_secret: TWITTER_API_SECRET,
