@@ -1,11 +1,22 @@
 <template name="signin_page">
 <div id="fullpage">
 	<div class="section section-custom">
-		<img src="/images/friends-jumping.jpg" id="landing-image">
-		<div id="image-overlay">
-			<div id="motto-text">"Get Your Message Further Together" </div>
-			<button class="btn btn-xlarge btn-primary" id="btn-login"> Sign in with Twitter</button>
-		</div>
+		<div id="signin-logo-wrapper">
+		  <object data="/images/ShoutLogoWithText.svg" type="image/svg+xml" id="signin-logo">
+          <img src="/images/ShoutLogoWithText.png" />
+        </object>
+       	</div>
+		<div class="promo-section">
+		<iframe id="promo-video" width="900" height="550"
+			src="https://www.youtube.com/embed/F_ci1Yb6MCA">
+		</iframe>
+
+<!-- 		<div id="motto-text">Coming March 1st</div>
+ -->		<div id="signin-button-wrapper"> 
+ 				<button class="btn btn-xlarge btn-primary" id="btn-login"> Sign in with Twitter</button>
+			</div>
+
+	</div>
 	</div>
 	<div class="section section-custom">
 		<div id="trade-retweets-intro-heading" class="landing-heading">

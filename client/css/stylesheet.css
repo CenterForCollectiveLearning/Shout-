@@ -817,6 +817,25 @@ object {
   margin-left: 5px;
 }
 
+.promo-section {
+  text-align: center;
+  margin-top: 30px;
+}
+
+#promo-video {
+  border: 5px solid black;
+}
+#signin-logo-wrapper {
+  margin-top: 30px;
+  text-align: center;
+}
+#signin-logo {
+  height: 80px;
+}
+
+#signin-button-wrapper {
+  margin-top: 10px;
+}
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
