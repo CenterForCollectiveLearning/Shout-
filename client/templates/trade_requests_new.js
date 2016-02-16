@@ -1,4 +1,4 @@
-Template.trade_requests.helpers({
+Template.trade_requests_new.helpers({
 	// Returns a list of trades that the current user is involved in
 	// Only return the OTHER username & quantity.
 	requests_list: function() {
@@ -22,7 +22,7 @@ Template.trade_requests.helpers({
   	},
 });
 
-Template.trade_requests.events({
+Template.trade_requests_new.events({
 
 	'click .proposal-action': function(e, template) {
 		// Update the current trade request
@@ -68,7 +68,7 @@ Template.trade_requests.events({
 	}
 });
 
-Template.trade_requests.onCreated(function() {
+Template.trade_requests_new.onCreated(function() {
   	this.autorun(() => {
 		this.subscribe('allUsers');
 		this.subscribe('current_trade_requests');

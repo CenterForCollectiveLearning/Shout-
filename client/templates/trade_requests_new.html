@@ -1,0 +1,43 @@
+<template name="trade_requests_new">
+    <li class="dropdown">
+        <a href="#" id="nav-dropdown" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="notifications-bell" class="glyphicon glyphicon-bell"></span>
+            <div class="badger-outter" id="Badger"><div class="badger-inner"><p class="badger-badge badger-number" id="Badge">{{num_requests}}</p></div></div></a>
+        <ul id="notifications-dropdown" class="dropdown-menu">
+            <li id="requests-heading">Trade Requests</li>
+            {{#each requests_list}}
+            <li role="separator" class="divider"></li>
+            <li>
+                <div class="row">
+                    {{#with specific_user user_id_from}} 
+                    <div class="col-md-2">
+                        <div>
+                            <img class="notifications-user-icon user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div>
+                            {{profile.name}}
+                        </div>
+                        <div>
+                            @{{services.twitter.screenName}}
+                        </div>
+                    </div>
+                    {{/with}}
+                    <div class="col-md-6">
+                        <div>
+                            You retweet <b>{{proposed_from}}</b> tweets for {{name_lookup user_id_from}}. {{name_lookup user_id_from}} retweets <b>{{proposed_to}}</b> tweets for you!
+                        </div>
+                    </div>
+                </div>
+                <div class="row proposal-buttons-wrapper">
+                    <div class="btn-group proposal-buttons" role="group">
+                        <button class="btn btn-default proposal-action accept">Accept</button>
+                        <button class="btn btn-default proposal-action reject">Reject</button>
+                        <button type="button" class="btn btn-default proposal-action modify">Modify</button>
+                    </div>
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+    </li>
+</template>
