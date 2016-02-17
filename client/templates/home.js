@@ -67,6 +67,12 @@ Accounts.onLogin(function() {
 			console.log(err.reason);
 			return;
 		}
+	});
+	Meteor.call("updateUserFollowersAndFriends", Meteor.userId(), function(err, result) {
+		if (err) {
+			console.log(err.reason);
+			return;
+		}
 	})
 })
 

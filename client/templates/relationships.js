@@ -226,7 +226,7 @@ Template.relationships.onCreated(function() {
   	  });
 
 	// Populate the user list initially
-	var users = Meteor.call("getAllUsersExceptLoggedInUser", Meteor.userId(), function(err, result) {
+	var users = Meteor.call("getAllUsersExceptLoggedInUser", function(err, result) {
 		if (err) {
 			console.log(err.reason);
 			return;
@@ -236,4 +236,5 @@ Template.relationships.onCreated(function() {
 		 Session.set("userListStatus", "full");
 
 	});
+
 });

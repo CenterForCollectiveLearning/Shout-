@@ -197,6 +197,20 @@ Meteor.methods({
 		}
 	},
 
+	updateUserFollowersAndFriends: function() {
+		if (this.userId) {
+			var twitterParams = {user_id: Meteor.userId()};
+			var followers_result = makeTwitterCall('followers/ids', twitterParams);
+			var friends_result = makeTwitterCall('friends/ids', twitterParams);
+
+			// Update db collections
+			Meteor.users.update({"_id":Meteor.userId()}, {"$set":{"profile.has_logged_in":true, "profile.followers_list": followers_result, "profile.friends_list": friends_result}});
+		}
+		else {
+			throw new Meteor.error("logged-out");
+		}
+	},
+
 	// Updates the current trade requests if a modification is made.
 	updateCurrentTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to) {
 		if (this.userId){
@@ -311,10 +325,27 @@ Meteor.methods({
 			}
 	},
 
-	getAllUsersExceptLoggedInUser: function(user_id) {
+	// Gets all users for list, and puts them in order
+	// Followers are at the top, then friends, then remaining users.
+	getAllUsersExceptLoggedInUser: function() {
 		if (this.userId) {
-			check(user_id, String);
-			return Meteor.users.find({"_id":{$ne:user_id}}).fetch();
+			followers_ids = Meteor.user() && Meteor.user().profile && Meteor.user().profile.followers_list.ids;
+			friends_ids = Meteor.user() && Meteor.user().profile && Meteor.user().profile.friends_list.ids;
+			
+			followers_ids_strings = [];
+			for (var i=0; i<followers_ids.length; i++) {
+				followers_ids_strings.push(followers_ids[i].toString());
+			}
+
+			friends_ids_strings = [];
+			for (var i=0; i<friends_ids.length; i++) {
+				friends_ids_strings.push(friends_ids[i].toString());
+			}
+
+			followers_users = Meteor.users.find({"services.twitter.id":{$in:followers_ids_strings}}).fetch();
+			friends_users =  Meteor.users.find({"services.twitter.id":{$in:friends_ids_strings}}).fetch();
+			other_users = Meteor.users.find({$and: [{"_id":{$ne:Meteor.userId()}}, {"services.twitter.id":{$nin:followers_ids_strings}}, {"services.twitter.id":{$nin: friends_ids_strings}}]}).fetch();
+			return followers_users.concat(friends_users, other_users);
 		}
 		else {
 			throw new Meteor.error("logged-out");
