@@ -1,9 +1,15 @@
 <template name="trade_requests_new">
     <li class="dropdown">
         <a href="#" id="nav-dropdown" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="notifications-bell" class="glyphicon glyphicon-bell"></span>
-            <div class="badger-outter" id="Badger"><div class="badger-inner"><p class="badger-badge badger-number" id="Badge">{{num_requests}}</p></div></div></a>
+            {{#if has_trade_requests}}
+            <div class="badger-outter" id="Badger"><div class="badger-inner"><p class="badger-badge badger-number" id="Badge">{{num_requests}}</p></div></div>
+            {{/if}}
+        </a>
+
         <ul id="notifications-dropdown" class="dropdown-menu">
+            {{#if has_trade_requests}}
             <li id="requests-heading">Trade Requests</li>
+            {{/if}}
             {{#each requests_list}}
             <li role="separator" class="divider"></li>
             <li>
@@ -38,6 +44,8 @@
                 </div>
             </li>
             {{/each}}
+            <li id="recent-activity-heading"> Recent Activity</li>
+            {{> history}}
         </ul>
     </li>
 </template>

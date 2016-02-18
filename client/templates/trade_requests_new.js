@@ -7,7 +7,14 @@ Template.trade_requests_new.helpers({
 
 	num_requests: function() {
 		return Current_trade_requests.find({"user_id_to": Meteor.userId()}).count();
+	},
 
+	has_trade_requests: function() {
+		var num_trade_requests = Current_trade_requests.find({"user_id_to": Meteor.userId()}).count();
+		if (num_trade_requests>0) {
+			return true;
+		}
+		return false;
 	},
 
 	name_lookup: function(user_id) {

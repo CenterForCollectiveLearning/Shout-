@@ -342,8 +342,8 @@ Meteor.methods({
 				friends_ids_strings.push(friends_ids[i].toString());
 			}
 
-			followers_users = Meteor.users.find({"services.twitter.id":{$in:followers_ids_strings}}).fetch();
-			friends_users =  Meteor.users.find({"services.twitter.id":{$in:friends_ids_strings}}).fetch();
+			followers_users = Meteor.users.find({"services.twitter.id":{$in:followers_ids_strings}}).fetch();			
+			friends_users = Meteor.users.find({$and: [{"services.twitter.id":{$in:friends_ids_strings}}, {"services.twitter.id":{$nin: followers_ids_strings}}]}).fetch();
 			other_users = Meteor.users.find({$and: [{"_id":{$ne:Meteor.userId()}}, {"services.twitter.id":{$nin:followers_ids_strings}}, {"services.twitter.id":{$nin: friends_ids_strings}}]}).fetch();
 			return followers_users.concat(friends_users, other_users);
 		}

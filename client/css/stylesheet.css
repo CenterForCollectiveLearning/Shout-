@@ -426,8 +426,8 @@ span.tags
 }
 
 .date-heading {
-  font-size: 18px;
-  padding-top: 10px;
+  font-size: 16px;
+  margin-left: 5px;
 }
 
 .profile-modal-content {
@@ -836,6 +836,12 @@ object {
 #signin-button-wrapper {
   margin-top: 10px;
 }
+
+#recent-activity-heading {
+  font-size: 18px;
+  margin-left: 5px;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
