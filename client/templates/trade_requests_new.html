@@ -20,30 +20,33 @@
                             <img class="notifications-user-icon user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
                         </div>
                     </div>
-                    <div class="col-md-4">
-                        <div>
-                            {{profile.name}}
-                        </div>
-                        <div>
-                            @{{services.twitter.screenName}}
-                        </div>
-                    </div>
                     {{/with}}
-                    <div class="col-md-6">
-                        <div>
-                            You retweet <b>{{proposed_from}}</b> tweets for {{name_lookup user_id_from}}. {{name_lookup user_id_from}} retweets <b>{{proposed_to}}</b> tweets for you!
+
+                    <div class="col-md-10">
+                        {{#with specific_user user_id_from}} 
+                        <div><b>{{profile.name}}</b> @{{services.twitter.screenName}} offers: </div>
+                        {{/with}}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div><b>{{proposed_from}}</b> of their retweets for</div>
+                                <div><b>{{proposed_to}}</b> of your retweets.</div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="row proposal-buttons-wrapper">
+                                    <div class="btn-group proposal-buttons" role="group">
+                                        <button class="btn btn-default proposal-action accept">Accept</button>
+                                        <button class="btn btn-default proposal-action reject">Reject</button>
+                                        <button type="button" class="btn btn-default proposal-action modify">Modify</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row proposal-buttons-wrapper">
-                    <div class="btn-group proposal-buttons" role="group">
-                        <button class="btn btn-default proposal-action accept">Accept</button>
-                        <button class="btn btn-default proposal-action reject">Reject</button>
-                        <button type="button" class="btn btn-default proposal-action modify">Modify</button>
                     </div>
                 </div>
             </li>
             {{/each}}
+            <li role="separator" class="divider"></li>
             <li id="recent-activity-heading"> Recent Activity</li>
             {{> history}}
         </ul>

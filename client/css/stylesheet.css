@@ -800,7 +800,7 @@ object {
 
 #notifications-dropdown {
   background-color: #F0F4F7;
-  width: 350px;
+  width: 500px;
 }
 
 #requests-heading {
@@ -809,12 +809,14 @@ object {
 }
 
 .proposal-buttons-wrapper {
-  text-align: center;
+  text-align: right;
   margin-top: 10px;
+  margin-right: 10px;
 }
 
 .notifications-user-icon {
   margin-left: 5px;
+  margin-top: 5px;
 }
 
 .promo-section {
