@@ -5,7 +5,7 @@
   Trade request sent to Peggy Popular.
 </div> -->
 
-<div id="row">
+<!-- <div class="row">
 	<div class="col-md-4">
 		<div id="select-tweet-instructions" class="instructions" hidden="{{existsCurrentSelectedTweet}}"><b>Select the tweet you want to have retweeted!</b></div>
 	</div>
@@ -19,7 +19,63 @@
 	  {{/if}}
 	</div>
 </div>
+ -->
+
 <div class="row">
+	<div class="col-md-5">
+		<div class="row">
+			<div class="col-md-2"> </div>
+			<div class="col-md-10"> 
+				<div id="select-tweet-instructions" class="instructions" hidden="{{existsCurrentSelectedTweet}}"><b>Select the tweet you want to have retweeted!</b></div>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-1">
+	</div>
+
+	<div class="col-md-5">
+		<div class="col-md-10"> 	  
+			{{#if existsCurrentSelectedTweet}}
+				  {{#unless existsCurrentSelectedUser}}
+				  		{{#if existCurrentTraders}}
+				     		<div id="select-user-instructions" class="instructions"><b>Select the trader to retweet your tweet!</b></div>
+				     	{{/if}}
+				  {{/unless}}
+			  {{/if}}
+			</div>
+		<div class="col-md-2"> </div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-5">
+		<div class="row">
+			<div class="col-md-2"> </div>
+			<div class="col-md-10"> 
+				{{> recent_tweets}}
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-1">
+	</div>
+
+	<div class="col-md-5">
+		<div class="col-md-10"> {{> relationships}}</div>
+		<div class="col-md-2"> </div>
+	</div>
+</div>
+
+{{#if tradeReady}}
+	<div class="row trade-buttons" >
+		<button class="btn btn-lg btn-primary btn-trade" id="trade-button"> Send retweet through @{{getRetweetingTrader}}</button>
+		<button class="btn btn-default btn-lg" id="reset-button"> Reset </button>
+	</div>
+{{/if}}
+
+
+<!-- <div class="row">
 	<div class="col-md-9 col-lg-8">
 		<div class="row">
 			<div class="col-sm-6 col-md-6 layout-col timeline-col">
@@ -37,9 +93,9 @@
 		{{/if}}
 	</div>
 	<div class="col-md-3 col-lg-4 layout-col activity-col"> 
-		<!-- {{> history}} -->
 	</div>
-</div>
+</div> -->
+
 {{> footer}}
 
 </template>

@@ -540,7 +540,6 @@ span.tags
 
 .instructions {
   margin-top: 10px;
-  margin-left: 10px;
   text-align: left;
 }
 
@@ -603,7 +602,6 @@ span.tags
 }
 
 #select-user-instructions {
-  margin-left: 20px;
 }
 
 @font-face {
