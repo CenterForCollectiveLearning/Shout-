@@ -148,6 +148,19 @@ Template.recent_tweets.events({
 	'click #search-clear-tweets': function() {
 		$("#tweet-search-input").val('');
 		Session.set("tweetListStatus", "full");
+	},
+
+	'click #reload-tweets-button': function() {
+		Meteor.call("updateUserTimeline", Meteor.userId(), function(error, result) {
+			if (error) {
+				console.log("Error reloading user timeline");
+				console.log(error.reason);
+				return;
+			}
+			Session.set("fullTweetList", result);
+			Session.set("fullTweetListByDate", result);
+			Session.set("tweetListStatus", "full");
+		})
 	}
 });
 

@@ -362,7 +362,7 @@ span.tags
   font-size: 15px;
   margin-left: 0px;
   margin-right: 0px;
-  margin-bottom: 10px;
+  margin-top: 10px;
   padding: 2px;
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
@@ -716,6 +716,10 @@ object {
   visibility: hidden;
 }
 
+.sort-by {
+  margin-bottom: 15px;
+}
+
 .trade-request-success {
   margin: 20px;
   font-size: 18px;
@@ -840,6 +844,18 @@ object {
 #recent-activity-heading {
   font-size: 18px;
   margin-left: 5px;
+}
+
+#tweets-wrapper {
+  margin-top: -10px;
+}
+
+.date-time-retweets {
+  color: gray;
+}
+
+#reload-tweets-button {
+  float: right;
 }
 
 /* Sticky footer styles

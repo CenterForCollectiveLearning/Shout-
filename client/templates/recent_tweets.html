@@ -3,6 +3,7 @@
 		<div class="heading"> Your Latest Tweets </div>
 		<div class="sort-by" id="tweet-sort-by" hidden="{{existsCurrentSelectedTweet}}">
 			Sort by: <a id="sort-latest">latest</a> | <a id="sort-retweets">retweets</a> | <a id="sort-favorites">favorites</a>
+			<span><button type="button" class="btn btn-sm btn-default" id="reload-tweets-button">Reload <span class="glyphicon glyphicon-refresh"></span></button></span>
 		</div>
 		<div id="tweet-search-div">
 			<div class="input-group">
@@ -16,21 +17,24 @@
 			</div>
 		</div>
 		<div id="tweet-scroll" class="pre-scrollable">
-		{{#each tweetList}}
-			<div class="row tweet-panel home-tweet-panel 
-				{{#unless existsCurrentSelectedTweet}}
-				no-highlight {{else}} highlight {{/unless}}">
-				<div class="col-xs-2 inner-tweet-panel"> 
-					<img class="user-icon img-rounded" src="{{currentUser.services.twitter.profile_image_url}}">
-				</div>
-				<div class="col-xs-10 tweet-text inner-tweet-panel">
-					<div class="tweet-text">{{text}}</div>
-				</div>
+			<div id="tweets-wrapper">
+				{{#each tweetList}}
+					<div class="row tweet-panel home-tweet-panel 
+						{{#unless existsCurrentSelectedTweet}}
+						no-highlight {{else}} highlight {{/unless}}">
+						<div class="col-xs-2 inner-tweet-panel"> 
+							<img class="user-icon img-rounded" src="{{currentUser.services.twitter.profile_image_url}}">
+						</div>
+						<div class="col-xs-10 tweet-text inner-tweet-panel">
+							<div class="tweet-text">{{text}}</div>
+						</div>
+					</div>
+					<div class="date-time-retweets">
+						{{dateConverter created_at}} | <span class="glyphicon glyphicon-retweet"></span>  {{retweet_count}} | 
+						<span class="glyphicon glyphicon-heart"></span> {{favorite_count}}
+					</div>
+				{{/each}}
 			</div>
-			<div class="date-time-retweets">
-				{{dateConverter created_at}} | Retweets: {{retweet_count}} | Favorites: {{favorite_count}}
-			</div>
-		{{/each}}
 		</div>
 	{{/if}}
 
