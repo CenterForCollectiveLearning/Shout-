@@ -157,19 +157,12 @@ Template.recent_tweets.events({
 				console.log(error.reason);
 				return;
 			}
-			Session.set("fullTweetList", result);
-			Session.set("fullTweetListByDate", result);
-			Session.set("tweetListStatus", "full");
+			loadUserTimeline();
 		})
 	}
 });
 
-
-Template.recent_tweets.onCreated(function() {
-  	this.autorun(() => {
-		this.subscribe('userData');
-	});
-
+function loadUserTimeline() {
 	Meteor.call("getUserTimeline", Meteor.userId(), function(error, result){
 	if (error) {
 		console.log("Error getting user timeline");
@@ -183,4 +176,11 @@ Template.recent_tweets.onCreated(function() {
 	//??
 	Session.set("panels_ready", false);
 	});
+}
+
+Template.recent_tweets.onCreated(function() {
+  	this.autorun(() => {
+		this.subscribe('userData');
+	});
+	loadUserTimeline();
 });

@@ -1,8 +1,21 @@
-Template.trade_requests_new.helpers({
+Template.notifications.helpers({
 	// Returns a list of trades that the current user is involved in
 	// Only return the OTHER username & quantity.
 	requests_list: function() {
 		return Current_trade_requests.find({"user_id_to": Meteor.userId()}).fetch();
+	},
+
+	shout_requests_list: function() {
+		console.log(Shout_requests.find({"retweeting_user": Meteor.userId()}).fetch());
+		return Shout_requests.find({"retweeting_user": Meteor.userId()}).fetch();
+	},
+
+	has_shout_requests: function() {
+		var num_shout_requests = Shout_requests.find({"retweeting_user": Meteor.userId()}).count();
+		if (num_shout_requests>0) {
+			return true;
+		}
+		return false;	
 	},
 
 	num_requests: function() {
@@ -29,21 +42,31 @@ Template.trade_requests_new.helpers({
   	},
 });
 
-Template.trade_requests_new.events({
+Template.notifications.events({
 
 	'click .proposal-action': function(e, template) {
 		// Update the current trade request
 		// and push the old trade request to the historic collection.
 		var new_status;
 		if ($(e.currentTarget).hasClass("accept")) {
-			new_status = "approved";
-			if (has_current_trade_relationship(this.user_id_from)) {
-				Meteor.call("addToExistingTrade", this.user_id_from, this.user_id_to, this.proposed_from, this.proposed_to);
-			}
-			else {
-				Meteor.call("createNewTrade", this.user_id_from, this.user_id_to, this.proposed_from, this.proposed_to);
-			}
-			Meteor.call("pushHistoricTradeRequest", this.user_id_from, this.user_id_to, this.proposed_from, this.proposed_to, new_status);
+
+			Session.set("accept-modal-id-from", this.user_id_from);
+			Session.set("accept-modal-id-to", this.user_id_to);
+			Session.set("accept-modal-proposed-from", this.proposed_from);
+			Session.set("accept-modal-proposed-to", this.proposed_to);
+			Session.set("accept-modal-review-status-from", this.review_status)
+
+			$("#accept-trade-modal").modal('show');
+
+
+			// new_status = "approved";
+			// if (has_current_trade_relationship(this.user_id_from)) {
+			// 	Meteor.call("addToExistingTrade", this.user_id_from, this.user_id_to, this.proposed_from, this.proposed_to);
+			// }
+			// else {
+			// 	Meteor.call("createNewTrade", this.user_id_from, this.user_id_to, this.proposed_from, this.proposed_to);
+			// }
+			// Meteor.call("pushHistoricTradeRequest", this.user_id_from, this.user_id_to, this.proposed_from, this.proposed_to, new_status);
 
 		}
 		else if ($(e.currentTarget).hasClass("reject")) {
@@ -75,11 +98,12 @@ Template.trade_requests_new.events({
 	}
 });
 
-Template.trade_requests_new.onCreated(function() {
+Template.notifications.onCreated(function() {
   	this.autorun(() => {
 		this.subscribe('allUsers');
 		this.subscribe('current_trade_requests');
+		this.subscribe('shout_requests');
+		this.subscribe('tweets');
 	});
-	$("#link-to-expand").attr("aria-expanded","false");
 });
 

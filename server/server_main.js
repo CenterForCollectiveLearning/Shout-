@@ -50,6 +50,19 @@ var checkTradeParams = function(user_id_from, user_id_to, num_proposed_from, num
 	check(num_proposed_to, String);		
 };
 
+// Decreases the trade amounts on a successful retweet. 
+var decrementTradeCounts= function(trader_id_posted, other_trader_id) {
+	Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":-1}});
+	Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":-1}});
+};
+
+// increments the trade counts if the user rejects a shout! post, or if a retweet
+// was unsuccessful. 
+var incrementTradeCounts= function(trader_id_posted, other_trader_id) {
+	Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":1}});
+	Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":1}});
+};
+
 // PUBLICATIONS
 
 Meteor.publish("userData", function() {
@@ -82,12 +95,21 @@ Meteor.publish("current_trade_requests", function() {
 	}
 	return Current_trade_requests.find();
 });
+
 Meteor.publish("historic_trade_requests", function() {
 	if (!this.userId) {
 		return this.ready();
 	}
 	return Historic_trade_requests.find();
 });
+
+Meteor.publish("shout_requests", function() {
+	if (!this.userId) {
+		return this.ready();
+	}
+	return Shout_requests.find();
+});
+
 Meteor.publish("retweet_ids", function() {
 	if (!this.userId) {
 		return this.ready();
@@ -212,14 +234,16 @@ Meteor.methods({
 	},
 
 	// Updates the current trade requests if a modification is made.
-	updateCurrentTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to) {
+	updateCurrentTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to, review_status) {
 		if (this.userId){
 			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
-			Current_trade_requests.update({"user_id_from":user_id_from, "user_id_to":user_id_to}, {"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to}, {"upsert":true});
+			Current_trade_requests.update({"user_id_from":user_id_from, "user_id_to":user_id_to}, {"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "review_status": review_status}, {"upsert":true});
 		}
 		else {
 			throw new Meteor.error("logged-out");
 		}
+		console.log("Updated the current trade request");
+
 	},
 
 	// Once a trade proposal is accepted/rejected, push the trade request to the historic trade request collection
@@ -235,27 +259,33 @@ Meteor.methods({
 		else {
 			throw new Meteor.error("logged-out");
 		}
+		console.log("Pushed historic trade request");
+
 
 	},
 
-	createNewTrade: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to) {
+	// Review status from/to parameters identify whether the users want to allow direct retweets through their account
+	// Each individual trade object stores the review preference of the OTHER trader.
+	createNewTrade: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to, review_status_from, review_status_to) {
 		// Pulls out any existing trade with the other user; inserts the new one. 
 		// TODO: Revise this logic - Should not be a need to pull out an existing trade
 		if (this.userId) {
 			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
 
 			Trades.update({"user_id":user_id_from}, {$pull: {"trades":{"other_user_id":user_id_to}}});
-			Trades.update({"user_id":user_id_from}, {$push: {"trades":{"other_user_id":user_id_to, "this_trade_num":parseInt(num_proposed_from), "other_trade_num":parseInt(num_proposed_to)}}}, {"upsert":true});
+			Trades.update({"user_id":user_id_from}, {$push: {"trades":{"other_user_id":user_id_to, "this_trade_num":parseInt(num_proposed_from), "other_trade_num":parseInt(num_proposed_to), "with_review": review_status_to}}}, {"upsert":true});
 
 			Trades.update({"user_id":user_id_to}, {$pull: {"trades":{"other_user_id":user_id_from}}});
-			Trades.update({"user_id":user_id_to}, {$push: {"trades":{"other_user_id":user_id_from, "this_trade_num":parseInt(num_proposed_to), "other_trade_num":parseInt(num_proposed_from)}}}, {"upsert":true});
+			Trades.update({"user_id":user_id_to}, {$push: {"trades":{"other_user_id":user_id_from, "this_trade_num":parseInt(num_proposed_to), "other_trade_num":parseInt(num_proposed_from), "with_review": review_status_from}}}, {"upsert":true});
 		}
 		else {
 			throw new Meteor.error("logged-out");
 		}
+		console.log("Created the new trade");
 	},
 
-	addToExistingTrade: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to) {
+	// When adding to an existing trade, the new review_status will override the old. 
+	addToExistingTrade: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to, review_status_from, review_status_to) {
 		if (this.userId) {
 			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
 
@@ -283,7 +313,14 @@ Meteor.methods({
 		}	
 	},
 
-	sendRetweet: function(tweet_id, trader_id_posted, other_trader_id) {
+	// Removes the shout! request -- Called when user rejects a request
+	clearShoutRequest: function(tweet_id, retweeting_user, original_poster_id) {
+		Shout_requests.remove({"tweet_id":tweet_id, "retweeting_user": retweeting_user, "original_poster_id": original_poster_id});
+	},
+
+	// 'direct' arg is true if the retweet is triggered directly (not through a shout! request)
+	// In the direct case, trade quantities have not been decremented previously.
+	sendRetweet: function(tweet_id, trader_id_posted, other_trader_id, direct) {
 		check(tweet_id, String);
 		check(trader_id_posted, String);
 		check(other_trader_id, String);
@@ -305,11 +342,15 @@ Meteor.methods({
 			traderTwit.post('statuses/retweet/' + tweet_id, Meteor.bindEnvironment(function(err, data, response) {
 				if (err) {
 					console.log(err);
+					if (!direct) {
+						incrementTradeCounts(trader_id_posted, other_trader_id);
+					}
 					return;
 				} 
-				// If the retweet is successful, decrement the corresponding trade counts.           
-				Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":-1}});
-				Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":-1}}); 
+				// If the retweet is successful, decrement the corresponding trade counts. 
+				if (direct) {
+					decrementTradeCounts(trader_id_posted, other_trader_id);
+				}           
 				Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
 				 
 				Post_history.insert({"user_id":trader_id_posted, "retweet_id":data.id_str, "is_original_poster":true, "other_user_id": other_trader_id, "time": new Date(data.created_at)});
@@ -389,6 +430,16 @@ Meteor.methods({
 			check(edited_bio, String);
 			check(edited_interests, String);
 			Meteor.users.update({"_id" :user_id},{$set : {"profile.bio":edited_bio, "profile.interests":edited_interests}});
+		}
+		else {
+			throw new Meteor.error("logged-out");
+		}
+	},
+
+	createNewShoutRequest: function(tweet_id, trader_id) {
+		if (this.userId) {
+			Shout_requests.insert({"original_poster_id": Meteor.userId(), "retweeting_user": trader_id, "tweet_id": tweet_id});
+			decrementTradeCounts(trader_id, Meteor.userId()); 
 		}
 		else {
 			throw new Meteor.error("logged-out");

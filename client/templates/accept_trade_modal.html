@@ -1,0 +1,64 @@
+<template name="accept_trade_modal">
+  <div class="modal fade" id="accept-trade-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Accept Trade Request</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-5">
+                <div class="row">
+                  {{#with other_user_in_trade}}
+                  <div class="col-xs-3 inner-trader-panel"> 
+                    <img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
+                  </div>
+                  <div class="col-xs-9 inner-trader-panel">
+                    <div>
+                        {{profile.name}} 
+                    </div>
+                    <div>@{{services.twitter.screenName}}</div>
+                  </div>
+                  {{/with}}
+                </div>
+                <div> <span class="num-tweets-offered">{{other_user_trade_amount}}</span> tweets offered </div>
+            </div>
+            <div class="col-md-5">
+                <div class="row">
+                  <div class="col-xs-3 inner-trader-panel"> 
+                    <img class="user-icon img-rounded" src="{{currentUser.services.twitter.profile_image_url}}">
+                  </div>
+                  <div class="col-xs-9 inner-trader-panel">
+                    <div>{{currentUser.profile.name}}</div>
+                    <div>@{{currentUser.services.twitter.screenName}}</div>
+                  </div>
+                </div>
+                <div> <span class="num-tweets-offered">{{this_user_trade_amount}}</span> tweets offered </div>
+            </div>
+            <div class="col-md-1"></div>
+          </div>
+          <form class="accept-request-form">
+              <div class="radio">
+                  <label>
+                    <input type="radio" name="optionsRadios" id="radio-without-review" value="option2" checked="true">
+                    Accept without review
+                  </label>
+            </div>
+            <div class="radio">
+                  <label>
+                    <input type="radio" name="optionsRadios" id="radio-with-review" value="option2">
+                    Accept with review
+                  </label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button type="button" id="confirm-trade-button" class="btn btn-primary">Confirm</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+</template>

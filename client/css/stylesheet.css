@@ -369,7 +369,23 @@ span.tags
     border-radius: 8px;
 }
 
-.home-tweet-panel {
+.notification-tweet-panel {
+  background-color: #DFE5EA;
+  margin-left: 10px;
+  margin-right: 5px;
+  margin-top: 10px;
+  padding: 2px;
+  border-radius: 8px;
+  float:left;
+  font-size: 13px;
+}
+
+.notification-date-time-retweets {
+  margin-left: 10px;
+}
+
+.shout-proposal-buttons {
+  margin-top: 30px;
 }
 
 .modal-tweet-panel {
@@ -858,6 +874,15 @@ object {
   float: right;
 }
 
+.num-tweets-offered {
+  font-size: 30px;
+}
+
+.accept-request-form { 
+margin: 0 auto; 
+width:200px;
+font-size: 20px;
+}
 /* Sticky footer styles
 -------------------------------------------------- */
 html {

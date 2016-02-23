@@ -1,4 +1,4 @@
-<template name="trade_requests_new">
+<template name="notifications">
     <li class="dropdown">
         <a href="#" id="nav-dropdown" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="notifications-bell" class="glyphicon glyphicon-bell"></span>
             {{#if has_trade_requests}}
@@ -7,6 +7,14 @@
         </a>
 
         <ul id="notifications-dropdown" class="dropdown-menu">
+            {{#if has_shout_requests}}
+            <li id="requests-heading">Shout! Requests</li>
+            {{/if}}
+            {{#each shout_requests_list}}
+                <li role="separator" class="divider"></li>
+                {{> single_tweet}}
+            {{/each}}
+
             {{#if has_trade_requests}}
             <li id="requests-heading">Trade Requests</li>
             {{/if}}
@@ -29,8 +37,8 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <div><b>{{proposed_from}}</b> of their retweets for</div>
-                                <div><b>{{proposed_to}}</b> of your retweets.</div>
+                                <div><b>{{proposed_to}}</b> of their retweets for</div>
+                                <div><b>{{proposed_from}}</b> of your retweets.</div>
                             </div>
                             <div class="col-md-6">
                                 <div class="row proposal-buttons-wrapper">

@@ -100,7 +100,16 @@ Template.profile_modal.events({
     var user_id_from = Meteor.userId();
     var new_proposed_from = template.find('.num-you').value;
     var new_proposed_to = template.find('.num-them').value;
-    Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, new_proposed_from, new_proposed_to);
+
+    var review_status;
+    if ($("#request-modal-without-review").checked) {
+      review_status = false;
+    }
+    else {
+      review_status = true;
+    }
+
+    Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, new_proposed_from, new_proposed_to, review_status);
     $('.modal').modal('hide');
   },
 
@@ -112,13 +121,22 @@ Template.profile_modal.events({
     var proposed_from = template.find('.num-you').value;
     var proposed_to = template.find('.num-them').value;
 
+    var review_status;
+    if ($("#request-modal-without-review").checked) {
+      review_status = false;
+    }
+    else {
+      review_status = true;
+    }
+
+
     if (!(checkOfferParam(proposed_from) && checkOfferParam(proposed_to))) {
         Session.set("paramError", true);
         //$('.modal').modal('hide');
         return;
     }
 
-    Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, proposed_from, proposed_to);
+    Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, proposed_from, proposed_to, review_status);
     $('.modal').modal('hide');
   },
 

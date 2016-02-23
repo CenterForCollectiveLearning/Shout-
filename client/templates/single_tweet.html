@@ -1,0 +1,33 @@
+<template name="single_tweet">
+	<div class="row">
+		<div class="col-md-8">
+			<div class="notification-tweet-panel">
+			<div class="col-xs-3 inner-tweet-panel"> 
+				{{#with getSpecificUser original_poster_id}}
+				<img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
+				{{/with}}
+			</div>
+			<div class="col-xs-9 tweet-text inner-tweet-panel">
+				{{#with getSpecificUser original_poster_id}}
+				<div class="tweet-text"><b>{{profile.name}}</b> @{{services.twitter.screenName}}</div>
+				{{/with}}
+				{{#with getTweet tweet_id}}
+					<div class="tweet-text">{{text}}</div>
+				{{/with}}
+			</div>
+		</div>
+		</div>
+		<div class="col-md-4">
+            <div class="btn-group shout-proposal-buttons" role="group">
+                <button class="btn btn-default shout-accept">Accept</button>
+                <button class="btn btn-default shout-reject">Reject</button>
+            </div>
+		</div>
+	</div>
+	{{#with getTweet tweet_id}}
+	<div class="notification-date-time-retweets date-time-retweets">
+		{{dateConverter created_at}} | <span class="glyphicon glyphicon-retweet"></span>  {{retweet_count}} | 
+		<span class="glyphicon glyphicon-heart"></span> {{favorite_count}}
+	</div>
+	{{/with}}
+</template>

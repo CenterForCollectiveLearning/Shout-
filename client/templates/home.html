@@ -54,7 +54,13 @@
 
 {{#if tradeReady}}
 	<div class="row trade-buttons" >
-		<button class="btn btn-lg btn-primary btn-trade" id="trade-button"> Send retweet through @{{getRetweetingTrader}}</button>
+		<button class="btn btn-lg btn-primary btn-trade" id="trade-button">
+			{{#if tradeNeedsReview}}
+				Send request to Shout! through @{{getRetweetingTrader}}
+			{{else}}
+		 		Send Shout! through @{{getRetweetingTrader}}
+			{{/if}}
+		</button>
 		<button class="btn btn-default btn-lg" id="reset-button"> Reset </button>
 	</div>
 {{/if}}
