@@ -341,7 +341,7 @@ span.tags
   border:2px solid white;
 }
 
-#nav-dropdown {
+.nav-dropdown {
   margin-top:10px;
   color:black;
 }
@@ -833,8 +833,8 @@ object {
 }
 
 .notifications-user-icon {
+  height: 40px;
   margin-left: 5px;
-  margin-top: 5px;
 }
 
 .promo-section {
@@ -883,6 +883,27 @@ margin: 0 auto;
 width:200px;
 font-size: 20px;
 }
+
+#profile-button {
+  color: black;
+}
+
+#profile-button-link {
+  color: black;
+}
+
+#logout-button {
+  color: black;
+}
+#logout-button-link {
+  color: black;
+}
+
+
+#profile-dropdown {
+  background-color: #F0F4F7;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {

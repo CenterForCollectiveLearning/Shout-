@@ -102,10 +102,12 @@ Template.profile_modal.events({
     var new_proposed_to = template.find('.num-them').value;
 
     var review_status;
-    if ($("#request-modal-without-review").checked) {
+    if ($("#request-modal-without-review").is(":checked")) {
+      console.log("review status is false");
       review_status = false;
     }
     else {
+      console.log("review status is true");
       review_status = true;
     }
 
@@ -122,10 +124,12 @@ Template.profile_modal.events({
     var proposed_to = template.find('.num-them').value;
 
     var review_status;
-    if ($("#request-modal-without-review").checked) {
+    if ($("#request-modal-without-review").is(":checked")) {
+      console.log("review status is false");
       review_status = false;
     }
     else {
+      console.log("review status is true");
       review_status = true;
     }
 

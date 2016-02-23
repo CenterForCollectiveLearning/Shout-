@@ -23,10 +23,12 @@ Template.accept_trade_modal.events({
 		var review_status_from = Session.get("accept-modal-review-status-from");
 
 		var review_status_to;
-		if ($("#radio-without-review").checked) {
+		if ($("#radio-without-review").is(":checked")) {
+			console.log("false review_status");
 			review_status_to = false;
 		}
 		else {
+			console.log("true review status");
 			review_status_to = true;
 		}
 

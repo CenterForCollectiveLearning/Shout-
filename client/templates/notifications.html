@@ -1,7 +1,7 @@
 <template name="notifications">
     <li class="dropdown">
-        <a href="#" id="nav-dropdown" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="notifications-bell" class="glyphicon glyphicon-bell"></span>
-            {{#if has_trade_requests}}
+        <a href="#" class="nav-dropdown dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="notifications-bell" class="glyphicon glyphicon-bell"></span>
+            {{#if has_requests}}
             <div class="badger-outter" id="Badger"><div class="badger-inner"><p class="badger-badge badger-number" id="Badge">{{num_requests}}</p></div></div>
             {{/if}}
         </a>
@@ -53,8 +53,9 @@
                     </div>
                 </div>
             </li>
-            {{/each}}
             <li role="separator" class="divider"></li>
+
+            {{/each}}
             <li id="recent-activity-heading"> Recent Activity</li>
             {{> history}}
         </ul>

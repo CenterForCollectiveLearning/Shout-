@@ -56,13 +56,6 @@ var decrementTradeCounts= function(trader_id_posted, other_trader_id) {
 	Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":-1}});
 };
 
-// increments the trade counts if the user rejects a shout! post, or if a retweet
-// was unsuccessful. 
-var incrementTradeCounts= function(trader_id_posted, other_trader_id) {
-	Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":1}});
-	Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":1}});
-};
-
 // PUBLICATIONS
 
 Meteor.publish("userData", function() {
@@ -444,6 +437,13 @@ Meteor.methods({
 		else {
 			throw new Meteor.error("logged-out");
 		}
+	},
+
+	// increments the trade counts if the user rejects a shout! post, or if a retweet
+	// was unsuccessful. 
+ 	incrementTradeCounts: function(trader_id_posted, other_trader_id) {
+		Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":1}});
+		Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":1}});
 	}
 
 });

@@ -21,14 +21,14 @@
     <div class="collapse navbar-collapse" id="navbar-collapse-custom">
       <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
-              <a href="#" id="nav-dropdown" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              <a href="#" class="nav-dropdown dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                 <div> 
                       <img class="user-icon img-rounded" src="{{currentUser.services.twitter.profile_image_url}}"><span class="nav-logged-in-user">{{currentUser.profile.name}}</span>
                 </div>
               </a>
-            <ul class="dropdown-menu">
-              <li><a href="{{pathFor '/profile'}}">Profile</a></li>
-              <li id="logout-button"><a>Logout</a></li>
+            <ul class="dropdown-menu" id="profile-dropdown">
+              <li id="profile-button"><a id="profile-button-link" href="{{pathFor '/profile'}}">Profile</a></li>
+              <li id="logout-button"><a id="logout-button-link">Logout</a></li>
             </ul>
         </li>
         {{> notifications}}

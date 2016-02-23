@@ -2,6 +2,10 @@
 	{{#if Template.subscriptionsReady}}
 		<div hidden="{{existsRecentHistory}}"> You have no recent activity. </div>
 			{{#each retweetEvents}}
+				{{#if isNewDay time}}
+					<li role="separator" class="divider"></li>
+					<div class="date-heading">{{getDate time}}</div>
+				{{/if}}
 				<li role="separator" class="divider"></li>
 				<li>
 			        <div class="row">
@@ -40,11 +44,6 @@
 
                 </div>		
 				</li>
-
-				{{#if isNewDay time}}
-					<li role="separator" class="divider"></li>
-					<div class="date-heading">{{getDate time}}</div>
-				{{/if}}
 			{{/each}}
 	{{/if}}
 </template>
