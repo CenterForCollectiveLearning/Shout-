@@ -855,6 +855,7 @@ object {
 
 #signin-button-wrapper {
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 #recent-activity-heading {
@@ -902,6 +903,13 @@ font-size: 20px;
 
 #profile-dropdown {
   background-color: #F0F4F7;
+}
+#how-it-works-heading {
+  font-size: 22px;
+}
+
+#how-it-works-bullets {
+  font-size: 18px;
 }
 
 /* Sticky footer styles
