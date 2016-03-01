@@ -912,6 +912,24 @@ font-size: 20px;
   font-size: 18px;
 }
 
+li
+{
+    list-style-type: none;
+}
+
+#notifications-panel {
+  width: 600px;
+  margin: auto;
+}
+
+#notifications-heading {
+  width: 200px;
+  margin: auto;
+  font-size: 26px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
