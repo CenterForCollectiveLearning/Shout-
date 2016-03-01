@@ -923,11 +923,20 @@ li
 }
 
 #notifications-heading {
-  width: 200px;
+  width: 180px;
   margin: auto;
   font-size: 26px;
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+#notifications-scroll {
+  overflow-x: hidden;
+}
+
+#see-all {
+  width: 40px;
+  margin: auto;
 }
 
 /* Sticky footer styles
