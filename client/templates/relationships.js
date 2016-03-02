@@ -1,6 +1,6 @@
 
 function hasCurrentTradeRelationship(other_user_id) {
-	var trades = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id, "trades.this_trade_num":{$gt:0}}).fetch();
+	var trades = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id, "trades.this_trade_num":{$gte:0}}).fetch();
 	var count = trades.length;	
 	if (count===0) {
 		return false;

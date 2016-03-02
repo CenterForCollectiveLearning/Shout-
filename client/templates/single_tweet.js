@@ -22,6 +22,12 @@ Template.single_tweet.events({
 				console.log("error sending retweet");
 				console.log(err.reason);
 			}
+			Meteor.call('clearShoutRequest', this.tweet_id, this.retweeting_user, this.original_poster_id, function(err, result) {
+			if (err) {
+				console.log("error clearing the Shout! request");
+				console.log(err.reason);
+			}
+			});
 		});
 	},
 

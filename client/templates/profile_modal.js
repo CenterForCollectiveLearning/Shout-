@@ -127,17 +127,17 @@ Template.profile_modal.events({
     var proposed_from = template.find('.num-you').value;
     var proposed_to = template.find('.num-them').value;
 
-    if (!($("#request-modal-without-review").is(":checked")) && !$("#request-modal-without-review").is(":checked")) {
-      
+if (!($("#request-modal-without-review_"+user_id_to).is(":checked") || $("#request-modal-with-review_"+user_id_to).is(":checked"))) {      
       Session.set("optionsError", true);
       return;
     }
+    Session.set("optionsError", false);
 
     var review_status;
-    if ($("#request-modal-without-review").is(":checked")) {
+    if ($("#request-modal-without-review_"+user_id_to).is(":checked")) {
       review_status = false;
     }
-    else {
+    else { 
       review_status = true;
     }
 

@@ -50,8 +50,8 @@
 							{{text}}
 						</div>
 					</div>
-					<div class="date-time-retweets-modal">
-						{{dateConverter created_at}} | Retweets: {{retweet_count}} | Favorites: {{favorite_count}}
+					<div class="date-time-retweets-modal date-time-retweets">
+						{{dateConverter created_at}} | <span class="glyphicon glyphicon-retweet"></span> {{retweet_count}} | <span class="glyphicon glyphicon-heart"></span> {{favorite_count}}
 					</div>
 					{{/each}}
 				</div>
@@ -84,13 +84,13 @@
 						   <form>
 				              <div class="radio">
 				                  <label>
-				                    <input type="radio" name="reviewOptions" id="request-modal-without-review" value="without_review">
+				                    <input type="radio" name="reviewOptions" id="request-modal-without-review_{{_id}}" value="without_review">
 				                    Allow retweets to be posted directly through my account.
 				                  </label>
 				            </div>
 				            <div class="radio">
 				                  <label>
-				                    <input type="radio" name="reviewOptions" id="request-modal-with-review" value="with_review">
+				                    <input type="radio" name="reviewOptions" id="request-modal-with-review_{{_id}}" value="with_review">
 				                    Let me review retweets that will be posted through my account. 
 				                  </label>
 				            </div>
