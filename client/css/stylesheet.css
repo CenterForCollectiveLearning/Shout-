@@ -514,8 +514,7 @@ span.tags
 
 .info-text {
   font-family: OpenSans-light;
-  margin-left: 15px;
-  margin-top: 15px;
+margin: 20px;
 }
 
 .section-custom {
@@ -937,6 +936,10 @@ li
 #see-all {
   width: 40px;
   margin: auto;
+}
+
+#auto-height-section {
+  height: auto !important;
 }
 
 /* Sticky footer styles
