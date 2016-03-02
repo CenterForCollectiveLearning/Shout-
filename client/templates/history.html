@@ -2,10 +2,6 @@
 	{{#if Template.subscriptionsReady}}
 		<div hidden="{{existsRecentHistory}}"> You have no recent activity. </div>
 			{{#each retweetEvents}}
-				{{#if isNewDay time}}
-					<li role="separator" class="divider"></li>
-					<div class="date-heading">{{getDate time}}</div>
-				{{/if}}
 				<li role="separator" class="divider"></li>
 				<li>
 			        <div class="row">
@@ -18,7 +14,6 @@
 	                 {{/with}}
 	                    <div class="col-md-10">
 	                        <div>
-	                        	{{getTime time}} - 
 	                        {{#unless is_original_poster}}
 								You
 							{{else}}
@@ -38,6 +33,9 @@
 							{{/with}}
 							{{/if}}
 							
+	                        </div>
+	                        <div>
+								{{getDate time}} {{getTime time}}
 	                        </div>
 	                    </div>
                     

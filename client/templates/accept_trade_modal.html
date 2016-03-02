@@ -7,56 +7,47 @@
           <h4 class="modal-title">Accept Trade Request</h4>
         </div>
         <div class="modal-body">
-          <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-5">
-                <div class="row">
-                  {{#with other_user_in_trade}}
-                  <div class="col-xs-3 inner-trader-panel"> 
-                    <img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
-                  </div>
-                  <div class="col-xs-9 inner-trader-panel">
-                    <div>
-                        {{profile.name}} 
-                    </div>
-                    <div>@{{services.twitter.screenName}}</div>
-                  </div>
-                  {{/with}}
-                </div>
-                <div> <span class="num-tweets-offered">{{other_user_trade_amount}}</span> tweets offered </div>
+
+      <div class="round-trader-panel no-highlight row row-custom" id="accept-trade-panel">
+{{#with other_user_in_trade}}
+        <div class="col-xs-8">
+          <div class="row inner-trader-panel">
+            <div class="col-xs-3"> 
+              <img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
             </div>
-            <div class="col-md-5">
-                <div class="row">
-                  <div class="col-xs-3 inner-trader-panel"> 
-                    <img class="user-icon img-rounded" src="{{currentUser.services.twitter.profile_image_url}}">
-                  </div>
-                  <div class="col-xs-9 inner-trader-panel">
-                    <div>{{currentUser.profile.name}}</div>
-                    <div>@{{currentUser.services.twitter.screenName}}</div>
-                  </div>
-                </div>
-                <div> <span class="num-tweets-offered">{{this_user_trade_amount}}</span> tweets offered </div>
+            <div class="col-xs-9">
+                  <div>{{profile.name}}</div>
+                  <div>@{{services.twitter.screenName}}</div>
             </div>
-            <div class="col-md-1"></div>
           </div>
+        </div>
+        {{/with}}
+
+              <div class="col-xs-2 trading-num trading-num-own"> 
+                +{{other_user_trade_amount}}
+              </div>
+              <div class="col-xs-2 trading-num trading-num-owe"> 
+                -{{this_user_trade_amount}}
+              </div>
+      </div>
           <form class="accept-request-form">
               <div class="radio">
                   <label>
-                    <input type="radio" name="optionsRadios" id="radio-without-review" value="option2" checked="true">
-                    Accept without review
+                    <input type="radio" name="acceptTradeRadios" id="radio-without-review" value="without_review" checked="true">
+                    Allow retweets to be posted directly through my account.
                   </label>
             </div>
             <div class="radio">
                   <label>
-                    <input type="radio" name="optionsRadios" id="radio-with-review" value="option2">
-                    Accept with review
+                    <input type="radio" name="acceptTradeRadios" id="radio-with-review" value="with_review">
+                    Let me review retweets that will be posted through my account.
                   </label>
             </div>
           </form>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer accept-trade-modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-          <button type="button" id="confirm-trade-button" class="btn btn-primary">Confirm</button>
+          <button type="button" id="confirm-trade-button" class="btn btn-default">Accept</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

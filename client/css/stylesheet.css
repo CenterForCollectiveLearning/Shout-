@@ -879,9 +879,8 @@ object {
 }
 
 .accept-request-form { 
-margin: 0 auto; 
-width:200px;
-font-size: 20px;
+font-size: 16px;
+margin-left: 30px;
 }
 
 #profile-button {
@@ -919,6 +918,7 @@ li
 #notifications-panel {
   width: 600px;
   margin: auto;
+  font-size: 16px;
 }
 
 #notifications-heading {
@@ -942,6 +942,22 @@ li
   height: auto !important;
 }
 
+.request-proposal-numbers {
+  font-size: 16px;
+}
+
+#confirm-trade-button {
+  background-color: #DFE5EA;
+}
+
+.accept-trade-modal-footer {
+  text-align: center;
+}
+
+#accept-trade-panel {
+  margin: 30px;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -951,6 +967,10 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+}
+
+li {
+  margin-top: 10px;
 }
 .footer {
   position: absolute;

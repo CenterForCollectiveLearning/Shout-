@@ -3,15 +3,15 @@
             <li id="requests-heading">Shout! Requests</li>
             {{/if}}
             {{#each shout_requests_list}}
-                <li role="separator" class="divider"></li>
                 {{> single_tweet}}
+                <li role="separator" class="divider"></li>
+
             {{/each}}
 
             {{#if has_trade_requests}}
             <li id="requests-heading">Trade Requests</li>
             {{/if}}
             {{#each requests_list}}
-            <li role="separator" class="divider"></li>
             <li>
                 <div class="row">
                     {{#with specific_user user_id_from}} 
@@ -29,8 +29,8 @@
 
                         <div class="row">
                             <div class="col-md-6">
-                                <div><b>{{proposed_to}}</b> of their retweets for</div>
-                                <div><b>{{proposed_from}}</b> of your retweets.</div>
+                                <div><span class="request-proposal-numbers trading-num-own"><b>{{proposed_to}}</b></span> of their retweets for</div>
+                                <div><span class="request-proposal-numbers trading-num-owe"><b>{{proposed_from}}</b></span> of your retweets.</div>
                             </div>
                             <div class="col-md-6">
                                 <div class="row proposal-buttons-wrapper">
