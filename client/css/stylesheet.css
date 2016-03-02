@@ -514,9 +514,7 @@ span.tags
 
 .info-text {
   font-family: OpenSans-light;
-  margin-left: 15px;
-  margin-top: 15px;
-  font-size: 16px;
+  margin: 20px;
 }
 
 .section-custom {
@@ -911,6 +909,37 @@ font-size: 20px;
 
 #how-it-works-bullets {
   font-size: 18px;
+}
+
+li
+{
+    list-style-type: none;
+}
+
+#notifications-panel {
+  width: 600px;
+  margin: auto;
+}
+
+#notifications-heading {
+  width: 180px;
+  margin: auto;
+  font-size: 26px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#notifications-scroll {
+  overflow-x: hidden;
+}
+
+#see-all {
+  width: 40px;
+  margin: auto;
+}
+
+#auto-height-section {
+  height: auto !important;
 }
 
 /* Sticky footer styles

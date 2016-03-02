@@ -1,0 +1,16 @@
+<template name="notifications_dropdown">
+    <li class="dropdown">
+        <a href="#" class="nav-dropdown dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="notifications-bell" class="glyphicon glyphicon-bell"></span>
+            {{#if has_requests}}
+            <div class="badger-outter" id="Badger"><div class="badger-inner"><p class="badger-badge badger-number" id="Badge">{{num_requests}}</p></div></div>
+            {{/if}}
+        </a>
+        <ul id="notifications-dropdown" class="dropdown-menu">
+            <div id="notifications-scroll" class="pre-scrollable">
+            {{> notifications}}
+            <li role="separator" class="divider"></li>
+        </div>
+            <li id="see-all"> <a href="{{pathFor '/notifications'}}" style="color:black">See All</a></li>
+        </ul>
+    </li>
+</template>
