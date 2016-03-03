@@ -26,38 +26,9 @@
 						</div>
 					</div>
 				</div>
-				{{#if exists_bio this._id}}
-				<div class="profile-modal-bio">
-					<b>Bio: </b>{{bio this._id}}
-				</div>
-				{{/if}}
-				{{#if exists_interests this._id}}
-				<div class="profile-modal-interests"> 
-					<b>Interests:</b> {{interests this._id}}
-				</div>
-				{{/if}}
 				{{/with}} 
 			</div>
-			<div class="modal-body">
-				{{#with get_user_by_id _id}}
-				<div class="recent-tweets">
-					{{#each other_user_timeline}}
-					<div class="row tweet-panel modal-tweet-panel tweet-text">
-						<div class="col-md-2"> 
-							<img class="user-icon img-rounded" src="{{user.profile_image_url}}">
-						</div>
-						<div class="col-md-10">
-							{{text}}
-						</div>
-					</div>
-					<div class="date-time-retweets-modal date-time-retweets">
-						{{dateConverter created_at}} | <span class="glyphicon glyphicon-retweet"></span> {{retweet_count}} | <span class="glyphicon glyphicon-heart"></span> {{favorite_count}}
-					</div>
-					{{/each}}
-				</div>
-				{{/with}}
-			</div>
-			<div class="modal-footer profile-modal-footer">
+			<div class="modal-body profile-modal-footer">
 				{{#if exists_outgoing_pending_trade_request}}
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				{{else}}
@@ -73,13 +44,12 @@
 						</div>
 					{{/if}}
 					<div class="profile-modal-make-deal">
-						<div class="deal-heading"> {{#if modify_status}}Modify the Deal{{else}}Make a Deal{{/if}}</div>
 						<div>
-							I will retweet
+							I will retweet you
 							<input type="number" min="{{get_min_trade_param}}" max="{{get_max_trade_param}}" class="form-control form-control-custom num-them">
-							tweets on your behalf if you retweet
+							times if you retweet me
 							<input type="number" min="0" max="25" class="form-control form-control-custom num-you">
-							tweets on my behalf.
+							times.
 						</div>
 						   <form>
 				              <div class="radio">
@@ -91,14 +61,14 @@
 				            <div class="radio">
 				                  <label>
 				                    <input type="radio" name="reviewOptions" id="request-modal-with-review_{{_id}}" value="with_review">
-				                    Let me review retweets that will be posted through my account. 
+				                    I want to review retweets that will be posted through my account. 
 				                  </label>
 				            </div>
 				          </form>
 					</div>
 
 					{{#if has_current_trade_relationship _id}}
-					<div class="alert alert-warning" role="alert"><b>Warning: </b> You have an existing current trade with {{profile.name}}. Creating a new one will add the new trade balance onto the old, and update the review settings.</div>
+					<div class="alert alert-warning" role="alert">You have an existing current trade with {{profile.name}}. Creating a new one will add the new trade balance onto the old, and update the review settings.</div>
 					{{/if}}
 
 					{{/with}}

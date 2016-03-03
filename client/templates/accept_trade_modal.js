@@ -37,7 +37,6 @@ Template.accept_trade_modal.events({
 	console.log("Checking for a current trade relationship between " + Meteor.userId() + " and " + user_id_from);
 
 		if (has_current_trade_relationship(user_id_from)) {
-			console.log("There is an existing current trade relationship with " + user_id_from);
 			// When adding to an existing trade, can change the review status of the trade.
 			Meteor.call("addToExistingTrade", user_id_from, user_id_to, proposed_from, proposed_to, review_status_from, review_status_to);
 		}
