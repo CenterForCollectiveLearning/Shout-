@@ -10,7 +10,11 @@ Template.accept_trade_modal.helpers({
 
 	other_user_trade_amount: function() {
 		return Session.get("accept-modal-proposed-to");
-	}
+	},
+
+	has_current_trade_relationship: function(user_id){
+    	return has_current_trade_relationship(user_id);
+  },
 });
 
 Template.accept_trade_modal.events({
@@ -24,20 +28,21 @@ Template.accept_trade_modal.events({
 
 		var review_status_to;
 		if ($("#radio-without-review").is(":checked")) {
-			console.log("false review_status");
 			review_status_to = false;
 		}
 		else {
-			console.log("true review status");
 			review_status_to = true;
 		}
 
+	console.log("Checking for a current trade relationship between " + Meteor.userId() + " and " + user_id_from);
 
-		if (has_current_trade_relationship(this.user_id_from)) {
+		if (has_current_trade_relationship(user_id_from)) {
+			console.log("There is an existing current trade relationship with " + user_id_from);
 			// When adding to an existing trade, can change the review status of the trade.
 			Meteor.call("addToExistingTrade", user_id_from, user_id_to, proposed_from, proposed_to, review_status_from, review_status_to);
 		}
 		else {
+			console.log("Creating a new trade instead");
 			Meteor.call("createNewTrade", user_id_from, user_id_to, proposed_from, proposed_to, review_status_from, review_status_to);
 		}
 		Meteor.call("pushHistoricTradeRequest", user_id_from, user_id_to, proposed_from, proposed_to, status);

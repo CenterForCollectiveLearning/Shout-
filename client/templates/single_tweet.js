@@ -15,6 +15,8 @@ Template.single_tweet.helpers({
 
 Template.single_tweet.events({
 	// Accept the shout! --> Trigger the retweet
+
+	// TODO: Shouldn't clear the Shout! request unless the retweet sends successfully. 
 	'click .shout-accept': function() {
 		console.log("Clicked accept");
 		Meteor.call("sendRetweet", this.tweet_id, this.retweeting_user, this.original_poster_id, false, function(err, result) {
@@ -22,12 +24,12 @@ Template.single_tweet.events({
 				console.log("error sending retweet");
 				console.log(err.reason);
 			}
-			Meteor.call('clearShoutRequest', this.tweet_id, this.retweeting_user, this.original_poster_id, function(err, result) {
+		});
+		Meteor.call('clearShoutRequest', this.tweet_id, this.retweeting_user, this.original_poster_id, function(err, result) {
 			if (err) {
 				console.log("error clearing the Shout! request");
 				console.log(err.reason);
 			}
-			});
 		});
 	},
 

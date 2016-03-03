@@ -96,7 +96,14 @@
 				            </div>
 				          </form>
 					</div>
+
+					{{#if has_current_trade_relationship _id}}
+					<div class="alert alert-warning" role="alert"><b>Warning: </b> You have an existing current trade with {{profile.name}}. Creating a new one will add the new trade balance onto the old, and update the review settings.</div>
+					{{/if}}
+
 					{{/with}}
+
+
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 
 					{{#if exists_incoming_pending_trade_request _id}}

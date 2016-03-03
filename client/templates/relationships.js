@@ -78,8 +78,10 @@ Template.relationships.helpers({
 		
 		var trading_users = []
 		var non_trading_users = []
+		//console.log("about to split the full user list");
 		for (var i=0; i<users.length; i+=1) {
 			var user = users[i]
+			//console.log("user id: " + user._id);
 			if (hasCurrentTradeRelationship(user._id)) {
 				trading_users.push(user)
 			}
