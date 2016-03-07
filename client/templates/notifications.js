@@ -18,12 +18,6 @@ Template.notifications.helpers({
 		return false;	
 	},
 
-	num_requests: function() {
-		num_trade_requests = Current_trade_requests.find({"user_id_to": Meteor.userId()}).count();
-		num_shout_requests = Shout_requests.find({"retweeting_user":Meteor.userId()}).count();
-		return num_trade_requests + num_shout_requests;
-	},
-
 	has_requests: function() {
 		num_trade_requests = Current_trade_requests.find({"user_id_to": Meteor.userId()}).count();
 		num_shout_requests = Shout_requests.find({"retweeting_user":Meteor.userId()}).count();

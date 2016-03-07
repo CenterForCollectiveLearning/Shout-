@@ -854,8 +854,8 @@ object {
 }
 
 #signin-button-wrapper {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: -45px;
+  margin-bottom: 30px;
 }
 
 #recent-activity-heading {
@@ -880,9 +880,8 @@ object {
 }
 
 .accept-request-form { 
-margin: 0 auto; 
-width:200px;
-font-size: 20px;
+font-size: 16px;
+margin-left: 30px;
 }
 
 #profile-button {
@@ -920,6 +919,7 @@ li
 #notifications-panel {
   width: 600px;
   margin: auto;
+  font-size: 16px;
 }
 
 #notifications-heading {
@@ -943,6 +943,51 @@ li
   height: auto !important;
 }
 
+.request-proposal-numbers {
+  font-size: 16px;
+}
+
+#confirm-trade-button {
+  background-color: #DFE5EA;
+}
+
+.accept-trade-modal-footer {
+  text-align: center;
+}
+
+#accept-trade-panel {
+  margin: 30px;
+}
+
+#tutorial-wrapper {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+#tutorial-image {
+  width: 80%;
+}
+
+#promo-iframe {
+  position: absolute; 
+  width: 85%;
+  height: 85%;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  padding-top: 25px;
+  padding-left: ;
+  height: 0;
+
+}
+
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -952,6 +997,10 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+}
+
+li {
+  margin-top: 10px;
 }
 .footer {
   position: absolute;

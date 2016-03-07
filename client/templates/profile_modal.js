@@ -24,6 +24,11 @@ Template.profile_modal.helpers({
   exists_param_error: function() {
     return Session.get("paramError");
   },
+
+  exists_options_error: function() {
+    return Session.get("optionsError");
+  },
+
   other_user_timeline: function() {
     return Session.get("otherUserTimeline");
   },
@@ -102,12 +107,11 @@ Template.profile_modal.events({
     var new_proposed_to = template.find('.num-them').value;
 
     var review_status;
-    if ($("#request-modal-without-review").is(":checked")) {
-      console.log("review status is false");
+
+    if ($('input[name=reviewOptions]:checked').val()=="without_review") {
       review_status = false;
     }
     else {
-      console.log("review status is true");
       review_status = true;
     }
 
@@ -123,13 +127,17 @@ Template.profile_modal.events({
     var proposed_from = template.find('.num-you').value;
     var proposed_to = template.find('.num-them').value;
 
+if (!($("#request-modal-without-review_"+user_id_to).is(":checked") || $("#request-modal-with-review_"+user_id_to).is(":checked"))) {      
+      Session.set("optionsError", true);
+      return;
+    }
+    Session.set("optionsError", false);
+
     var review_status;
-    if ($("#request-modal-without-review").is(":checked")) {
-      console.log("review status is false");
+    if ($("#request-modal-without-review_"+user_id_to).is(":checked")) {
       review_status = false;
     }
-    else {
-      console.log("review status is true");
+    else { 
       review_status = true;
     }
 
@@ -140,12 +148,14 @@ Template.profile_modal.events({
         return;
     }
 
+
     Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, proposed_from, proposed_to, review_status);
     $('.modal').modal('hide');
   },
 
   'hidden.bs.modal .modal': function() {
     Session.set("paramError", false);
+    Session.set("optionsError", false);
     $(".num-you").val('');
     $(".num-them").val('');
 

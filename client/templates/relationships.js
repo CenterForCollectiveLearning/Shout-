@@ -1,6 +1,6 @@
 
 function hasCurrentTradeRelationship(other_user_id) {
-	var trades = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id, "trades.this_trade_num":{$gt:0}}).fetch();
+	var trades = Trades.find({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id, "trades.this_trade_num":{$gte:0}}).fetch();
 	var count = trades.length;	
 	if (count===0) {
 		return false;
@@ -78,8 +78,10 @@ Template.relationships.helpers({
 		
 		var trading_users = []
 		var non_trading_users = []
+		//console.log("about to split the full user list");
 		for (var i=0; i<users.length; i+=1) {
 			var user = users[i]
+			//console.log("user id: " + user._id);
 			if (hasCurrentTradeRelationship(user._id)) {
 				trading_users.push(user)
 			}
