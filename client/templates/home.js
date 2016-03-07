@@ -102,6 +102,9 @@ Template.home.events({
 });
 
 Accounts.onLogin(function() {
+	// Make sure that user profile pic is up to date
+	Meteor.call("checkUserImage", Meteor.userId());
+
 	Meteor.call("updateUserTimeline", Meteor.userId(), function(err, result) {
 		if (err) {
 			console.log(err.reason);
@@ -113,7 +116,7 @@ Accounts.onLogin(function() {
 			console.log(err.reason);
 			return;
 		}
-	})
+	});
 });
 
 Template.home.onCreated(function() {
