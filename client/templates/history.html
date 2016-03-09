@@ -4,7 +4,6 @@
 
 		{{#each events}}
 			{{#if is_notification_receiver}}
-				<li role="separator" class="divider"></li>
 				{{#if isDirectShoutEvent this}}
 					<li>
 				        <div class="row">
@@ -67,52 +66,8 @@
 	                	</div>		
 					</li>
 				{{/if}}
+				<li role="separator" class="divider"></li>
 			{{/if}}
 		{{/each}}
-
-
-<!-- 			{{#each events}}
-
-				<li role="separator" class="divider"></li>
-				<li>
-			        <div class="row">
-                    {{#with getSpecificUser other_user_id}}
-	                    <div class="col-md-2">
-	                        <div>
-	                            <img class="notifications-user-icon user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
-	                        </div>
-	                    </div>
-	                 {{/with}}
-	                    <div class="col-md-10">
-	                        <div>
-	                        {{#unless is_original_poster}}
-								You
-							{{else}}
-								  {{#with getSpecificUser other_user_id}}
-
-									{{profile.name}}
-									{{/with}}
-							{{/unless}}
-							
-								<a href="https://twitter.com/statuses/{{retweet_id}}" target="_blank" >sent a Shout!</a> through
-							
-							{{#if is_original_poster}}
-								you
-							{{else}}
-							{{#with getSpecificUser other_user_id}}
-									{{profile.name}}
-							{{/with}}
-							{{/if}}
-							
-	                        </div>
-	                        <div>
-								{{getDate time}} {{getTime time}}
-	                        </div>
-	                    </div>
-                    
-
-                </div>		
-				</li>
-			{{/each}} -->
 	{{/if}}
 </template>

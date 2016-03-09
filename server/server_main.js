@@ -253,8 +253,6 @@ Meteor.methods({
 			throw new Meteor.error("logged-out");
 		}
 		console.log("Pushed historic trade request");
-
-
 	},
 
 

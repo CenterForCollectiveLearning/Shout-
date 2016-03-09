@@ -68,17 +68,24 @@ Template.profile_modal.helpers({
     }
   },
 
-  bio: function(user_id) {
-    var user = getSpecificUser(user_id);
-    return user && user.profile && user.profile.bio;
-  },
-
-  interests: function(user_id) {
-    var user = getSpecificUser(user_id);
-    return user && user.profile && user.profile.interests;
-  },
   dateConverter: function(date) {
     return dateConverter(date);
+  },
+
+  num_followers: function(user_id) {
+    var user = getSpecificUser(user_id);
+    var profile = user && user.profile;
+    if (profile.followers_list) {
+      return profile.followers_list.ids.length;
+    }
+    else {
+      return "N/A";
+    }
+  },
+
+  num_tweets: function(user_id) {
+    var user = getSpecificUser(user_id);
+    return Tweets.find({"user.screen_name": user.services.twitter.screenName}).count();
   }
 });
 
