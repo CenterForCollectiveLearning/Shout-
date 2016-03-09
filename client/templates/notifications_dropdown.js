@@ -13,4 +13,10 @@ Template.notifications_dropdown.helpers({
 		num_shout_requests = Shout_requests.find({"retweeting_user":Meteor.userId()}).count();
 		return num_trade_requests + num_shout_requests;
 	},
+
+	exists_recent_activity: function() {
+		console.log("in notifications dropdown helper");
+		console.log(Post_history.findOne());
+		return exists_recent_activity();
+	}
 });

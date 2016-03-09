@@ -37,6 +37,10 @@ Template.notifications.helpers({
 	has_current_trade_relationship: function(user_id){
    		return has_current_trade_relationship(user_id);
   	},
+
+  	exists_recent_activity: function() {
+  		return exists_recent_activity();
+  	}
 });
 
 Template.notifications.events({
@@ -101,6 +105,7 @@ Template.notifications.onCreated(function() {
 		this.subscribe('current_trade_requests');
 		this.subscribe('shout_requests');
 		this.subscribe('tweets');
+		this.subscribe('post_history')
 	});
 });
 

@@ -815,9 +815,14 @@ object {
 
 /*End badger CSS*/
 
-#notifications-dropdown {
+.notifications-dropdown-with-requests {
   background-color: #F0F4F7;
   width: 500px;
+}
+
+.notifications-dropdown-without-requests {
+  background-color: #F0F4F7;
+  width: 300px;
 }
 
 #requests-heading {
@@ -853,7 +858,7 @@ object {
 }
 
 #signin-button-wrapper {
-  margin-top: -45px;
+  /*margin-top: -45px;*/
   margin-bottom: 30px;
 }
 
@@ -986,6 +991,11 @@ li
 
 }
 
+#no-recent-activity-text {
+  padding: 5px;
+  text-align: center;
+}
+
 
 /* Sticky footer styles
 -------------------------------------------------- */
@@ -999,7 +1009,7 @@ body {
 }
 
 li {
-  margin-top: 10px;
+  /*margin-top: 10px;*/
 }
 .footer {
   position: absolute;

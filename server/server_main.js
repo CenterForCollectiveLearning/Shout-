@@ -447,22 +447,22 @@ Meteor.methods({
 	},
 
 	// Checks that user profile pic is up to date
-	checkUserImage: function() {
-		var image_url = Meteor.user().services.twitter.profile_image_url;
-		$.ajax({
-		    url: image_url,
-		    type:'HEAD',
-		    error: function()
-		    {
-		        // Image URL is outdated - Pull it again from twitter
-		    },
-		    success: function()
-		    {
-		        // Image URL is ok
-		        console.log("User profile image is ok.");
-		    }
-	});
-	}
+	// checkUserImage: function() {
+	// 	var image_url = Meteor.user().services.twitter.profile_image_url;
+	// 	$.ajax({
+	// 	    url: image_url,
+	// 	    type:'HEAD',
+	// 	    error: function()
+	// 	    {
+	// 	        // Image URL is outdated - Pull it again from twitter
+	// 	    },
+	// 	    success: function()
+	// 	    {
+	// 	        // Image URL is ok
+	// 	        console.log("User profile image is ok.");
+	// 	    }
+	// });
+	// }
 
 });
 

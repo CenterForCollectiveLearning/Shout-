@@ -1,6 +1,7 @@
 <template name="notifications">
             {{#if has_shout_requests}}
             <li id="requests-heading">Shout! Requests</li>
+            <li role="separator" class="divider"></li>
             {{/if}}
             {{#each shout_requests_list}}
                 {{> single_tweet}}
@@ -48,6 +49,8 @@
             <li role="separator" class="divider"></li>
 
             {{/each}}
-            <li id="recent-activity-heading"> Recent Activity</li>
-            {{> history}}
+            {{#if exists_recent_activity}}
+                <li id="recent-activity-heading"> Recent Activity</li>
+                {{> history}}
+            {{/if}}
         </template>
