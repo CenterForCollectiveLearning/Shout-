@@ -16,7 +16,6 @@ Template.notifications_dropdown.helpers({
 
 	exists_recent_activity: function() {
 		console.log("in notifications dropdown helper");
-		console.log(Post_history.findOne());
 		return exists_recent_activity();
 	}
 });

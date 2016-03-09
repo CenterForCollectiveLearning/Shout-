@@ -109,11 +109,11 @@ Meteor.publish("retweet_ids", function() {
 	}
 	return Retweet_ids.find();
 });
-Meteor.publish("post_history", function() {
+Meteor.publish("recent_activity", function() {
 	if (!this.userId) {
 		return this.ready();
 	}
-	return Post_history.find();
+	return Recent_activity.find();
 });
 Meteor.publish("tweets", function() {
 	if (!this.userId) {
@@ -257,6 +257,18 @@ Meteor.methods({
 
 	},
 
+
+	// Adds the accepted or rejected trade request to Recent Activity
+	addTradeRequestToActivity: function(user_id_from, user_id_to, status) {
+		Recent_activity.insert({"user_id": user_id_from, "type":"trade_req", "is_notification_receiver":true, "tweet_id": null, "other_user_id":user_id_to, "status":status, "time":new Date()})
+		Recent_activity.insert({"user_id": user_id_to, "type":"trade_req", "is_notification_receiver":false, "tweet_id": null, "other_user_id":user_id_from, "status":status, "time":new Date()})
+	},
+
+	addShoutRequestToActivity: function(user_id_from, user_id_to, tweet_id, status) {
+		Recent_activity.insert({"user_id": user_id_from, "type": "shout_req", "is_notification_receiver": true, "tweet_id": tweet_id, "other_user_id": user_id_to, "status": status, "time":new Date()});
+		Recent_activity.insert({"user_id": user_id_to, "type": "shout_req", "is_notification_receiver": false, "tweet_id": tweet_id, "other_user_id": user_id_from, "status": status, "time":new Date()});
+	},
+
 	// Review status from/to parameters identify whether the users want to allow direct retweets through their account
 	// Each individual trade object stores the review preference of the OTHER trader.
 	createNewTrade: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to, review_status_from, review_status_to) {
@@ -270,6 +282,16 @@ Meteor.methods({
 
 			Trades.update({"user_id":user_id_to}, {$pull: {"trades":{"other_user_id":user_id_from}}});
 			Trades.update({"user_id":user_id_to}, {$push: {"trades":{"other_user_id":user_id_from, "this_trade_num":parseInt(num_proposed_to), "other_trade_num":parseInt(num_proposed_from), "with_review": review_status_from}}}, {"upsert":true});
+			
+			var status;
+			if (review_status_to) {
+				status="accept_with_review";
+			}
+			else {
+				status = "accept_without_review";
+			}
+			Meteor.call("addTradeRequestToActivity",user_id_from, user_id_to, status);
+
 		}
 		else {
 			throw new Meteor.error("logged-out");
@@ -332,26 +354,50 @@ Meteor.methods({
 				access_token_secret: trader_access_token_secret
 			});
 
-			traderTwit.post('statuses/retweet/' + tweet_id, Meteor.bindEnvironment(function(err, data, response) {
-				if (err) {
-					console.log(err);
-					if (!direct) {
-						incrementTradeCounts(trader_id_posted, other_trader_id);
-					}
-					return;
-				} 
-				// If the retweet is successful, decrement the corresponding trade counts. 
-				if (direct) {
+			/// TODO: PUT THIS BACK IN CALLBACK OF RETWEET API CALL
+			if (direct) {
 					decrementTradeCounts(trader_id_posted, other_trader_id);
-				}           
-				Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
+					Recent_activity.insert({"user_id":trader_id_posted, type: "direct_shout", "is_notification_receiver": true, "other_user_id": other_trader_id, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
+					Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
+				} 
+				else {
+					Meteor.call("addShoutRequestToActivity", other_trader_id, trader_id_posted, tweet_id, "accept");
+				}   
+				// TODO: UNCOMMENT BELOW LINE       
+				//Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
 				 
-				Post_history.insert({"user_id":trader_id_posted, "retweet_id":data.id_str, "is_original_poster":true, "other_user_id": other_trader_id, "time": new Date(data.created_at)});
-				Post_history.insert({"user_id":other_trader_id, "retweet_id":data.id_str, "is_original_poster":false, "other_user_id": trader_id_posted, "time": new Date(data.created_at)});
+				//Post_history.insert({"user_id":trader_id_posted, "retweet_id":data.id_str, "is_original_poster":true, "other_user_id": other_trader_id, "time": new Date(data.created_at)});
+				//Post_history.insert({"user_id":other_trader_id, "retweet_id":data.id_str, "is_original_poster":false, "other_user_id": trader_id_posted, "time": new Date(data.created_at)});
 
-			}, function() {
-				console.log("Failed to bind environment");
-			}));
+
+
+			// TODO: BRING THIS BACK IN ONCE WE FIGURE OUT RATE LIMIT ISSUES
+
+			// traderTwit.post('statuses/retweet/' + tweet_id, Meteor.bindEnvironment(function(err, data, response) {
+			// 	if (err) {
+			// 		console.log(err);
+			// 		if (!direct) {
+			// 			incrementTradeCounts(trader_id_posted, other_trader_id);
+			// 		}
+			// 		return;
+			// 	} 
+			// 	// If the retweet is successful, decrement the corresponding trade counts. 
+			// 	// if (direct) {
+			// 	// 	decrementTradeCounts(trader_id_posted, other_trader_id);
+			// 	// 	Recent_activity.insert({"user_id":trader_id_posted, type: "direct_shout", "is_notification_receiver": true, "other_user_id": other_trader_id, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
+			// 	// 	Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
+			// 	// } 
+			// 	// else {
+			// 	// 	addShoutRequestToActivity(other_trader_id, trader_id_posted, data.id_str, "accept")
+			// 	// }          
+			// 	// Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
+				 
+			// 	// //Post_history.insert({"user_id":trader_id_posted, "retweet_id":data.id_str, "is_original_poster":true, "other_user_id": other_trader_id, "time": new Date(data.created_at)});
+			// 	// //Post_history.insert({"user_id":other_trader_id, "retweet_id":data.id_str, "is_original_poster":false, "other_user_id": trader_id_posted, "time": new Date(data.created_at)});
+
+			// }, function() {
+			// 	console.log("Failed to bind environment");
+			// }));
 
 			}
 			else {
