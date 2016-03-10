@@ -5,7 +5,7 @@
 		{{#each events}}
 			{{#if is_notification_receiver}}
 				{{#if isDirectShoutEvent this}}
-					<li>
+					<li class="notifications-line-item {{#unless this.seen}}notification-highlight{{/unless}}">
 				        <div class="row">
 	                    {{#with getSpecificUser other_user_id}}
 		                    <div class="col-md-2">
@@ -43,7 +43,7 @@
 					</li>
 				{{else}}
 
-					<li>
+					<li class="notifications-line-item {{#unless this.seen}}notification-highlight{{/unless}}">
 				        <div class="row">
 	                    {{#with getSpecificUser other_user_id}}
 		                    <div class="col-md-2">
@@ -66,7 +66,7 @@
 	                	</div>		
 					</li>
 				{{/if}}
-				<li role="separator" class="divider"></li>
+				<li role="separator" class="notifications-divider divider"></li>
 			{{/if}}
 		{{/each}}
 	{{/if}}

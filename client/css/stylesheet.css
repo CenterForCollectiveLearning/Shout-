@@ -996,6 +996,20 @@ li
   text-align: center;
 }
 
+.notifications-divider {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+.notifications-line-item {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.notification-highlight {
+  background-color: yellow;
+}
+
 
 /* Sticky footer styles
 -------------------------------------------------- */

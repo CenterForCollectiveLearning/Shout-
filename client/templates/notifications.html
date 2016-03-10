@@ -5,7 +5,7 @@
             {{/if}}
             {{#each shout_requests_list}}
                 {{> single_tweet}}
-                <li role="separator" class="divider"></li>
+                <li role="separator" class="notifications-divider divider"></li>
 
             {{/each}}
 
@@ -46,12 +46,12 @@
                     </div>
                 </div>
             </li>
-            <li role="separator" class="divider"></li>
+            <li role="separator" class="notifications-divider divider"></li>
 
             {{/each}}
             {{#if exists_recent_activity}}
                 <li id="recent-activity-heading"> Recent Activity</li>
-                <li role="separator" class="divider"></li>
+                <li role="separator" class="notifications-divider divider"></li>
                 {{> history}}
             {{/if}}
         </template>

@@ -6,8 +6,6 @@ Template.history.helpers({
 		var events = Recent_activity.find({"user_id":Meteor.userId()},{sort:{"time":-1}});
 		if (events) {
 			Session.set("existsRecentHistory", true);
-			console.log("Getting events: ");
-			console.log(events.fetch());
 			return events;
 		}
 		Session.set("existsRecentHistory", false);

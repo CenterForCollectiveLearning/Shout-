@@ -6,7 +6,6 @@ Template.notifications.helpers({
 	},
 
 	shout_requests_list: function() {
-		console.log(Shout_requests.find({"retweeting_user": Meteor.userId()}).fetch());
 		return Shout_requests.find({"retweeting_user": Meteor.userId()}).fetch();
 	},
 

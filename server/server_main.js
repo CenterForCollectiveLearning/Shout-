@@ -258,13 +258,13 @@ Meteor.methods({
 
 	// Adds the accepted or rejected trade request to Recent Activity
 	addTradeRequestToActivity: function(user_id_from, user_id_to, status) {
-		Recent_activity.insert({"user_id": user_id_from, "type":"trade_req", "is_notification_receiver":true, "tweet_id": null, "other_user_id":user_id_to, "status":status, "time":new Date()})
-		Recent_activity.insert({"user_id": user_id_to, "type":"trade_req", "is_notification_receiver":false, "tweet_id": null, "other_user_id":user_id_from, "status":status, "time":new Date()})
+		Recent_activity.insert({"user_id": user_id_from, "type":"trade_req", "is_notification_receiver":true, "tweet_id": null, "other_user_id":user_id_to, "status":status, "time":new Date(), "seen": false})
+		Recent_activity.insert({"user_id": user_id_to, "type":"trade_req", "is_notification_receiver":false, "tweet_id": null, "other_user_id":user_id_from, "status":status, "time":new Date(), "seen": false})
 	},
 
 	addShoutRequestToActivity: function(user_id_from, user_id_to, tweet_id, status) {
-		Recent_activity.insert({"user_id": user_id_from, "type": "shout_req", "is_notification_receiver": true, "tweet_id": tweet_id, "other_user_id": user_id_to, "status": status, "time":new Date()});
-		Recent_activity.insert({"user_id": user_id_to, "type": "shout_req", "is_notification_receiver": false, "tweet_id": tweet_id, "other_user_id": user_id_from, "status": status, "time":new Date()});
+		Recent_activity.insert({"user_id": user_id_from, "type": "shout_req", "is_notification_receiver": true, "tweet_id": tweet_id, "other_user_id": user_id_to, "status": status, "time":new Date(), "seen": false});
+		Recent_activity.insert({"user_id": user_id_to, "type": "shout_req", "is_notification_receiver": false, "tweet_id": tweet_id, "other_user_id": user_id_from, "status": status, "time":new Date(), "seen": false});
 	},
 
 	// Review status from/to parameters identify whether the users want to allow direct retweets through their account
@@ -355,8 +355,8 @@ Meteor.methods({
 			/// TODO: PUT THIS BACK IN CALLBACK OF RETWEET API CALL
 			if (direct) {
 					decrementTradeCounts(trader_id_posted, other_trader_id);
-					Recent_activity.insert({"user_id":trader_id_posted, type: "direct_shout", "is_notification_receiver": true, "other_user_id": other_trader_id, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
-					Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
+					Recent_activity.insert({"user_id":trader_id_posted, type: "direct_shout", "is_notification_receiver": true, "other_user_id": other_trader_id, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at), "seen": false}) 
+					Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at), "seen": false}) 
 				} 
 				else {
 					Meteor.call("addShoutRequestToActivity", other_trader_id, trader_id_posted, tweet_id, "accept");
@@ -489,6 +489,10 @@ Meteor.methods({
 		Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":1}});
 		Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":1}});
 	},
+
+	markRecentActivitiesAsSeen: function() {
+		Recent_activity.update({"user_id":Meteor.userId(), "seen":false}, {$set:{"seen":true}});
+	}
 
 	// Checks that user profile pic is up to date
 	// checkUserImage: function() {
