@@ -41,7 +41,21 @@
 							<img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
 						</div>
 						<div class="col-xs-9">
-				          <div><a class="profile-link" data-toggle="modal" data-target="#{{_id}}">{{profile.name}}</a></div>
+				          <div><a class="profile-link" data-toggle="modal" data-target="#{{_id}}">{{profile.name}}</a> 
+
+				          <!-- LOGIC HERE -->
+			          		{{#with findTradeWithUser _id}}
+				            	{{#each trades}}
+				              		{{#if checkUserIdEquality ../../_id other_user_id}}
+				              			{{#if with_review}}
+
+				          					<span id="with-review-label" class="label label-info">With Review</span>
+				          				{{/if}}
+							        {{/if}}
+				            	{{/each}}
+				          	{{/with}}
+
+				          </div>
 				          <div>@{{services.twitter.screenName}}</div>
 						</div>
 					</div>

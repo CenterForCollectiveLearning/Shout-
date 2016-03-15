@@ -4,6 +4,9 @@ var T;
 var TWITTER_API_KEY = Meteor.settings.consumer_key;
 var TWITTER_API_SECRET = Meteor.settings.consumer_secret;
 
+// Before launch, we'll password-protect the app (except landing page)
+var PASSWORD_PROTECT = Meteor.settings.password_protect;
+
 // Batch size of tweets to return from Twitter API.
 // Max is 200.
 var BATCH_TWEET_SIZE = 200;
@@ -18,6 +21,11 @@ Meteor.users.publicFields = {
 	"services.twitter.accessToken":0,
 	"services.twitter.accessTokenSecret":0
 };
+
+//if (PASSWORD_PROTECT) {
+	var basicAuth = new HttpBasicAuth("shout_beta", "macroconnections");
+	basicAuth.protect(['/login']);
+//}
 
 var makeTwitterCall = function (apiCall, params) {
 	var res;

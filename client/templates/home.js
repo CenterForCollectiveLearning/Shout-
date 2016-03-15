@@ -5,6 +5,8 @@ function checkIfRetweetNeedsReview(other_user_id) {
 	trade = trades[0];
 	for (var j=0; j<trade.trades.length; j++) {
 		specific_trade = trade.trades[j];
+		console.log("Specific trade: ");
+		console.log(specific_trade);
 		if (specific_trade.other_user_id == other_user_id) {
 			if (specific_trade.with_review==true) {
 				return true;

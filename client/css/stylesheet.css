@@ -1010,6 +1010,12 @@ li
   background-color: yellow;
 }
 
+#with-review-label {
+  padding-bottom: .2em;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  background-color: #777;
+  font-weight: normal;
+}
 
 /* Sticky footer styles
 -------------------------------------------------- */
