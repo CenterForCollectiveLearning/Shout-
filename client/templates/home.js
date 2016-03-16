@@ -17,7 +17,19 @@ function checkIfRetweetNeedsReview(other_user_id) {
 
 }
 
+function allReady() {
+	if (Template.instance().subscriptionsReady() && Session.get("timeline_ready")) {
+		return true;
+	}
+	return false;
+}
+
 Template.home.helpers({
+
+	notReady: function() {
+		return !allReady()
+	},
+
 	tradeReady: function() {
 		if (Session.get("userListStatus")==="selected" && Session.get("tweetListStatus")==="selected"){
 			return true;
@@ -121,10 +133,15 @@ Accounts.onLogin(function() {
 	});
 });
 
+
+
 Template.home.onCreated(function() {
 
 	  this.autorun(() => {
     	this.subscribe('trades');
+    	this.subscribe('userData');
+    	this.subscribe('allUsers');
+    	this.subscribe('retweet_ids');
   	  });
 
 });

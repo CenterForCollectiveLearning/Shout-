@@ -1,5 +1,7 @@
 <template name="home">
 {{> nav}}
+
+<div id="page-wrapper" hidden={{notReady}}>
 <div class="row">
 	<div class="col-md-5">
 		<div class="row">
@@ -58,7 +60,13 @@
 		</button>
 		<button class="btn btn-default btn-lg" id="reset-button"> Reset </button>
 	</div>
+
 {{/if}}
+</div>
+{{#if notReady}}
+{{> loader}}
+{{/if}}
+
 
 {{> footer}}
 

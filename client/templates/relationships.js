@@ -221,11 +221,11 @@ Template.relationships.events({
 
 Template.relationships.onCreated(function() {
 
-	  this.autorun(() => {
-    	this.subscribe('allUsers');
-    	this.subscribe('trades');
-    	this.subscribe('retweet_ids');
-  	  });
+	  // this.autorun(() => {
+   //  	this.subscribe('allUsers');
+   //  	this.subscribe('trades');
+   //  	this.subscribe('retweet_ids');
+  	//   });
 
 	// Populate the user list initially
 	var users = Meteor.call("getAllUsersExceptLoggedInUser", function(err, result) {

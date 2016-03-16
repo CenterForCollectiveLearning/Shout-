@@ -175,12 +175,16 @@ function loadUserTimeline() {
 
 	//??
 	Session.set("panels_ready", false);
+
+	Session.set("timeline_ready", true);
 	});
 }
 
 Template.recent_tweets.onCreated(function() {
-  	this.autorun(() => {
-		this.subscribe('userData');
-	});
+	Session.set("timeline_ready", false);
+
+ //  	this.autorun(() => {
+	// 	this.subscribe('userData');
+	// });
 	loadUserTimeline();
 });
