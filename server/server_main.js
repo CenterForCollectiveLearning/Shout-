@@ -324,10 +324,10 @@ Meteor.methods({
 			}
 
 			Trades.update({"user_id":user_id_from}, {$pull: {"trades":{"other_user_id":user_id_to}}});
-			Trades.update({"user_id":user_id_from}, {$push: {"trades":{"other_user_id":user_id_to, "this_trade_num":parseInt(num_proposed_from)+parseInt(old_this_trade_num), "other_trade_num":parseInt(num_proposed_to)+parseInt(old_other_trade_num)}}}, {"upsert":true});
+			Trades.update({"user_id":user_id_from}, {$push: {"trades":{"other_user_id":user_id_to, "this_trade_num":parseInt(num_proposed_from)+parseInt(old_this_trade_num), "other_trade_num":parseInt(num_proposed_to)+parseInt(old_other_trade_num), "with_review": review_status_to}}}, {"upsert":true});
 
 			Trades.update({"user_id":user_id_to}, {$pull: {"trades":{"other_user_id":user_id_from}}});
-			Trades.update({"user_id":user_id_to}, {$push: {"trades":{"other_user_id":user_id_from, "this_trade_num":parseInt(num_proposed_to)+parseInt(old_other_trade_num), "other_trade_num":parseInt(num_proposed_from)+parseInt(old_this_trade_num)}}}, {"upsert":true});
+			Trades.update({"user_id":user_id_to}, {$push: {"trades":{"other_user_id":user_id_from, "this_trade_num":parseInt(num_proposed_to)+parseInt(old_other_trade_num), "other_trade_num":parseInt(num_proposed_from)+parseInt(old_this_trade_num), "with_review": review_status_from}}}, {"upsert":true});
 		}
 		else {
 			throw new Meteor.error("logged-out");
@@ -360,50 +360,29 @@ Meteor.methods({
 				access_token_secret: trader_access_token_secret
 			});
 
-			/// TODO: PUT THIS BACK IN CALLBACK OF RETWEET API CALL
-			if (direct) {
+			traderTwit.post('statuses/retweet/' + tweet_id, Meteor.bindEnvironment(function(err, data, response) {
+				if (err) {
+					console.log("Error sending retweet");
+					console.log(err);
+					if (!direct) {
+						Meteor.call("incrementTradeCounts", trader_id_posted, other_trader_id);
+					}
+					return;
+				} 
+				//If the retweet is successful, decrement the corresponding trade counts. 
+				if (direct) {
 					decrementTradeCounts(trader_id_posted, other_trader_id);
-					Recent_activity.insert({"user_id":trader_id_posted, type: "direct_shout", "is_notification_receiver": true, "other_user_id": other_trader_id, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at), "seen": false}) 
-					Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at), "seen": false}) 
+					Recent_activity.insert({"user_id":trader_id_posted, type: "direct_shout", "is_notification_receiver": true, "other_user_id": other_trader_id, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
+					Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
 				} 
 				else {
-					Meteor.call("addShoutRequestToActivity", other_trader_id, trader_id_posted, tweet_id, "accept");
-				}   
-				// TODO: UNCOMMENT BELOW LINE       
-				//Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
+					Meteor.call("addShoutRequestToActivity", other_trader_id, trader_id_posted, data.id_str, "accept")
+				}          
+				Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
 				 
-				//Post_history.insert({"user_id":trader_id_posted, "retweet_id":data.id_str, "is_original_poster":true, "other_user_id": other_trader_id, "time": new Date(data.created_at)});
-				//Post_history.insert({"user_id":other_trader_id, "retweet_id":data.id_str, "is_original_poster":false, "other_user_id": trader_id_posted, "time": new Date(data.created_at)});
-
-
-
-			// TODO: BRING THIS BACK IN ONCE WE FIGURE OUT RATE LIMIT ISSUES
-
-			// traderTwit.post('statuses/retweet/' + tweet_id, Meteor.bindEnvironment(function(err, data, response) {
-			// 	if (err) {
-			// 		console.log(err);
-			// 		if (!direct) {
-			// 			incrementTradeCounts(trader_id_posted, other_trader_id);
-			// 		}
-			// 		return;
-			// 	} 
-			// 	// If the retweet is successful, decrement the corresponding trade counts. 
-			// 	// if (direct) {
-			// 	// 	decrementTradeCounts(trader_id_posted, other_trader_id);
-			// 	// 	Recent_activity.insert({"user_id":trader_id_posted, type: "direct_shout", "is_notification_receiver": true, "other_user_id": other_trader_id, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
-			// 	// 	Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
-			// 	// } 
-			// 	// else {
-			// 	// 	addShoutRequestToActivity(other_trader_id, trader_id_posted, data.id_str, "accept")
-			// 	// }          
-			// 	// Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
-				 
-			// 	// //Post_history.insert({"user_id":trader_id_posted, "retweet_id":data.id_str, "is_original_poster":true, "other_user_id": other_trader_id, "time": new Date(data.created_at)});
-			// 	// //Post_history.insert({"user_id":other_trader_id, "retweet_id":data.id_str, "is_original_poster":false, "other_user_id": trader_id_posted, "time": new Date(data.created_at)});
-
-			// }, function() {
-			// 	console.log("Failed to bind environment");
-			// }));
+			}, function() {
+				console.log("Failed to bind environment");
+			}));
 
 			}
 			else {
@@ -494,6 +473,7 @@ Meteor.methods({
 	// increments the trade counts if the user rejects a shout! post, or if a retweet
 	// was unsuccessful. 
  	incrementTradeCounts: function(trader_id_posted, other_trader_id) {
+ 		console.log("incrementing trade counts");
 		Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":1}});
 		Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":1}});
 	},
@@ -501,24 +481,6 @@ Meteor.methods({
 	markRecentActivitiesAsSeen: function() {
 		Recent_activity.update({"user_id":Meteor.userId(), "seen":false}, {$set:{"seen":true}});
 	}
-
-	// Checks that user profile pic is up to date
-	// checkUserImage: function() {
-	// 	var image_url = Meteor.user().services.twitter.profile_image_url;
-	// 	$.ajax({
-	// 	    url: image_url,
-	// 	    type:'HEAD',
-	// 	    error: function()
-	// 	    {
-	// 	        // Image URL is outdated - Pull it again from twitter
-	// 	    },
-	// 	    success: function()
-	// 	    {
-	// 	        // Image URL is ok
-	// 	        console.log("User profile image is ok.");
-	// 	    }
-	// });
-	// }
 
 });
 

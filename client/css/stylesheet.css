@@ -1013,13 +1013,18 @@ li
 #with-review-label {
   padding-bottom: .2em;
   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-  background-color: #777;
-  font-weight: normal;
+  background-color: #DFE5EA;
+  font-weight: 400;
+  color: black;
 }
 
 #loader-wrapper {
   text-align: center;
   margin-top: 30px;
+}
+
+.relationships-sort-by {
+  visibility: hidden;
 }
 
 /* Sticky footer styles
