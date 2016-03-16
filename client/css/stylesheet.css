@@ -1007,7 +1007,7 @@ li
 }
 
 .notification-highlight {
-  background-color: yellow;
+  background-color: rgba(51, 122, 183, 0.12);
 }
 
 #with-review-label {

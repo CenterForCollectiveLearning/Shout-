@@ -302,7 +302,6 @@ Meteor.methods({
 		else {
 			throw new Meteor.error("logged-out");
 		}
-		console.log("Created the new trade");
 	},
 
 	// When adding to an existing trade, the new review_status will override the old. 
@@ -328,6 +327,18 @@ Meteor.methods({
 
 			Trades.update({"user_id":user_id_to}, {$pull: {"trades":{"other_user_id":user_id_from}}});
 			Trades.update({"user_id":user_id_to}, {$push: {"trades":{"other_user_id":user_id_from, "this_trade_num":parseInt(num_proposed_to)+parseInt(old_other_trade_num), "other_trade_num":parseInt(num_proposed_from)+parseInt(old_this_trade_num), "with_review": review_status_from}}}, {"upsert":true});
+			
+			var status;
+			if (review_status_to) {
+				status="accept_with_review";
+			}
+			else {
+				status = "accept_without_review";
+			}
+
+			Meteor.call("addTradeRequestToActivity",user_id_from, user_id_to, status);
+
+
 		}
 		else {
 			throw new Meteor.error("logged-out");
