@@ -3,24 +3,21 @@
 
 <div id="page-wrapper" hidden={{notReady}}>
 
-<!-- <div class="alert alert-success" role="alert">Trade request sent to Peggy Popular @peggy_popular.</div>
- -->
+<!-- <div class="alert alert-success" role="alert">Trade request sent to Peggy Popular @peggy_popular.</div> -->
+
 <div class="row">
-	<div class="col-md-5">
+	<div class="col-sm-6">
 		<div class="row">
-			<div class="col-md-3"> </div>
-			<div class="col-md-9"> 
+			<div class="col-lg-3"> </div>
+			<div class="col-lg-9"> 
 				<div id="select-tweet-instructions" class="instructions" hidden="{{existsCurrentSelectedTweet}}"><b>Select the tweet you want to have retweeted!</b>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="col-md-1">
-	</div>
-
-	<div class="col-md-5">
-		<div class="col-md-9"> 	  
+	<div class="col-sm-6">
+		<div class="col-lg-9"> 	  
 			{{#if existsCurrentSelectedTweet}}
 				  {{#unless existsCurrentSelectedUser}}
 				  		{{#if existCurrentTraders}}
@@ -29,26 +26,26 @@
 				  {{/unless}}
 			  {{/if}}
 			</div>
-		<div class="col-md-3"> </div>
+		<div class="col-lg-3"> </div>
 	</div>
 </div>
 
 <div class="row">
-	<div class="col-sm-6 col-md-5">
+	<div class="col-sm-6">
 		<div class="row">
-			<div class="col-md-3"> </div>
-			<div class="col-md-9"> 
+			<div class="col-lg-3"> </div>
+			<div class="col-lg-9"> 
 				{{> recent_tweets}}
 			</div>
 		</div>
 	</div>
 
-	<div class="col-sm-0 col-md-1">
-	</div>
+<!-- 	<div class="col-lg-1">
+	</div> -->
 
-	<div class="col-sm-6 col-md-5">
-		<div class="col-md-9"> {{> relationships}}</div>
-		<div class="col-md-3"> </div>
+	<div class="col-sm-6">
+		<div class="col-lg-9"> {{> relationships}}</div>
+		<div class="col-lg-3"> </div>
 	</div>
 </div>
 

@@ -818,11 +818,13 @@ object {
 .notifications-dropdown-with-requests {
   background-color: #F0F4F7;
   width: 500px;
+  padding: 0px;
 }
 
 .notifications-dropdown-without-requests {
   background-color: #F0F4F7;
   width: 350px;
+  padding: 0px;
 }
 
 #requests-heading {
@@ -939,8 +941,8 @@ li
 }
 
 #see-all {
-  width: 40px;
-  margin: auto;
+  text-align: center;
+  background-color: #C6CBCE;
 }
 
 #auto-height-section {
@@ -1025,6 +1027,16 @@ li
 
 .relationships-sort-by {
   visibility: hidden;
+}
+
+.dropdown-menu > li > a:hover {
+    background-color: #f2f2f2;
+    background-image: none;
+}
+
+#page-wrapper {
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 /* Sticky footer styles
