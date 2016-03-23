@@ -3,65 +3,57 @@
 
 <div id="page-wrapper" hidden={{notReady}}>
 
-<!-- <div class="alert alert-success" role="alert">Trade request sent to Peggy Popular @peggy_popular.</div> -->
+	<div id="test-alert" style="max-width: {{test_alert_width}}" class="alert alert-success" role="alert">Trade request sent to Peggy Popular @peggy_popular.</div>
 
-<div class="row">
-	<div class="col-sm-6">
-		<div class="row">
-			<div class="col-lg-3"> </div>
-			<div class="col-lg-9"> 
-				<div id="select-tweet-instructions" class="instructions" hidden="{{existsCurrentSelectedTweet}}"><b>Select the tweet you want to have retweeted!</b>
-				</div>
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="col-container">
+					<div id="select-tweet-instructions" class="instructions" hidden="{{existsCurrentSelectedTweet}}"><b>Select the tweet you want to have retweeted!</b>
+					</div>
 			</div>
 		</div>
-	</div>
 
-	<div class="col-sm-6">
-		<div class="col-lg-9"> 	  
-			{{#if existsCurrentSelectedTweet}}
-				  {{#unless existsCurrentSelectedUser}}
-				  		{{#if existCurrentTraders}}
-				     		<div id="select-user-instructions" class="instructions"><b>Select the trader to retweet your tweet!</b></div>
-				     	{{/if}}
-				  {{/unless}}
-			  {{/if}}
+		<div class="col-sm-6">
+			<div class="col-container">
+				{{#if existsCurrentSelectedTweet}}
+					  {{#unless existsCurrentSelectedUser}}
+					  		{{#if existCurrentTraders}}
+					     		<div id="select-user-instructions" class="instructions"><b>Select the trader to retweet your tweet!</b></div>
+					     	{{/if}}
+					  {{/unless}}
+				  {{/if}}
+				</div>
 			</div>
-		<div class="col-lg-3"> </div>
 	</div>
-</div>
 
-<div class="row">
-	<div class="col-sm-6">
-		<div class="row">
-			<div class="col-lg-3"> </div>
-			<div class="col-lg-9"> 
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="col-container">
 				{{> recent_tweets}}
 			</div>
 		</div>
+
+
+		<div class="col-sm-6">
+			<div class="col-container">
+				{{> relationships}}
+			</div>
+		</div>
 	</div>
 
-<!-- 	<div class="col-lg-1">
-	</div> -->
+	{{#if tradeReady}}
+		<div class="row trade-buttons" >
+			<button class="btn btn-lg btn-primary btn-trade" id="trade-button">
+				{{#if tradeNeedsReview}}
+					Send request to Shout! through @{{getRetweetingTrader}}
+				{{else}}
+			 		Send Shout! through @{{getRetweetingTrader}}
+				{{/if}}
+			</button>
+			<button class="btn btn-default btn-lg" id="reset-button"> Reset </button>
+		</div>
 
-	<div class="col-sm-6">
-		<div class="col-lg-9"> {{> relationships}}</div>
-		<div class="col-lg-3"> </div>
-	</div>
-</div>
-
-{{#if tradeReady}}
-	<div class="row trade-buttons" >
-		<button class="btn btn-lg btn-primary btn-trade" id="trade-button">
-			{{#if tradeNeedsReview}}
-				Send request to Shout! through @{{getRetweetingTrader}}
-			{{else}}
-		 		Send Shout! through @{{getRetweetingTrader}}
-			{{/if}}
-		</button>
-		<button class="btn btn-default btn-lg" id="reset-button"> Reset </button>
-	</div>
-
-{{/if}}
+	{{/if}}
 </div>
 {{#if notReady}}
 {{> loader}}

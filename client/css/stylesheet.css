@@ -651,6 +651,8 @@ object {
 
 #footer-custom {
   border-top: 2px solid white;
+  margin-left: 15px;
+  margin-right: 15px;
 }
 
 .macro-media-logo {
@@ -1037,6 +1039,11 @@ li
 #page-wrapper {
   padding-left: 20px;
   padding-right: 20px;
+}
+
+.col-container {
+  max-width: 500px;
+  margin: auto;
 }
 
 /* Sticky footer styles
