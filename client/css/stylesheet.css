@@ -847,7 +847,6 @@ object {
 
 .promo-section {
   text-align: center;
-  margin-top: 30px;
 }
 
 #promo-video {
@@ -988,7 +987,7 @@ li
 
 .video-wrapper {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 */
+  padding-bottom: 50%; /* 16:9 */
   padding-top: 25px;
   padding-left: ;
   height: 0;
@@ -1045,6 +1044,24 @@ li
   max-width: 500px;
   margin: auto;
 }
+
+#tagline {
+  margin-left: 30px;
+  font-size: 30px;
+}
+
+#landing-page-logo {
+  height: 150px;
+  margin-top: 50px;
+}
+
+.top-promo-section {
+  background-image: url("/images/valpo.jpg");
+  background-size: cover;
+  color: white;
+}
+
+
 
 /* Sticky footer styles
 -------------------------------------------------- */
