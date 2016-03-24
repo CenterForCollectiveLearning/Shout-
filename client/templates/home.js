@@ -31,10 +31,8 @@ Template.home.helpers({
 		return !allReady()
 	},
 
-	test_alert_width: function() {
-		console.log("max width should be:" + ($(window).width()/2-500)+1000);
+	alert_width: function() {
 		return ($(window).width()/2-500)+1000 + "px";
-		//return 1235.5;
 	},
 
 	tradeReady: function() {

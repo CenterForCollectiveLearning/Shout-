@@ -514,7 +514,7 @@ span.tags
 
 .info-text {
   font-family: OpenSans-light;
-margin: 20px;
+  margin: 20px;
 }
 
 .section-custom {
@@ -538,6 +538,8 @@ margin: 20px;
 #motto-text {
   font-family: Oswald;
   font-size: 50px;
+  margin: 20px;
+  margin-top: -40px;
 }
 
 .own-owe-heading {
