@@ -176,7 +176,15 @@ Meteor.startup(function () {
     Session.set("alert-element-width", ($(window).width()/2-500)+1000 + "px");
 
   });
-});
+
+	Meteor.call('sendEmail',
+            'ambikakrishnamachar@gmail.com',
+            'ambikakrishnamachar@gmail.com',
+            'Hello from Meteor!',
+            'This is a test of Email.send.');
+
+	});
+console.log("Sent email");
 
 
 

@@ -131,6 +131,24 @@ Meteor.publish("tweets", function() {
 });
 
 Meteor.methods({
+
+
+  sendEmail: function (to, from, subject, text) {
+    check([to, from, subject, text], [String]);
+
+    // Let other method calls from the same client start running,
+    // without waiting for the email sending to complete.
+    this.unblock();
+
+    Email.send({
+      to: to,
+      from: from,
+      subject: subject,
+      text: text
+    });
+  },
+
+
 	// Returns the tweets stored for a particular user
 	// Does not query the Twitter API
 	getUserTimeline: function(user_id) {
@@ -407,23 +425,27 @@ Meteor.methods({
 	// Followers are at the top, then friends, then remaining users.
 	getAllUsersExceptLoggedInUser: function() {
 		if (this.userId) {
-			followers_ids = Meteor.user() && Meteor.user().profile && Meteor.user().profile.followers_list.ids;
-			friends_ids = Meteor.user() && Meteor.user().profile && Meteor.user().profile.friends_list.ids;
-			
-			followers_ids_strings = [];
-			for (var i=0; i<followers_ids.length; i++) {
-				followers_ids_strings.push(followers_ids[i].toString());
-			}
+			followers_ids = Meteor.user() && Meteor.user().profile && Meteor.user().profile.followers_list && Meteor.user().profile.followers_list.ids;
+			friends_ids = Meteor.user() && Meteor.user().profile && Meteor.user().profile.friends_list && Meteor.user().profile.friends_list.ids;
+			if (followers_ids && friends_ids) {
+				followers_ids_strings = [];
+				for (var i=0; i<followers_ids.length; i++) {
+					followers_ids_strings.push(followers_ids[i].toString());
+				}
 
-			friends_ids_strings = [];
-			for (var i=0; i<friends_ids.length; i++) {
-				friends_ids_strings.push(friends_ids[i].toString());
-			}
+				friends_ids_strings = [];
+				for (var i=0; i<friends_ids.length; i++) {
+					friends_ids_strings.push(friends_ids[i].toString());
+				}
 
-			followers_users = Meteor.users.find({"services.twitter.id":{$in:followers_ids_strings}}).fetch();			
-			friends_users = Meteor.users.find({$and: [{"services.twitter.id":{$in:friends_ids_strings}}, {"services.twitter.id":{$nin: followers_ids_strings}}]}).fetch();
-			other_users = Meteor.users.find({$and: [{"_id":{$ne:Meteor.userId()}}, {"services.twitter.id":{$nin:followers_ids_strings}}, {"services.twitter.id":{$nin: friends_ids_strings}}]}).fetch();
-			return followers_users.concat(friends_users, other_users);
+				followers_users = Meteor.users.find({"services.twitter.id":{$in:followers_ids_strings}}).fetch();			
+				friends_users = Meteor.users.find({$and: [{"services.twitter.id":{$in:friends_ids_strings}}, {"services.twitter.id":{$nin: followers_ids_strings}}]}).fetch();
+				other_users = Meteor.users.find({$and: [{"_id":{$ne:Meteor.userId()}}, {"services.twitter.id":{$nin:followers_ids_strings}}, {"services.twitter.id":{$nin: friends_ids_strings}}]}).fetch();
+				return followers_users.concat(friends_users, other_users);
+			}
+			// If we can't access the user's followers or friends, just load the user list in random order. 
+			console.log("Could not load followers and friends");
+			return Meteor.users.find({"_id": {$ne:Meteor.userId()}}).fetch();
 		}
 		else {
 			throw new Meteor.Error("logged-out");
@@ -496,4 +518,14 @@ Meteor.methods({
 	}
 
 });
+
+Meteor.startup(function() {
+	var smtp = {
+		username: 'postmaster@sandbox083b3fa7a278479aa30e5d8cd4a26aa5',   // eg: server@gentlenode.com
+		password: 'bd52ca741bfb519a37444a3735f1013e',   // eg: 3eeP1gtizk5eziohfervU
+
+	};
+    process.env.MAIL_URL = "smtp://"+ encodeURIComponent(smtp.username) +".mailgun.org:"+ encodeURIComponent(smtp.password) + "@smtp.mailgun.org:587";
+
+})
 
