@@ -134,7 +134,7 @@ Template.profile_modal.events({
     var proposed_from = template.find('.num-you').value;
     var proposed_to = template.find('.num-them').value;
 
-if (!($("#request-modal-without-review_"+user_id_to).is(":checked") || $("#request-modal-with-review_"+user_id_to).is(":checked"))) {      
+    if (!($("#request-modal-without-review_"+user_id_to).is(":checked") || $("#request-modal-with-review_"+user_id_to).is(":checked"))) {      
       Session.set("optionsError", true);
       return;
     }
@@ -156,8 +156,22 @@ if (!($("#request-modal-without-review_"+user_id_to).is(":checked") || $("#reque
     }
 
 
-    Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, proposed_from, proposed_to, review_status);
+    Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, proposed_from, proposed_to, review_status, function(err, result) {
+      if (err) {
+        console.log(err.reason);
+      } 
+      else {
+        Session.set("requested-user-for-alert", getSpecificUser(user_id_to));
+        $("#trade-req-alert").show();
+        $("#trade-req-alert").fadeTo(2000, 500).slideUp(500, function(){
+          $("#trade-req-alert").hide();
+        });
+      }
+    });
+
     $('.modal').modal('hide');
+
+
   },
 
   'hidden.bs.modal .modal': function() {

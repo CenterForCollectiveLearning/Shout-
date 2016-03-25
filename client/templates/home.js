@@ -5,8 +5,6 @@ function checkIfRetweetNeedsReview(other_user_id) {
 	trade = trades[0];
 	for (var j=0; j<trade.trades.length; j++) {
 		specific_trade = trade.trades[j];
-		console.log("Specific trade: ");
-		console.log(specific_trade);
 		if (specific_trade.other_user_id == other_user_id) {
 			if (specific_trade.with_review==true) {
 				return true;
@@ -27,12 +25,19 @@ function allReady() {
 
 Template.home.helpers({
 
+	getRequestedUserForAlert: function() {
+		var user = Session.get("requested-user-for-alert");
+		if (user && user.profile) {
+			return user.profile.name;
+		}
+	},
+
 	notReady: function() {
 		return !allReady()
 	},
 
 	alert_width: function() {
-		return ($(window).width()/2-500)+1000 + "px";
+		return Session.get("alert-element-width");
 	},
 
 	tradeReady: function() {
@@ -86,6 +91,7 @@ Template.home.helpers({
 
 
 Template.home.events({
+
 	'click #trade-button': function(event){
 		var selected_tweet_id = Session.get("selectedTweetId");
 		var selected_trader_id =  Session.get("selectedTraderId");
@@ -96,14 +102,39 @@ Template.home.events({
 			Meteor.call("createNewShoutRequest", selected_tweet_id, selected_trader_id, function(err, result) {
 				if (err) {
 					console.log(err.reason);
-					return;
+					//return;
 				}
+				else {
+				    Session.set("requested-user-for-alert", getSpecificUser(selected_trader_id));
+			        $("#shout-req-alert").show();
+			        $("#shout-req-alert").fadeTo(2000, 500).slideUp(500, function(){
+			          $("#shout-req-alert").hide();
+			        });	
+				}
+
 			});
 		}
 		else {
 			// Directly trigger retweet
 			// Uncomment below line
-			Meteor.call("sendRetweet", selected_tweet_id, selected_trader_id, Meteor.userId(), true);
+			Meteor.call("sendRetweet", selected_tweet_id, selected_trader_id, Meteor.userId(), true, function(error) {
+				console.log(error);
+				if (error) {
+					console.log(error.reason);
+					Session.set("requested-user-for-alert", getSpecificUser(selected_trader_id));
+			        $("#direct-shout-error-alert").show();
+			        $("#direct-shout-error-alert").fadeTo(2000, 500).slideUp(500, function(){
+			          $("#direct-shout-error-alert").hide();
+			        });
+				}
+				else {
+			        Session.set("requested-user-for-alert", getSpecificUser(selected_trader_id));
+			        $("#direct-shout-alert").show();
+			        $("#direct-shout-alert").fadeTo(2000, 500).slideUp(500, function(){
+			          $("#direct-shout-alert").hide();
+			        });
+				}
+			});
 		}
 
 		Session.set("userListStatus", "full");
@@ -136,6 +167,15 @@ Accounts.onLogin(function() {
 			return;
 		}
 	});
+});
+
+Meteor.startup(function () {
+	Session.set("alert-element-width", ($(window).width()/2-500)+1000 + "px");
+
+  window.addEventListener('resize', function(){
+    Session.set("alert-element-width", ($(window).width()/2-500)+1000 + "px");
+
+  });
 });
 
 

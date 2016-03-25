@@ -1063,6 +1063,13 @@ li
   color: white;
 }
 
+.custom-alert {
+  text-align: center;
+  margin: auto;
+  color: black;
+  display: none;
+}
+
 
 
 /* Sticky footer styles

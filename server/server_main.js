@@ -151,7 +151,7 @@ Meteor.methods({
 
 		var user = Meteor.users.findOne({"_id":user_id});
 		if (!(user && user.services && user.services.twitter)) {
-			throw new Meteor.error("no user");
+			throw new Meteor.Error("no user");
 			return;
 		}
 		 if (!user.profile.has_logged_in) {
@@ -216,22 +216,22 @@ Meteor.methods({
 			return makeTwitterCall('search/tweets', twitterParams)
 		}
 		else {
-			throw new Meteor.error("logged-out");
+			throw new Meteor.Error("logged-out");
 		}
 	},
 
 	updateUserFollowersAndFriends: function() {
-		if (this.userId) {
-			var twitterParams = {user_id: Meteor.userId()};
-			var followers_result = makeTwitterCall('followers/ids', twitterParams);
-			var friends_result = makeTwitterCall('friends/ids', twitterParams);
+		// if (this.userId) {
+		// 	var twitterParams = {user_id: Meteor.userId()};
+		// 	var followers_result = makeTwitterCall('followers/ids', twitterParams);
+		// 	var friends_result = makeTwitterCall('friends/ids', twitterParams);
 
-			// Update db collections
-			Meteor.users.update({"_id":Meteor.userId()}, {"$set":{"profile.has_logged_in":true, "profile.followers_list": followers_result, "profile.friends_list": friends_result}});
-		}
-		else {
-			throw new Meteor.error("logged-out");
-		}
+		// 	// Update db collections
+		// 	Meteor.users.update({"_id":Meteor.userId()}, {"$set":{"profile.has_logged_in":true, "profile.followers_list": followers_result, "profile.friends_list": friends_result}});
+		// }
+		// else {
+		// 	throw new Meteor.Error("logged-out");
+		// }
 	},
 
 	// Updates the current trade requests if a modification is made.
@@ -241,7 +241,7 @@ Meteor.methods({
 			Current_trade_requests.update({"user_id_from":user_id_from, "user_id_to":user_id_to}, {"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "review_status": review_status}, {"upsert":true});
 		}
 		else {
-			throw new Meteor.error("logged-out");
+			throw new Meteor.Error("logged-out");
 		}
 		console.log("Updated the current trade request");
 
@@ -258,7 +258,7 @@ Meteor.methods({
 			Current_trade_requests.remove({"user_id_from":user_id_from, "user_id_to":user_id_to});
 		}
 		else {
-			throw new Meteor.error("logged-out");
+			throw new Meteor.Error("logged-out");
 		}
 		console.log("Pushed historic trade request");
 	},
@@ -300,7 +300,7 @@ Meteor.methods({
 
 		}
 		else {
-			throw new Meteor.error("logged-out");
+			throw new Meteor.Error("logged-out");
 		}
 	},
 
@@ -341,7 +341,7 @@ Meteor.methods({
 
 		}
 		else {
-			throw new Meteor.error("logged-out");
+			throw new Meteor.Error("logged-out");
 		}	
 	},
 
@@ -371,34 +371,36 @@ Meteor.methods({
 				access_token_secret: trader_access_token_secret
 			});
 
-			traderTwit.post('statuses/retweet/' + tweet_id, Meteor.bindEnvironment(function(err, data, response) {
-				if (err) {
-					console.log("Error sending retweet");
-					console.log(err);
-					if (!direct) {
-						Meteor.call("incrementTradeCounts", trader_id_posted, other_trader_id);
-					}
-					return;
-				} 
-				//If the retweet is successful, decrement the corresponding trade counts. 
-				if (direct) {
-					decrementTradeCounts(trader_id_posted, other_trader_id);
-					Recent_activity.insert({"user_id":trader_id_posted, type: "direct_shout", "is_notification_receiver": true, "other_user_id": other_trader_id, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
-					Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
-				} 
-				else {
-					Meteor.call("addShoutRequestToActivity", other_trader_id, trader_id_posted, data.id_str, "accept")
-				}          
-				Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
-				 
-			}, function() {
-				console.log("Failed to bind environment");
-			}));
 
+			// Example code
+			var twitterResultsSync = Meteor.wrapAsync(traderTwit.post, traderTwit);
+			var apiCall = 'statuses/retweet/' + tweet_id;
+
+			try {
+				twitterResultsSync(apiCall, params);
 			}
+			catch (err) {
+				console.log("Error sending retweet");
+				if (!direct) {
+					Meteor.call("incrementTradeCounts", trader_id_posted, other_trader_id);
+				}
+				throw new Meteor.Error("Error posting retweet");
+				return;
+			}
+			if (direct) {
+				decrementTradeCounts(trader_id_posted, other_trader_id);
+				Recent_activity.insert({"user_id":trader_id_posted, type: "direct_shout", "is_notification_receiver": true, "other_user_id": other_trader_id, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
+				Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
+			} 
 			else {
-				throw new Meteor.error("logged-out");
-			}
+				Meteor.call("addShoutRequestToActivity", other_trader_id, trader_id_posted, data.id_str, "accept")
+			}          
+			Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
+			 
+		}
+		else {
+			throw new Meteor.Error("logged-out");
+		}
 	},
 
 	// Gets all users for list, and puts them in order
@@ -424,7 +426,7 @@ Meteor.methods({
 			return followers_users.concat(friends_users, other_users);
 		}
 		else {
-			throw new Meteor.error("logged-out");
+			throw new Meteor.Error("logged-out");
 		}
 	},
 
@@ -440,7 +442,7 @@ Meteor.methods({
 			}
 		}
 		else {
-			throw new Meteor.error("logged-out");
+			throw new Meteor.Error("logged-out");
 		}
 	},
 
@@ -455,7 +457,7 @@ Meteor.methods({
 			}
 		}
 		else {
-			throw new Meteor.error("logged-out");
+			throw new Meteor.Error("logged-out");
 		}
 	},
 
@@ -467,7 +469,7 @@ Meteor.methods({
 			Meteor.users.update({"_id" :user_id},{$set : {"profile.bio":edited_bio, "profile.interests":edited_interests}});
 		}
 		else {
-			throw new Meteor.error("logged-out");
+			throw new Meteor.Error("logged-out");
 		}
 	},
 
@@ -477,7 +479,7 @@ Meteor.methods({
 			decrementTradeCounts(trader_id, Meteor.userId()); 
 		}
 		else {
-			throw new Meteor.error("logged-out");
+			throw new Meteor.Error("logged-out");
 		}
 	},
 

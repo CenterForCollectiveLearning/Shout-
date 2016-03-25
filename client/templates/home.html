@@ -3,7 +3,16 @@
 
 <div id="page-wrapper" hidden={{notReady}}>
 
-	<div id="test-alert" style="max-width: {{alert_width}}" class="alert alert-success" role="alert">Trade request sent to Peggy Popular @peggy_popular.</div>
+	<div id="alert-wrapper">
+
+		<div style="max-width: {{alert_width}}" id="trade-req-alert" class="alert alert-success custom-alert" role="alert">Trade request sent to {{getRequestedUserForAlert}}.</div>
+
+		<div style="max-width: {{alert_width}}" id="shout-req-alert" class="alert alert-success custom-alert" role="alert">Request to Shout! sent to {{getRequestedUserForAlert}}.</div>
+
+		<div style="max-width: {{alert_width}}" id="direct-shout-alert" class="alert alert-success custom-alert" role="alert">Shout! sent through {{getRequestedUserForAlert}}.</div>
+
+		<div style="max-width: {{alert_width}}" id="direct-shout-error-alert" class="alert alert-success custom-alert" role="alert">Error sending Shout! through {{getRequestedUserForAlert}}.</div>
+	</div>
 
 	<div class="row">
 		<div class="col-sm-6">
