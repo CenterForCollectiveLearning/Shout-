@@ -122,8 +122,19 @@ Template.profile_modal.events({
       review_status = true;
     }
 
-    Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, new_proposed_from, new_proposed_to, review_status);
-    $('.modal').modal('hide');
+    Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, new_proposed_from, new_proposed_to, review_status, function(err, result) {
+        if (err) {
+          console.log(err.reason);
+        } 
+        else {
+          Session.set("requested-user-for-alert", getSpecificUser(user_id_to));
+          $("#trade-req-alert").show();
+          $("#trade-req-alert").fadeTo(2000, 500).slideUp(500, function(){
+            $("#trade-req-alert").hide();
+          });
+        }
+        });
+      $('.modal').modal('hide');
   },
 
 

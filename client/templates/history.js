@@ -18,10 +18,12 @@ Template.history.helpers({
 		return false;
 	},
 
+
+	// TODO: Figure out how to embed the links here. 
 	statusToString: function(event, type) {
 		if (event.status == "accept") {
 			if (event.type=="shout_req") {
-				return "accepted your Shout! request";
+				return "sent your ";
 			}
 			else {
 				return "accepted your trade request";
@@ -35,7 +37,7 @@ Template.history.helpers({
 		}
 		else {
 			if (event.type=="shout_req") {
-				return "rejected your Shout! request";
+				return "rejected your ";
 			}
 			else {
 				return "rejected your trade request";

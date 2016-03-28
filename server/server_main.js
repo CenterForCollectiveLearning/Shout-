@@ -132,21 +132,37 @@ Meteor.publish("tweets", function() {
 
 Meteor.methods({
 
+	// If user has an email address, put it in the database. 
+	verifyUserCredentials: function() {
+		var twitterParams = {"include_email": true};
+		var res = makeTwitterCall('account/verify_credentials', twitterParams);
+		if (res.email) {
+			Meteor.users.update({"_id" :Meteor.userId()},{$set : {"profile.email":res.email}});
+		}
+	},
 
-  sendEmail: function (to, from, subject, text) {
-    check([to, from, subject, text], [String]);
+	sendNotificationEmail: function(user_id, notification_text) {
 
-    // Let other method calls from the same client start running,
-    // without waiting for the email sending to complete.
-    this.unblock();
+		var user = Meteor.users.findOne({"_id":user_id});
+		var user_email = user && user.profile && user.profile.email;
+		if (user_email) {
+			SSR.compileTemplate( 'notificationEmail', Assets.getText( 'notification-email.html' ) );
 
-    Email.send({
-      to: to,
-      from: from,
-      subject: subject,
-      text: text
-    });
-  },
+			var emailData = {
+			  notification_name: user.profile.name,
+			  notification_user_icon: user.services.twitter.profile_image_url,
+			  notification_text: notification_text
+			};
+
+			Email.send({
+			  to: user_email,
+			  from: "ambikakrishnamachar@gmail.com",
+			  subject: "Notification from Shout!",
+			  html: SSR.render( 'notificationEmail', emailData)
+			});
+		}
+	
+	},
 
 
 	// Returns the tweets stored for a particular user
@@ -257,11 +273,12 @@ Meteor.methods({
 		if (this.userId){
 			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
 			Current_trade_requests.update({"user_id_from":user_id_from, "user_id_to":user_id_to}, {"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "review_status": review_status}, {"upsert":true});
+			Meteor.call("sendNotificationEmail", user_id_to, "sent you a trade request!");
+
 		}
 		else {
 			throw new Meteor.Error("logged-out");
 		}
-		console.log("Updated the current trade request");
 
 	},
 
@@ -278,7 +295,6 @@ Meteor.methods({
 		else {
 			throw new Meteor.Error("logged-out");
 		}
-		console.log("Pushed historic trade request");
 	},
 
 
@@ -355,7 +371,7 @@ Meteor.methods({
 			}
 
 			Meteor.call("addTradeRequestToActivity",user_id_from, user_id_to, status);
-
+			Meteor.call("sendNotificationEmail", user_id_to, "accepted your trade request."); // CHECK THIS
 
 		}
 		else {
@@ -393,12 +409,15 @@ Meteor.methods({
 			// Example code
 			var twitterResultsSync = Meteor.wrapAsync(traderTwit.post, traderTwit);
 			var apiCall = 'statuses/retweet/' + tweet_id;
+			//var params = {id: tweet_id};
 
 			try {
-				twitterResultsSync(apiCall, params);
+				twitterResultsSync(apiCall);
 			}
 			catch (err) {
 				console.log("Error sending retweet");
+				console.log(err);
+				console.log(err.reason);
 				if (!direct) {
 					Meteor.call("incrementTradeCounts", trader_id_posted, other_trader_id);
 				}
@@ -411,7 +430,9 @@ Meteor.methods({
 				Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
 			} 
 			else {
-				Meteor.call("addShoutRequestToActivity", other_trader_id, trader_id_posted, data.id_str, "accept")
+				Meteor.call("addShoutRequestToActivity", other_trader_id, trader_id_posted, tweet_id, "accept");
+				Meteor.call("sendNotificationEmail", trader_id_posted, "accepted your Shout! request.");
+
 			}          
 			Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
 			 
@@ -499,6 +520,8 @@ Meteor.methods({
 		if (this.userId) {
 			Shout_requests.insert({"original_poster_id": Meteor.userId(), "retweeting_user": trader_id, "tweet_id": tweet_id});
 			decrementTradeCounts(trader_id, Meteor.userId()); 
+			Meteor.call("sendNotificationEmail", trader_id_posted, "sent you a Shout! request.");
+
 		}
 		else {
 			throw new Meteor.Error("logged-out");

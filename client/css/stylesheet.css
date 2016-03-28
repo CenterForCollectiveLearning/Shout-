@@ -1070,14 +1070,54 @@ li
   display: none;
 }
 
+#email-container {
+  text-align: center;
+  background-color: white;
+  width: 60%;
+  margin: auto;
+  padding: 30px;
+
+}
+
+#email-logo {
+  height: 50px;
+}
+
+#email-user-icon {
+  height: 75px;
+  margin: 20px;
+}
+
+#email-name {
+  font-size: 36px;
+}
+
+#email-notification-text {
+  font-size: 24px;
+}
+
+#email-view-button {
+  font-size: 20px;
+  color: black;
+  background-color: #66b2ff;
+  margin-top: 20px;
+}
+
+#__blaze-root {
+    display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+
 
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
   position: relative;
-  min-height: 100%;
-}
+/*  min-height: 100%;
+*/}
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;

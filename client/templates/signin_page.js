@@ -8,6 +8,7 @@ Template.signin_page.rendered = function() {
 Template.signin_page.events({
 	'click #btn-login': function() {
 		Meteor.loginWithTwitter(function() {
+			Meteor.call('verifyUserCredentials');
 		});
 	}
 })

@@ -57,7 +57,12 @@
 								{{#with getSpecificUser other_user_id}}
 									{{profile.name}}
 								{{/with}}
-									{{statusToString this}}					
+
+								{{#if isShoutRequestEvent this}}
+									{{statusToString this}} <a href="https://twitter.com/statuses/{{tweet_id}}" target="_blank" >Shout! </a>
+								{{else}}
+									{{statusToString this}}	
+								{{/if}}				
 		                        </div>
 		                        <div>
 									{{getDate time}} {{getTime time}}

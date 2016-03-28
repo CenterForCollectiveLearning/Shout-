@@ -177,14 +177,14 @@ Meteor.startup(function () {
 
   });
 
-	Meteor.call('sendEmail',
-            'ambikakrishnamachar@gmail.com',
-            'ambikakrishnamachar@gmail.com',
-            'Hello from Meteor!',
-            'This is a test of Email.send.');
+});
+	// Meteor.call('sendEmail',
+ //            'ambikakrishnamachar@gmail.com',
+ //            'ambikakrishnamachar@gmail.com',
+ //            'Hello from Meteor!',
+ //            'This is a test of Email.send.');
 
-	});
-console.log("Sent email");
+	// });
 
 
 

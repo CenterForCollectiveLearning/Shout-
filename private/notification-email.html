@@ -1,0 +1,78 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta name="viewport" content="width=device-width" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>HTML email test</title>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/ShoutNotification" style="background-color: #DFE5EA; font-family: Oswald;">
+  <style>
+    @font-face {
+        font-family: Oswald;
+        src: url("/fonts/oswald/Oswald-Regular.ttf");
+    }
+  </style>
+ 
+  <div id="email-container" style="text-align: center; background-color: white; width: 60%; margin: auto; padding: 30px;">
+    <div id="shout-logo-container">
+      <object data="ShoutLogoWithText.svg" type="image/svg+xml" id="email-logo" style="height: 50px;">
+            <img src="ShoutLogoWithText.png" />
+          </object>
+    </div>
+    <hr>
+    <div>
+      <img id="email-user-icon" style="height: 65px; margin: 20px; @font-face {
+    font-family: Oswald;
+    src: url("/fonts/oswald/Oswald-Regular.ttf");
+}" src="{{notification_user_icon}}">
+      <div id="email-name" style="font-size: 36px">
+        {{notification_name}}
+      </div>
+      <div id="email-notification-text" style="font-size: 24px">
+        {{notification_text}}
+      </div>
+      <div> 
+        <button class="btn btn-lg btn-primary" href="http://shout.media.mit.edu" id="email-view-button" 
+        style="
+              display: inline-block;
+              padding: 6px 12px;
+              margin-bottom: 0;
+              font-size: 14px;
+              font-weight: normal;
+              line-height: 1.42857143;
+              text-align: center;
+              white-space: nowrap;
+              vertical-align: middle;
+              -ms-touch-action: manipulation;
+              touch-action: manipulation;
+              cursor: pointer;
+              -webkit-user-select: none;
+              -moz-user-select: none;
+              -ms-user-select: none;
+              user-select: none;
+              background-image: none;
+              border: 1px solid transparent;
+              border-radius: 4px;
+
+
+              border-color: #2e6da4;
+              
+              padding: 10px 16px;
+              font-size: 18px;
+              line-height: 1.3333333;
+              border-radius: 6px;
+
+
+              font-size: 20px; 
+              color: black; 
+              background-color: #66b2ff; 
+              margin-top: 20px;">
+          Login to Shout! to view
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
