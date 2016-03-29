@@ -29,6 +29,10 @@ Template.profile_modal.helpers({
     return Session.get("optionsError");
   },
 
+  exists_both_zero_error: function() {
+    return Session.get("bothZeroError");
+  },
+
   other_user_timeline: function() {
     return Session.get("otherUserTimeline");
   },
@@ -145,11 +149,35 @@ Template.profile_modal.events({
     var proposed_from = template.find('.num-you').value;
     var proposed_to = template.find('.num-them').value;
 
-    if (!($("#request-modal-without-review_"+user_id_to).is(":checked") || $("#request-modal-with-review_"+user_id_to).is(":checked"))) {      
+    var options_error = !($("#request-modal-without-review_"+user_id_to).is(":checked") || $("#request-modal-with-review_"+user_id_to).is(":checked"));
+    var param_error = !(checkOfferParam(proposed_from) && checkOfferParam(proposed_to))
+    var both_zero_error = !(parseInt(proposed_from) + parseInt(proposed_to) > 0)
+    if (options_error) {
       Session.set("optionsError", true);
+    }
+    else {
+      Session.set("optionsError", false);
+    }
+
+    if (param_error) {
+      Session.set("paramError", true);
+    } 
+    else {
+      Session.set("paramError", false);
+    }
+
+    if (both_zero_error) {
+      Session.set("bothZeroError", true);
+    }
+    else {
+      Session.set("bothZeroError", false);
+    }
+
+    if (param_error || options_error || both_zero_error) {
       return;
     }
-    Session.set("optionsError", false);
+
+
 
     var review_status;
     if ($("#request-modal-without-review_"+user_id_to).is(":checked")) {
@@ -159,12 +187,6 @@ Template.profile_modal.events({
       review_status = true;
     }
 
-
-    if (!(checkOfferParam(proposed_from) && checkOfferParam(proposed_to))) {
-        Session.set("paramError", true);
-        //$('.modal').modal('hide');
-        return;
-    }
 
 
     Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, proposed_from, proposed_to, review_status, function(err, result) {
@@ -188,6 +210,7 @@ Template.profile_modal.events({
   'hidden.bs.modal .modal': function() {
     Session.set("paramError", false);
     Session.set("optionsError", false);
+    Session.set("bothZeroError", false);
     $(".num-you").val('');
     $(".num-them").val('');
 

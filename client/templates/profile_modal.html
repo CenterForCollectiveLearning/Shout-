@@ -32,16 +32,32 @@
 
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     {{else}} 
+
+                    {{#if exists_incoming_pending_trade_request _id}}
+                        <div class="alert alert-warning" role="alert">You already have a pending trade request from {{profile.name}}.</div>
+
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                    {{else}}
+                            <div class="error_messages">
                             {{#if exists_param_error}}
                                 <div class="param-error-text">
                                     Please enter integers between {{get_min_trade_param}} and {{get_max_trade_param}}.
                                 </div>
-                            {{/if}} 
+                            {{else}}
+                                {{#if exists_both_zero_error}}
+                                    <div class="param-error-text">
+                                        Please specify at least one positive trade number.
+                                    </div>
+                                {{/if}} 
+                            {{/if}}
+
                             {{#if exists_options_error}}
-                                <div class="options-error-text" style="color: red">
+                                <div class="param-error-text">
                                     Please specify whether you want to review retweets sent through your account.
                                 </div>
                             {{/if}}
+                        </div>
                             <div class="profile-modal-make-deal">
                                 <div>
                                     I will retweet you
@@ -74,6 +90,9 @@
                         {{else}}
                             <button type="button" class="btn btn-default btn-make-offer" id="make-offer">Make the Offer</button>
                         {{/if}} 
+
+
+                        {{/if}}
 
                     {{/if}}
                     {{/with}}
