@@ -64,6 +64,13 @@ var decrementTradeCounts= function(trader_id_posted, other_trader_id) {
 	Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":-1}});
 };
 
+var checkForFinishedTrade= function(trader_id_posted, other_user_id) {
+	Trades.update({"user_id":trader_id_posted}, {$pull:{"trades":{"other_user_id":other_user_id, "this_trade_num":0, "other_trade_num":0}}});
+	Trades.update({"user_id":other_user_id}, {$pull:{"trades":{"other_user_id":trader_id_posted, "this_trade_num":0, "other_trade_num":0}}});
+};
+
+
+
 // PUBLICATIONS
 
 Meteor.publish("userData", function() {
@@ -273,7 +280,9 @@ Meteor.methods({
 		if (this.userId){
 			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
 			Current_trade_requests.update({"user_id_from":user_id_from, "user_id_to":user_id_to}, {"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "review_status": review_status}, {"upsert":true});
-			Meteor.call("sendNotificationEmail", user_id_to, "sent you a trade request!");
+			
+			// TODO: Uncomment below. 
+			//Meteor.call("sendNotificationEmail", user_id_to, "sent you a trade request!");
 
 		}
 		else {
@@ -412,7 +421,10 @@ Meteor.methods({
 			//var params = {id: tweet_id};
 
 			try {
-				twitterResultsSync(apiCall);
+				if (direct) {
+					twitterResultsSync(apiCall);
+				}
+				
 			}
 			catch (err) {
 				console.log("Error sending retweet");
@@ -426,14 +438,19 @@ Meteor.methods({
 			}
 			if (direct) {
 				decrementTradeCounts(trader_id_posted, other_trader_id);
-				Recent_activity.insert({"user_id":trader_id_posted, type: "direct_shout", "is_notification_receiver": true, "other_user_id": other_trader_id, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
-				Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":data.id_str, "status": null, "time":new Date(data.created_at)}) 
+				Recent_activity.insert({"user_id":trader_id_posted, type: "direct_shout", "is_notification_receiver": true, "other_user_id": other_trader_id, "tweet_id":tweet_id, "status": null, "time":new Date()}) 
+				Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":tweet_id, "status": null, "time":new Date()}) 
+				
+				// If trade has reached 0-0, we should remove it. 
+				checkForFinishedTrade(trader_id_posted, other_trader_id);
+
 			} 
 			else {
 				Meteor.call("addShoutRequestToActivity", other_trader_id, trader_id_posted, tweet_id, "accept");
 				Meteor.call("sendNotificationEmail", trader_id_posted, "accepted your Shout! request.");
 
-			}          
+			} 		
+
 			Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
 			 
 		}
