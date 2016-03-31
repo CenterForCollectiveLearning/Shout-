@@ -38,3 +38,5 @@ momentjs:moment
 reactive-var
 ecmascript
 jabbslad:basic-auth
+email
+meteorhacks:ssr
