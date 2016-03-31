@@ -865,6 +865,7 @@ object {
 #signin-button-wrapper {
   /*margin-top: -45px;*/
   margin-bottom: 30px;
+  margin-top: 10px;
 }
 
 #recent-activity-heading {
@@ -1053,8 +1054,8 @@ li
 }
 
 #landing-page-logo {
-  height: 150px;
-  margin-top: 50px;
+  height: 200px;
+  margin-bottom: -50px; /*This is temporary until we replace the SVG*/
 }
 
 .top-promo-section {
@@ -1128,6 +1129,10 @@ li
   margin-top: 30px;
 }
 
+.request-item {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
 
 
 /* Sticky footer styles

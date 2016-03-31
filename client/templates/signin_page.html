@@ -1,15 +1,31 @@
 <template name="signin_page">
 <div id="fullpage">
 	<div class="section section-custom" id="auto-height-section">
-		<div class="promo-section">
+		<div class="promo-section top-promo-section">
+					<object data="/images/ShoutLogoWithText_white.svg" type="image/svg+xml" id="landing-page-logo">
+         			 <img src="/images/ShoutLogoWithText.png" />
+        			</object>
+        			<div id="tagline">
+        				Get your message further. 
+        			</div>
+
+        		<!-- 	<div id="motto-text">
+        				Coming Soon!
+        			</div> -->
+        						<div id="signin-button-wrapper"> 
+	 			<button class="btn btn-xlarge btn-primary" id="btn-login"> Sign in with Twitter</button>
+			</div>
+
+				<div class="video-wrapper">
+					<iframe id="promo-iframe" src="https://player.vimeo.com/video/157641350?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+				</div>
+			
+<!-- 
 			<div class="video-wrapper"> 
 					<iframe id="promo-iframe" src="https://player.vimeo.com/video/157641350?title=0&byline=0&portrait=0" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
 			</div>
-			<div id="signin-button-wrapper"> 
-	 			<button class="btn btn-xlarge btn-primary" id="btn-login"> Sign in with Twitter</button>
-			</div>
+			<div id="motto-text">Coming Soon</div> -->
 		</div>
-
 	</div>
 	<div class="section section-custom" id="auto-height-section">
 		<div id="trade-retweets-intro-heading" class="landing-heading">
@@ -26,8 +42,10 @@
 		<div id="trade-retweets-intro-heading" class="landing-heading">
 			<span id="intro-heading-text">How does Shout! work?</span>
 		</div>
-			<div id="tutorial-wrapper">	<img id="tutorial-image" src="/images/ShoutTutorial1.png"></div>
- 	</div>
+		<div id="tutorial-wrapper">
+			<img id="tutorial-image" src="/images/ShoutTutorial1.png">
+		</div>
+	</div>
 
 	<div class="section section-custom" id="auto-height-section">
 		<div id="trade-retweets-intro-heading" class="landing-heading">
@@ -44,7 +62,6 @@
 		</div>
 		<div class="info-text">
 			<div id="how-it-works-bullets">
-
 				When you start a trade, Shout! gives you the option to select an exchange "with" or "without" review. If you choose to trade without review, retweets will be directly triggered through your account. If you choose to trade with review, you can review tweets before they come out.</div>
 		</div>
 	</div>
@@ -74,7 +91,6 @@
 
 	<div class="section section-custom" id="auto-height-section">
 		<div id="trade-retweets-intro-heading" class="landing-heading">
-
 			<span id="intro-heading-text">Can someone I have traded retweets with access my account?</span>
 		</div>
 		<div class="info-text">

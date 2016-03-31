@@ -163,7 +163,7 @@ Meteor.methods({
 
 			Email.send({
 			  to: user_email,
-			  from: "ambikakrishnamachar@gmail.com",
+			  from: "shout.notifications@gmail.com",
 			  subject: "Notification from Shout!",
 			  html: SSR.render( 'notificationEmail', emailData)
 			});
@@ -282,7 +282,7 @@ Meteor.methods({
 			Current_trade_requests.update({"user_id_from":user_id_from, "user_id_to":user_id_to}, {"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "review_status": review_status}, {"upsert":true});
 			
 			// TODO: Uncomment below. 
-			//Meteor.call("sendNotificationEmail", user_id_to, "sent you a trade request!");
+			Meteor.call("sendNotificationEmail", user_id_to, "sent you a trade request!");
 
 		}
 		else {
@@ -438,8 +438,8 @@ Meteor.methods({
 			}
 			if (direct) {
 				decrementTradeCounts(trader_id_posted, other_trader_id);
-				Recent_activity.insert({"user_id":trader_id_posted, type: "direct_shout", "is_notification_receiver": true, "other_user_id": other_trader_id, "tweet_id":tweet_id, "status": null, "time":new Date()}) 
-				Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":tweet_id, "status": null, "time":new Date()}) 
+				Recent_activity.insert({"user_id":trader_id_posted, type: "direct_shout", "is_notification_receiver": true, "other_user_id": other_trader_id, "tweet_id":tweet_id, "status": null, "seen":false, "time":new Date()}) 
+				Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":tweet_id, "status": null, "seen":false, "time":new Date()}) 
 				
 				// If trade has reached 0-0, we should remove it. 
 				checkForFinishedTrade(trader_id_posted, other_trader_id);
@@ -537,7 +537,7 @@ Meteor.methods({
 		if (this.userId) {
 			Shout_requests.insert({"original_poster_id": Meteor.userId(), "retweeting_user": trader_id, "tweet_id": tweet_id});
 			decrementTradeCounts(trader_id, Meteor.userId()); 
-			Meteor.call("sendNotificationEmail", trader_id_posted, "sent you a Shout! request.");
+			Meteor.call("sendNotificationEmail", trader_id, "sent you a Shout! request.");
 
 		}
 		else {

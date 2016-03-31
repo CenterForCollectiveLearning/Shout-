@@ -5,7 +5,7 @@
 		{{#each events}}
 			{{#if is_notification_receiver}}
 				{{#if isDirectShoutEvent this}}
-					<li class="notifications-line-item {{#unless this.seen}}notification-highlight{{/unless}}">
+					<li class="notifications-line-item {{#unless seen}}notification-highlight{{/unless}}">
 				        <div class="row">
 	                    {{#with getSpecificUser other_user_id}}
 		                    <div class="col-md-2">
@@ -16,23 +16,13 @@
 		                 {{/with}}
 		                    <div class="col-md-10">
 		                        <div>
-		                        {{#unless is_original_poster}}
-									You
-								{{else}}
-									  {{#with getSpecificUser other_user_id}}
+									{{#with getSpecificUser other_user_id}}
 										{{profile.name}}
-										{{/with}}
-								{{/unless}}
+									{{/with}}
 								
-									<a href="https://twitter.com/statuses/{{retweet_id}}" target="_blank" >sent a Shout!</a> through
+									<a href="https://twitter.com/statuses/{{tweet_id}}" target="_blank" >sent a Shout!</a> through
 								
-								{{#if is_original_poster}}
-									you
-								{{else}}
-								{{#with getSpecificUser other_user_id}}
-										{{profile.name}}
-								{{/with}}
-								{{/if}}
+									you.
 								
 		                        </div>
 		                        <div>
