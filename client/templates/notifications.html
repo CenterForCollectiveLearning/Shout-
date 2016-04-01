@@ -16,24 +16,24 @@
             <li>
                 <div class="row request-item">
                     {{#with specific_user user_id_from}} 
-                    <div class="col-md-2">
+                    <div class="col-xs-2">
                         <div>
                             <img class="notifications-user-icon user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
                         </div>
                     </div>
                     {{/with}}
 
-                    <div class="col-md-10">
+                    <div class="col-xs-10">
                         {{#with specific_user user_id_from}} 
                         <div><b>{{profile.name}}</b> @{{services.twitter.screenName}} offers: </div>
                         {{/with}}
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-xs-6">
                                 <div><span class="request-proposal-numbers trading-num-own"><b>{{proposed_to}}</b></span> of their retweets for</div>
                                 <div><span class="request-proposal-numbers trading-num-owe"><b>{{proposed_from}}</b></span> of your retweets.</div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-xs-6">
                                 <div class="row proposal-buttons-wrapper">
                                     <div class="btn-group proposal-buttons" role="group">
                                         <button class="btn btn-default proposal-action accept">Accept</button>

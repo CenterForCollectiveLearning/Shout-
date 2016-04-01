@@ -93,6 +93,7 @@ Template.notifications.events({
 			Session.set("old_proposed_from", this.proposed_from);
 			Session.set("old_proposed_to", this.proposed_to);
 			Session.set("modifyStatus", true);
+
 			$('#'+this.user_id_from).modal('show');
 		}
 		e.preventDefault;

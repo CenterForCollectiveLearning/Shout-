@@ -49,27 +49,10 @@ Template.profile_modal.helpers({
     return existsOutgoingPendingTradeRequest(user_id);
   },
   exists_incoming_pending_trade_request: function(user_id) {
-    return existsIncomingPendingTradeRequest(user_id);
+    return existsIncomingPendingTradeRequest(user_id) && !Session.get("modifyStatus");
   },
-  exists_bio: function(user_id) {
-    var user = getSpecificUser(user_id);
-    var profile = user && user.profile;
-    if (profile.bio) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  },
-  exists_interests: function(user_id){
-    var user = getSpecificUser(user_id);
-    var profile = user && user.profile;
-    if (profile.interests) {
-      return true;
-    }
-    else {
-      return false;
-    }
+  modify_status: function() {
+    return Session.get("modifyStatus");
   },
 
   dateConverter: function(date) {
@@ -211,6 +194,7 @@ Template.profile_modal.events({
     Session.set("paramError", false);
     Session.set("optionsError", false);
     Session.set("bothZeroError", false);
+    Session.set("modifyStatus", false);
     $(".num-you").val('');
     $(".num-them").val('');
 

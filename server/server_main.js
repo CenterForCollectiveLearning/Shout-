@@ -294,6 +294,8 @@ Meteor.methods({
 	// Once a trade proposal is accepted/rejected, push the trade request to the historic trade request collection
 	// and clear the current request.
 	pushHistoricTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to, status) {
+		
+		console.log("user_id_from: " + user_id_from + ", user_id_to: " + user_id_to);
 		if (this.userId){
 			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
 			check(status, String);
@@ -482,7 +484,7 @@ Meteor.methods({
 				return followers_users.concat(friends_users, other_users);
 			}
 			// If we can't access the user's followers or friends, just load the user list in random order. 
-			console.log("Could not load followers and friends");
+			//console.log("Could not load followers and friends");
 			return Meteor.users.find({"_id": {$ne:Meteor.userId()}}).fetch();
 		}
 		else {
@@ -548,7 +550,6 @@ Meteor.methods({
 	// increments the trade counts if the user rejects a shout! post, or if a retweet
 	// was unsuccessful. 
  	incrementTradeCounts: function(trader_id_posted, other_trader_id) {
- 		console.log("incrementing trade counts");
 		Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":1}});
 		Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":1}});
 	},

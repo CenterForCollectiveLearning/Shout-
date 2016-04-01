@@ -85,7 +85,7 @@
 
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 
-                        {{#if exists_incoming_pending_trade_request _id}}
+                        {{#if modify_status}}
                             <button type="button" class="btn btn-default btn-make-offer" id="propose-modified-trade">Make the Offer</button>
                         {{else}}
                             <button type="button" class="btn btn-default btn-make-offer" id="make-offer">Make the Offer</button>
