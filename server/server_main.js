@@ -23,8 +23,8 @@ Meteor.users.publicFields = {
 };
 
 //if (PASSWORD_PROTECT) {
-	var basicAuth = new HttpBasicAuth("shout_beta", "macroconnections");
-	basicAuth.protect(['/login']);
+	// var basicAuth = new HttpBasicAuth("shout_beta", "macroconnections");
+	// basicAuth.protect(['/login']);
 //}
 
 var makeTwitterCall = function (apiCall, params) {
