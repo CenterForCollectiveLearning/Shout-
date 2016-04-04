@@ -148,21 +148,24 @@ Meteor.methods({
 		}
 	},
 
-	sendNotificationEmail: function(user_id, notification_text) {
 
-		var user = Meteor.users.findOne({"_id":user_id});
-		var user_email = user && user.profile && user.profile.email;
-		if (user_email) {
+	// Notification email sent to the other user
+	// Email contents contain info about logged-in user and action
+	sendNotificationEmail: function(other_user_id, notification_text) {
+		var other_user = Meteor.users.findOne({"_id":other_user_id});
+		var other_user_email = other_user &&  other_user.profile &&  other_user.profile.email;
+
+		if (other_user_email) {
 			SSR.compileTemplate( 'notificationEmail', Assets.getText( 'notification-email.html' ) );
 
 			var emailData = {
-			  notification_name: user.profile.name,
-			  notification_user_icon: user.services.twitter.profile_image_url,
+			  notification_name: Meteor.user().profile.name,
+			  notification_user_icon: Meteor.user().services.twitter.profile_image_url,
 			  notification_text: notification_text
 			};
 
 			Email.send({
-			  to: user_email,
+			  to: other_user_email,
 			  from: "shout.notifications@gmail.com",
 			  subject: "Notification from Shout!",
 			  html: SSR.render( 'notificationEmail', emailData)
@@ -281,7 +284,7 @@ Meteor.methods({
 			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
 			Current_trade_requests.update({"user_id_from":user_id_from, "user_id_to":user_id_to}, {"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "review_status": review_status}, {"upsert":true});
 			
-			// TODO: Uncomment below. 
+			
 			Meteor.call("sendNotificationEmail", user_id_to, "sent you a trade request!");
 
 		}
