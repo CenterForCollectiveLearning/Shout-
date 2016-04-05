@@ -4,6 +4,10 @@ var T;
 var TWITTER_API_KEY = Meteor.settings.consumer_key;
 var TWITTER_API_SECRET = Meteor.settings.consumer_secret;
 
+// Email settings
+var SMTP_USERNAME = Meteor.settings.smtp_username;
+var SMTP_PASSWORD = Meteor.settings.smtp_password;
+
 // Before launch, we'll password-protect the app (except landing page)
 var PASSWORD_PROTECT = Meteor.settings.password_protect;
 
@@ -11,8 +15,9 @@ var PASSWORD_PROTECT = Meteor.settings.password_protect;
 // Max is 200.
 var BATCH_TWEET_SIZE = 200;
 
-// Number of times to query the Twitter API for timeliner results.
-// Total number of tweets it can return is 3200
+// Number of times to query the Twitter API for timeline results.
+// (API cannot return all tweets at once.)
+// Total number of tweets it can return per call is 3200
 // So BATCH_TWEET_SIZE * NUM_TWEET_ITERATIONS <= 3200
 var NUM_BATCH_ITERATIONS = 5;
 
@@ -51,6 +56,7 @@ var makeTwitterCall = function (apiCall, params) {
 	return res;
 };
 
+// Check that trade request has correct params
 var checkTradeParams = function(user_id_from, user_id_to, num_proposed_from, num_proposed_to) {
 	check(user_id_from, String);
 	check(user_id_to, String);
@@ -58,12 +64,13 @@ var checkTradeParams = function(user_id_from, user_id_to, num_proposed_from, num
 	check(num_proposed_to, String);		
 };
 
-// Decreases the trade amounts on a successful retweet. 
+// Decreases the trade quantities on a successful retweet. 
 var decrementTradeCounts= function(trader_id_posted, other_trader_id) {
 	Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":-1}});
 	Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":-1}});
 };
 
+// Removes a trade that has 0-0 balance from the collection. 
 var checkForFinishedTrade= function(trader_id_posted, other_user_id) {
 	Trades.update({"user_id":trader_id_posted}, {$pull:{"trades":{"other_user_id":other_user_id, "this_trade_num":0, "other_trade_num":0}}});
 	Trades.update({"user_id":other_user_id}, {$pull:{"trades":{"other_user_id":trader_id_posted, "this_trade_num":0, "other_trade_num":0}}});
@@ -72,7 +79,7 @@ var checkForFinishedTrade= function(trader_id_posted, other_user_id) {
 
 
 // PUBLICATIONS
-
+// TODO: More selective publications
 Meteor.publish("userData", function() {
 	if (!this.userId) {
 		return this.ready();
@@ -137,9 +144,12 @@ Meteor.publish("tweets", function() {
 	return Tweets.find();
 });
 
+
+
 Meteor.methods({
 
 	// If user has an email address, put it in the database. 
+	// This is because the general twitter login does not populate the email addresses. 
 	verifyUserCredentials: function() {
 		var twitterParams = {"include_email": true};
 		var res = makeTwitterCall('account/verify_credentials', twitterParams);
@@ -149,7 +159,7 @@ Meteor.methods({
 	},
 
 
-	// Notification email sent to the other user
+	// Notification email sent to the other_user param
 	// Email contents contain info about logged-in user and action
 	sendNotificationEmail: function(other_user_id, notification_text) {
 		var other_user = Meteor.users.findOne({"_id":other_user_id});
@@ -175,8 +185,7 @@ Meteor.methods({
 	},
 
 
-	// Returns the tweets stored for a particular user
-	// Does not query the Twitter API
+	// Returns the tweets we have stored in our db for a particular user
 	getUserTimeline: function(user_id) {
 		check(user_id, String);
 
@@ -190,6 +199,8 @@ Meteor.methods({
 	// Pull down the timeline data from Twitter here.
 	// If first user login, pull tweets in batches. 
 	// Else, pull most recent tweets.
+
+	// TODO: Optimize this - Loading time is way too slow.
 	updateUserTimeline: function(user_id) {
 		check(user_id, String);
 
@@ -264,6 +275,8 @@ Meteor.methods({
 		}
 	},
 
+
+	// TODO: Figure out why this is causing so many API calls, and bring it back
 	updateUserFollowersAndFriends: function() {
 		// if (this.userId) {
 		// 	var twitterParams = {user_id: Meteor.userId()};
@@ -278,13 +291,12 @@ Meteor.methods({
 		// }
 	},
 
-	// Updates the current trade requests if a modification is made.
+	// Updates the current trade requests.
 	updateCurrentTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to, review_status) {
 		if (this.userId){
 			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
 			Current_trade_requests.update({"user_id_from":user_id_from, "user_id_to":user_id_to}, {"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "review_status": review_status}, {"upsert":true});
-			
-			
+
 			Meteor.call("sendNotificationEmail", user_id_to, "sent you a trade request!");
 
 		}
@@ -318,6 +330,7 @@ Meteor.methods({
 		Recent_activity.insert({"user_id": user_id_to, "type":"trade_req", "is_notification_receiver":false, "tweet_id": null, "other_user_id":user_id_from, "status":status, "time":new Date(), "seen": false})
 	},
 
+	// Adds the accepted or rejected Shout! request to Recent Activity
 	addShoutRequestToActivity: function(user_id_from, user_id_to, tweet_id, status) {
 		Recent_activity.insert({"user_id": user_id_from, "type": "shout_req", "is_notification_receiver": true, "tweet_id": tweet_id, "other_user_id": user_id_to, "status": status, "time":new Date(), "seen": false});
 		Recent_activity.insert({"user_id": user_id_to, "type": "shout_req", "is_notification_receiver": false, "tweet_id": tweet_id, "other_user_id": user_id_from, "status": status, "time":new Date(), "seen": false});
@@ -565,11 +578,9 @@ Meteor.methods({
 
 Meteor.startup(function() {
 	var smtp = {
-		username: 'postmaster@sandbox083b3fa7a278479aa30e5d8cd4a26aa5',   // eg: server@gentlenode.com
-		password: 'bd52ca741bfb519a37444a3735f1013e',   // eg: 3eeP1gtizk5eziohfervU
-
+		username: SMTP_USERNAME,
+		password: SMTP_PASSWORD,
 	};
     process.env.MAIL_URL = "smtp://"+ encodeURIComponent(smtp.username) +".mailgun.org:"+ encodeURIComponent(smtp.password) + "@smtp.mailgun.org:587";
-
 })
 
