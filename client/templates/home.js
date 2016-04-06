@@ -152,10 +152,8 @@ Template.home.events({
 });
 
 Accounts.onLogin(function() {
-	// Make sure that user profile pic is up to date
-	Meteor.call("checkUserImage", Meteor.userId());
-
 	Meteor.call("updateUserTimeline", Meteor.userId(), function(err, result) {
+		console.log("calling updateUserTimeline in Accounts.onLogin");
 		if (err) {
 			console.log(err.reason);
 			return;
@@ -178,14 +176,6 @@ Meteor.startup(function () {
   });
 
 });
-	// Meteor.call('sendEmail',
- //            'ambikakrishnamachar@gmail.com',
- //            'ambikakrishnamachar@gmail.com',
- //            'Hello from Meteor!',
- //            'This is a test of Email.send.');
-
-	// });
-
 
 
 Template.home.onCreated(function() {
