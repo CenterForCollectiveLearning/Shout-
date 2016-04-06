@@ -210,6 +210,7 @@ Meteor.methods({
 			return;
 		}
 		 if (!user.profile.has_logged_in) {
+		 	console.log("Updating user timeline - FIRST TIME  " + new Date());
 			// Pull down batches of tweets
 			var num_batches_processed = 0;
 			var lowest_id;
@@ -217,6 +218,10 @@ Meteor.methods({
 			while (num_batches_processed < NUM_BATCH_ITERATIONS) {
 				var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, max_id: lowest_id}
 				var res =  makeTwitterCall('statuses/user_timeline', twitterParams);
+
+				if (res.length==0) {
+					break;
+				}
 
 				_.each(res, function(tweet, j) { 
 					// If we aren't on the first batch, skip the first tweet. 
@@ -238,6 +243,7 @@ Meteor.methods({
 					  	highest_id = tweet.id;
 					  }
 					});
+					console.log("Updating user timeline - Batch   " + num_batches_processed + ", " + new Date());
 					num_batches_processed += 1;
 			};			
 
@@ -247,7 +253,9 @@ Meteor.methods({
 
 		}
 		else {
-			var highest_id = user.profile.highest_tweet_id;
+			console.log("Updating user timeline - starting " + new Date());
+
+			var highest_id = user.profile && user.profile.highest_tweet_id;
 
 			// Pull only most recent tweets
 			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, since_id: highest_id}
@@ -260,6 +268,8 @@ Meteor.methods({
 				  }
 			});
 			Meteor.users.update({"_id":user_id}, {"$set":{"profile.highest_tweet_id": highest_id}});
+			console.log("Updating user timeline - finished  " + new Date());
+
 		}	
 	},
 
