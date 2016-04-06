@@ -1,8 +1,10 @@
 <template name="home">
 {{> nav}}
 
-<div id="page-wrapper" hidden={{notReady}}>
+<div id="page-wrapper">
 
+<!-- <div id="page-wrapper" hidden={{notReady}}>
+ -->
 	<div id="alert-wrapper">
 
 		<div style="max-width: {{alert_width}}" id="trade-req-alert" class="alert alert-success custom-alert" role="alert">Trade request sent to {{getRequestedUserForAlert}}.</div>
@@ -64,9 +66,9 @@
 
 	{{/if}}
 </div>
-{{#if notReady}}
+<!-- {{#if notReady}}
 {{> loader}}
-{{/if}}
+{{/if}} -->
 
 
 {{> footer}}
