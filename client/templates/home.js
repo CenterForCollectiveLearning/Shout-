@@ -17,6 +17,8 @@ function checkIfRetweetNeedsReview(other_user_id) {
 
 // Checks to see if all subscriptions are ready and timeline is loaded. 
 function allReady() {
+	console.log("Subscriptions ready: " + Template.instance().subscriptionsReady());
+	console.log("Timeline ready: " + Session.get("timeline_ready"));
 	if (Template.instance().subscriptionsReady() && Session.get("timeline_ready")) {
 		return true;
 	}
@@ -152,12 +154,16 @@ Template.home.events({
 });
 
 Accounts.onLogin(function() {
+	console.log("In Accounts.onLogin - " + new Date());
 	Meteor.call("updateUserTimeline", Meteor.userId(), function(err, result) {
-		console.log("calling updateUserTimeline in Accounts.onLogin");
 		if (err) {
 			console.log(err.reason);
+			console.log("Error calling updateUserTimeline in Accounts.onLogin");
+
 			return;
 		}
+		console.log("Finished calling updateUserTimeline in Accounts.onLogin");
+
 	});
 	Meteor.call("updateUserFollowersAndFriends", Meteor.userId(), function(err, result) {
 		if (err) {

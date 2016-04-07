@@ -163,12 +163,15 @@ Template.recent_tweets.events({
 });
 
 function loadUserTimeline() {
+	console.log("Loading user timeline in recent_tweets.js - " + new Date())
 	Meteor.call("getUserTimeline", Meteor.userId(), function(error, result){
 	if (error) {
 		console.log("Error getting user timeline");
 		console.log(error.reason);
 		return;
 	}
+	console.log("Finished loading user timeline in recent_tweets.js - " + new Date());
+
 	Session.set("fullTweetList", result);
 	Session.set("fullTweetListByDate", result);
 	Session.set("tweetListStatus", "full");

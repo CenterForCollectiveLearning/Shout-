@@ -202,11 +202,12 @@ Meteor.methods({
 
 	// TODO: Optimize this - Loading time is way too slow.
 	updateUserTimeline: function(user_id) {
-		console.log("updateUserTimeline method called");
+		console.log("updateUserTimeline method called at " + new Date());
 		check(user_id, String);
 
 		var user = Meteor.users.findOne({"_id":user_id});
 		if (!(user && user.services && user.services.twitter)) {
+			console.log("No user - " + new Date());
 			throw new Meteor.Error("no user");
 			return;
 		}
@@ -257,7 +258,7 @@ Meteor.methods({
 
 		}
 		else {
-			console.log("Updating " + user.profile.screenName + " timeline - starting " + new Date());
+			console.log("Updating " + user.profile.name + " timeline - starting " + new Date());
 
 			var highest_id = user.profile && user.profile.highest_tweet_id;
 			var twitterParams;
@@ -277,7 +278,7 @@ Meteor.methods({
 				  }
 			});
 			Meteor.users.update({"_id":user_id}, {"$set":{"profile.highest_tweet_id": highest_id}});
-			console.log("Updating " +  user.profile.screenName + " user timeline - finished  " + new Date());
+			console.log("Updating " +  user.profile.name + " user timeline - finished  " + new Date());
 
 		}	
 	},
@@ -596,6 +597,7 @@ Meteor.methods({
 });
 
 Meteor.startup(function() {
+	console.log("In meteor startup function");
 	var smtp = {
 		username: SMTP_USERNAME,
 		password: SMTP_PASSWORD,
