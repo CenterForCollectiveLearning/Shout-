@@ -258,7 +258,7 @@ Meteor.methods({
 
 		}
 		else {
-			console.log("Updating " + user.profile.name + " timeline - starting " + new Date());
+			console.log("Updating " + user.profile.name + " user timeline - starting " + new Date());
 
 			var highest_id = user.profile && user.profile.highest_tweet_id;
 			var twitterParams;
