@@ -153,25 +153,25 @@ Template.home.events({
 	}
 });
 
-Accounts.onLogin(function() {
-	console.log("In Accounts.onLogin - about to update user timeline. - " + new Date());
-	Meteor.call("updateUserTimeline", Meteor.userId(), function(err, result) {
-		if (err) {
-			console.log(err.reason);
-			console.log("Error calling updateUserTimeline in Accounts.onLogin");
+// Accounts.onLogin(function() {
+// 	console.log("In Accounts.onLogin - about to update user timeline. - " + new Date());
+// 	Meteor.call("updateUserTimeline", Meteor.userId(), function(err, result) {
+// 		if (err) {
+// 			console.log(err.reason);
+// 			console.log("Error calling updateUserTimeline in Accounts.onLogin");
 
-			return;
-		}
-		console.log("Finished calling updateUserTimeline in Accounts.onLogin");
+// 			return;
+// 		}
+// 		console.log("Finished calling updateUserTimeline in Accounts.onLogin");
 
-	});
-	Meteor.call("updateUserFollowersAndFriends", Meteor.userId(), function(err, result) {
-		if (err) {
-			console.log(err.reason);
-			return;
-		}
-	});
-});
+// 	});
+// 	Meteor.call("updateUserFollowersAndFriends", Meteor.userId(), function(err, result) {
+// 		if (err) {
+// 			console.log(err.reason);
+// 			return;
+// 		}
+// 	});
+// });
 
 Meteor.startup(function () {
 	Session.set("alert-element-width", ($(window).width()/2-500)+1000 + "px");
