@@ -187,13 +187,16 @@ Meteor.methods({
 
 	// Returns the tweets we have stored in our db for a particular user
 	getUserTimeline: function(user_id) {
+		console.log("getUserTimeline called - " + new Date())
 		check(user_id, String);
 
 		var user = Meteor.users.findOne({"_id":user_id});
 		if (user && user.services.twitter) {
 			var screenName = user.services.twitter.screenName;
 		}
-		return Tweets.find({"user.screen_name":screenName}, {sort: {"id":-1}}).fetch();		
+		var res = Tweets.find({"user.screen_name":screenName}, {sort: {"id":-1}}).fetch();
+		console.log("getUserTimeline finishing - " + new Date());
+		return res;		
 	},
 
 	// Pull down the timeline data from Twitter here.

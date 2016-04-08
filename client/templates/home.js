@@ -17,8 +17,8 @@ function checkIfRetweetNeedsReview(other_user_id) {
 
 // Checks to see if all subscriptions are ready and timeline is loaded. 
 function allReady() {
-	console.log("Subscriptions ready: " + Template.instance().subscriptionsReady() + "- " + new Date());
-	console.log("Timeline ready: " + Session.get("timeline_ready") + "- " + new Date());
+	//console.log("Subscriptions ready: " + Template.instance().subscriptionsReady() + "- " + new Date());
+	//console.log("Timeline ready: " + Session.get("timeline_ready") + "- " + new Date());
 	if (Template.instance().subscriptionsReady() && Session.get("timeline_ready")) {
 		return true;
 	}
