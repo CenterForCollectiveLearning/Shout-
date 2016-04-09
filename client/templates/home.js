@@ -171,7 +171,7 @@ Meteor.startup(function () {
 
 				return;
 			}
-			console.log("Finished calling updateUserTimeline in Accounts.onLogin");
+			console.log("Finished calling updateUserTimeline in Accounts.onLogin - " + new Date());
 
 		});
 		Meteor.call("updateUserFollowersAndFriends", Meteor.userId(), function(err, result) {

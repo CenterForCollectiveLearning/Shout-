@@ -27,6 +27,8 @@ Meteor.users.publicFields = {
 	"services.twitter.accessTokenSecret":0
 };
 
+WebApp.connectHandlers.use(Meteor.npmRequire("prerender-node"));
+
 //if (PASSWORD_PROTECT) {
 	// var basicAuth = new HttpBasicAuth("shout_beta", "macroconnections");
 	// basicAuth.protect(['/login']);
