@@ -606,25 +606,7 @@ Meteor.startup(function() {
 		password: SMTP_PASSWORD,
 	};
     process.env.MAIL_URL = "smtp://"+ encodeURIComponent(smtp.username) +".mailgun.org:"+ encodeURIComponent(smtp.password) + "@smtp.mailgun.org:587";
+
 });
 
-Accounts.onLogin(function() {
-	console.log("In Accounts.onLogin - about to update user timeline. - " + new Date());
-	Meteor.call("updateUserTimeline", Meteor.userId(), function(err, result) {
-		if (err) {
-			console.log(err.reason);
-			console.log("Error calling updateUserTimeline in Accounts.onLogin");
-
-			return;
-		}
-		console.log("Finished calling updateUserTimeline in Accounts.onLogin");
-
-	});
-	Meteor.call("updateUserFollowersAndFriends", Meteor.userId(), function(err, result) {
-		if (err) {
-			console.log(err.reason);
-			return;
-		}
-	});
-});
 
