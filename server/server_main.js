@@ -27,7 +27,7 @@ Meteor.users.publicFields = {
 	"services.twitter.accessTokenSecret":0
 };
 
-WebApp.connectHandlers.use(Meteor.npmRequire("prerender-node"));
+// WebApp.connectHandlers.use(Meteor.npmRequire("prerender-node"));
 
 //if (PASSWORD_PROTECT) {
 	// var basicAuth = new HttpBasicAuth("shout_beta", "macroconnections");
@@ -608,6 +608,12 @@ Meteor.startup(function() {
 		password: SMTP_PASSWORD,
 	};
     process.env.MAIL_URL = "smtp://"+ encodeURIComponent(smtp.username) +".mailgun.org:"+ encodeURIComponent(smtp.password) + "@smtp.mailgun.org:587";
+
+     Accounts.loginServiceConfiguration.insert({
+        service     : 'twitter',
+        consumerKey : TWITTER_API_KEY,
+        secret      : TWITTER_API_SECRET
+      });
 
 });
 
