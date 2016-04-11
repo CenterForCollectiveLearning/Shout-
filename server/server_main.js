@@ -609,11 +609,11 @@ Meteor.startup(function() {
 	};
     process.env.MAIL_URL = "smtp://"+ encodeURIComponent(smtp.username) +".mailgun.org:"+ encodeURIComponent(smtp.password) + "@smtp.mailgun.org:587";
 
-     Accounts.loginServiceConfiguration.insert({
-        service     : 'twitter',
-        consumerKey : TWITTER_API_KEY,
-        secret      : TWITTER_API_SECRET
-      });
+     // Accounts.loginServiceConfiguration.insert({
+     //    service     : 'twitter',
+     //    consumerKey : TWITTER_API_KEY,
+     //    secret      : TWITTER_API_SECRET
+     //  });
 
 });
 
