@@ -43,7 +43,6 @@ var makeTwitterCall = function (apiCall, params) {
 		access_token: user.services.twitter.accessToken,
 		access_token_secret: user.services.twitter.accessTokenSecret
 	});
-
 	var twitterResultsSync = Meteor.wrapAsync(client.get, client);
 	try {
 		res = twitterResultsSync(apiCall, params);
@@ -143,7 +142,9 @@ Meteor.publish("tweets", function() {
 	if (!this.userId) {
 		return this.ready();
 	}
-	return Tweets.find();
+	var user = Meteor.users.findOne(this.userId);
+
+	return Tweets.find({"user.screen_name":user.services.twitter.screenName});
 });
 
 
