@@ -20,7 +20,6 @@ Template.single_tweet.helpers({
 	},
 
 	getSpecificUser: function(original_poster_id) {
-		console.log("original poster id: " + original_poster_id);
 		return getSpecificUser(original_poster_id);
 	},
 });
@@ -30,7 +29,6 @@ Template.single_tweet.events({
 
 	// TODO: Shouldn't clear the Shout! request unless the retweet sends successfully. 
 	'click .shout-accept': function() {
-		console.log("Clicked accept");
 		Meteor.call("sendRetweet", this.tweet_id, this.retweeting_user, this.original_poster_id, false, function(err, result) {
 			if (err){
 				console.log("error sending retweet");
