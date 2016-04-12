@@ -161,17 +161,20 @@ Meteor.startup(function () {
     if(Meteor.userId()){
 		Meteor.call("updateUserTimeline", Meteor.userId(), function(err, result) {
 			if (err) {
-				console.log(err.reason);
-				console.log("Error calling updateUserTimeline in Accounts.onLogin");
-
-				return;
+				console.log(err);
 			}
 
 		});
+		
+		Meteor.call("verifyUserCredentials", function(err, result) {
+			if (err) {
+				console.log(err);
+			}
+		});
+
 		Meteor.call("updateUserFollowersAndFriends", Meteor.userId(), function(err, result) {
 			if (err) {
-				console.log(err.reason);
-				return;
+				console.log(err);
 			}
 		});
     }

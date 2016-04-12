@@ -1,6 +1,18 @@
+
+var getTweetFromServer = function(tweet_id) {
+		Meteor.call("getTweet", tweet_id.toString(), function(err, result) {
+			if (err) {
+				console.log(err);
+			}
+			Session.set("tweet_"+tweet_id.toString(), result);
+			return result;
+		});
+};
+
 Template.single_tweet.helpers({
 	getTweet: function(tweet_id) {
-		return Tweets.findOne({"id_str":tweet_id.toString()});
+		getTweetFromServer(tweet_id);
+		return Session.get("tweet_"+tweet_id.toString());
 	},
 
 	dateConverter: function(date) {
