@@ -166,6 +166,7 @@ Meteor.methods({
 	sendNotificationEmail: function(other_user_id, notification_text) {
 		var other_user = Meteor.users.findOne({"_id":other_user_id});
 		var other_user_email = other_user &&  other_user.profile &&  other_user.profile.email;
+		console.log("About to send notif email to " + other_user_email);
 
 		if (other_user_email) {
 			SSR.compileTemplate( 'notificationEmail', Assets.getText( 'notification-email.html' ) );
@@ -321,7 +322,7 @@ Meteor.methods({
 		if (this.userId){
 			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
 			Current_trade_requests.update({"user_id_from":user_id_from, "user_id_to":user_id_to}, {"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "review_status": review_status}, {"upsert":true});
-
+			console.log("Updating current trade request!");
 			Meteor.call("sendNotificationEmail", user_id_to, "sent you a trade request!");
 
 		}
@@ -348,6 +349,10 @@ Meteor.methods({
 		}
 	},
 
+
+	getTweet: function(tweet_id) {
+		return Tweets.findOne({"id_str":tweet_id.toString()});
+	},
 
 	// Adds the accepted or rejected trade request to Recent Activity
 	addTradeRequestToActivity: function(user_id_from, user_id_to, status) {
