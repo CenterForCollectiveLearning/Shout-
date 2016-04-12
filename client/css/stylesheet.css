@@ -47,11 +47,11 @@
 	padding-top: 65px;
 }
 
-.highlight {
-	background: #bfbfbf;
+.highlight, .highlight + .date-time-retweets {
+	background: hsl(206, 8%, 90%);
 }
 
-.no-highlight {
+.no-highlight, .no-highlight + .date-time-retweets {
  background: #F0F4F7;
 }
 
@@ -140,9 +140,9 @@
     padding: 18px 28px;
     font-size: 22px; /*//change this to your desired size*/
     line-height: normal;
-    -webkit-border-radius: 8px;
-       -moz-border-radius: 8px;
-            border-radius: 8px;
+    -webkit-border-radius: 3px;
+       -moz-border-radius: 3px;
+            border-radius: 3px;
 }
 
 .panel-heading a:after {
@@ -303,17 +303,17 @@ span.tags
   }
 
 #navbar-collapse-custom {
-  border-bottom: 2px solid white;
+  border-bottom: 1px solid white;
 }
 
 .navbar-center-custom
 {
-    position: absolute;
-    width: 100%;
-    left: 0;
-    top: 0;
-    text-align: center;
-    margin: auto;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  text-align: center;
+  margin: auto;
   height:100%;
 }
 
@@ -346,7 +346,8 @@ span.tags
   color:black;
 }
 
-.navbar-custom {
+.navbar.navbar-custom {
+  border: none;
 }
 
 .layout-col {
@@ -364,9 +365,12 @@ span.tags
   margin-right: 0px;
   margin-top: 10px;
   padding: 2px;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+
+  border-radius: 3px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .notification-tweet-panel {
@@ -402,15 +406,19 @@ span.tags
   margin-right: 0px;
   margin-bottom: 10px;
   padding: 2px;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
   font-size: 16px;
 }
 
 .inner-trader-panel {
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+.inner-trader-panel:last-child {
+  text-align: right;
 }
 
 .tweet-search-div {
@@ -659,7 +667,8 @@ span.tags
 
 body {
   background-color: #DFE5EA;
-  font-family: Oswald;
+  background-image: linear-gradient(to bottom right, hsl(227, 21%, 90%), hsl(197, 21%, 70%));
+  font-family: OpenSans-light;
 }
 
 object {
@@ -918,6 +927,13 @@ object {
 
 .date-time-retweets {
   color: gray;
+  background-color: #F0F4F7;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  padding-right: 20px;
+  font-size: 12px;
+  padding-bottom: 10px;
+  text-align: right;
 }
 
 #reload-tweets-button {
