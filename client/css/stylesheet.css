@@ -521,6 +521,27 @@ span.tags
   vertical-align: top;
 }
 
+.section {
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;  
+}
+
+.section:nth-child(odd) {
+  background-color: #293235;
+  color: white;
+}
+
+.section:nth-child(even) {
+  background-color: #DFE5EA;
+  color: #293235;
+}
+
+.section:not(:first-child) > * {
+    max-width: 960px;
+}
+
 .fp-tableCell {
   vertical-align: top;
 }
@@ -700,7 +721,8 @@ object {
 }
 
 #btn-login {
-  padding: 0px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .single-login-button {
@@ -849,6 +871,23 @@ object {
 
 .promo-section {
   text-align: center;
+  width: 100%;
+  position: relative;
+  z-index: 100;
+}
+
+.promo-section:before {
+  background-image: url("/images/valpo.jpg");
+  background-size: cover;
+  color: white;
+  width: 100%;
+  content: "";
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  opacity: 0.5;
 }
 
 #promo-video {
@@ -970,8 +1009,8 @@ li
 }
 
 #tutorial-wrapper {
-  margin-top: 30px;
-  margin-bottom: 30px;
+  padding-top: 30px;
+  padding-bottom: 30px;
   text-align: center;
 }
 
@@ -1051,17 +1090,13 @@ li
 #tagline {
   margin-left: 30px;
   font-size: 30px;
+  margin-top: 20px;
+  margin-bottom: 30px;
 }
 
 #landing-page-logo {
   height: 200px;
   margin-bottom: -50px; /*This is temporary until we replace the SVG*/
-}
-
-.top-promo-section {
-  background-image: url("/images/valpo.jpg");
-  background-size: cover;
-  color: white;
 }
 
 .custom-alert {
