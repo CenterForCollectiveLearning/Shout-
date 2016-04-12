@@ -143,7 +143,8 @@ Meteor.publish("tweets", function() {
 	if (!this.userId) {
 		return this.ready();
 	}
-	return Tweets.find();
+	var user = Meteor.users.findOne(this.userId);
+	return Tweets.find({"user.screen_name":user.services.twitter.screenName});
 });
 
 

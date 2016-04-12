@@ -717,12 +717,16 @@ object {
 
 #tweet-scroll {
   max-height:100vh;
+  
+  /*min-height: 100vh;*/
   overflow:auto;
   margin-top: 10px;
 }
 
 #user-scroll {
   max-height: 100vh;
+  
+ /* min-height: 100vh;*/
   overflow: auto;
   margin-top: 10px;
 }
