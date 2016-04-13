@@ -599,7 +599,7 @@ span.tags
 }
 
 .btn-trade {
-  font-size: 20px;
+  font-size: 16px;
   color: black;
   width: 400px;
   background-color: #66b2ff;
@@ -707,7 +707,7 @@ object {
 }
 
 #reset-button {
-  font-size: 20px;
+  font-size: 16px;
   padding-left: 20px;
   padding-right: 20px;
   margin: 15px;
