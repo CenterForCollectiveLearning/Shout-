@@ -7,7 +7,7 @@ function compareRetweetCounts(tweet1, tweet2) {
     return 0;
 }
 
-function compareFavoriteNums(tweet1, tweet2) {
+function compareFavoriteCounts(tweet1, tweet2) {
   if (tweet1.favorite_count < tweet2.favorite_count)
     return 1;
   else if (tweet1.favorite_count > tweet2.favorite_count)
@@ -145,6 +145,10 @@ Template.recent_tweets.events({
 		sortTweets("retweets");
 	},
 
+	'click #sort-favorites': function() {
+		sortTweets("favorites");
+	},
+
 	'click #search-clear-tweets': function() {
 		$("#tweet-search-input").val('');
 		Session.set("tweetListStatus", "full");
@@ -163,15 +167,12 @@ Template.recent_tweets.events({
 });
 
 function loadUserTimeline() {
-	console.log("Loading user timeline in recent_tweets.js - " + new Date())
 	Meteor.call("getUserTimeline", Meteor.userId(), function(error, result){
 	if (error) {
 		console.log("Error getting user timeline");
 		console.log(error.reason);
 		return;
 	}
-	console.log("Finished loading user timeline in recent_tweets.js - " + new Date());
-
 	Session.set("fullTweetList", result);
 	Session.set("fullTweetListByDate", result);
 	Session.set("tweetListStatus", "full");
@@ -184,7 +185,7 @@ function loadUserTimeline() {
 }
 
 Template.recent_tweets.onCreated(function() {
-	Session.set("timeline_ready", false);
+ 	Session.set("timeline_ready", false);
 
  //  	this.autorun(() => {
 	// 	this.subscribe('userData');

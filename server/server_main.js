@@ -27,7 +27,7 @@ Meteor.users.publicFields = {
 	"services.twitter.accessTokenSecret":0
 };
 
-WebApp.connectHandlers.use(Meteor.npmRequire("prerender-node"));
+// WebApp.connectHandlers.use(Meteor.npmRequire("prerender-node"));
 
 //if (PASSWORD_PROTECT) {
 	// var basicAuth = new HttpBasicAuth("shout_beta", "macroconnections");
@@ -43,7 +43,6 @@ var makeTwitterCall = function (apiCall, params) {
 		access_token: user.services.twitter.accessToken,
 		access_token_secret: user.services.twitter.accessTokenSecret
 	});
-
 	var twitterResultsSync = Meteor.wrapAsync(client.get, client);
 	try {
 		res = twitterResultsSync(apiCall, params);
@@ -143,7 +142,8 @@ Meteor.publish("tweets", function() {
 	if (!this.userId) {
 		return this.ready();
 	}
-	return Tweets.find();
+
+	return Tweets.find({"user.screen_name":user.services.twitter.screenName});
 });
 
 
@@ -166,6 +166,7 @@ Meteor.methods({
 	sendNotificationEmail: function(other_user_id, notification_text) {
 		var other_user = Meteor.users.findOne({"_id":other_user_id});
 		var other_user_email = other_user &&  other_user.profile &&  other_user.profile.email;
+		console.log("About to send notif email to " + other_user_email);
 
 		if (other_user_email) {
 			SSR.compileTemplate( 'notificationEmail', Assets.getText( 'notification-email.html' ) );
@@ -321,7 +322,7 @@ Meteor.methods({
 		if (this.userId){
 			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
 			Current_trade_requests.update({"user_id_from":user_id_from, "user_id_to":user_id_to}, {"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "review_status": review_status}, {"upsert":true});
-
+			console.log("Updating current trade request!");
 			Meteor.call("sendNotificationEmail", user_id_to, "sent you a trade request!");
 
 		}
@@ -348,6 +349,10 @@ Meteor.methods({
 		}
 	},
 
+
+	getTweet: function(tweet_id) {
+		return Tweets.findOne({"id_str":tweet_id.toString()});
+	},
 
 	// Adds the accepted or rejected trade request to Recent Activity
 	addTradeRequestToActivity: function(user_id_from, user_id_to, status) {
@@ -608,6 +613,12 @@ Meteor.startup(function() {
 		password: SMTP_PASSWORD,
 	};
     process.env.MAIL_URL = "smtp://"+ encodeURIComponent(smtp.username) +".mailgun.org:"+ encodeURIComponent(smtp.password) + "@smtp.mailgun.org:587";
+
+     // Accounts.loginServiceConfiguration.insert({
+     //    service     : 'twitter',
+     //    consumerKey : TWITTER_API_KEY,
+     //    secret      : TWITTER_API_SECRET
+     //  });
 
 });
 

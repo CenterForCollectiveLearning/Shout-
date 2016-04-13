@@ -78,16 +78,7 @@ Template.notifications.events({
 		else {
 			// Logic to get the other user timeline
 			//Session.set("isInProfileModal", true);
-		      Meteor.call("getUserTimeline", this.user_id_from, function(error, result){
-		      if (error) {
-		        console.log(error.reason);
-		        return;
-		      }
-		      var most_recent_tweets = result.slice(0, 5);
-		      Session.set("otherUserTimeline", most_recent_tweets);		      
-		    });
-
-
+			console.log("Modify logic here.. ");
 			new_status = "modified";
 			Session.set("modify_trade_from_id", this.user_id_from);
 			Session.set("old_proposed_from", this.proposed_from);
