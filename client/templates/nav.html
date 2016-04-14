@@ -3,7 +3,7 @@
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+      <button type="button" id="small-display-nav-button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#smallNav" aria-expanded="false">
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -16,6 +16,22 @@
         <div id="text-under-logo">The global marketplace for retweets</div>
       </a>
     </div>
+
+    <div id="smallNav">
+      <ul class="nav navbar-nav">
+        {{> notifications_dropdown}}
+        <li id="logout-button"><a href="" id="logout-button-link"><span class="glyphicon glyphicon-log-out glyphicon-log-out-custom"></span> Logout</a></li>
+      </ul>
+    </div>
+
+<!--     <div class="collapse navbar-collapse" id="navbar-collapse-small-display">
+      <ul>
+        <li id="logout-button">
+          <a id="logout-button-link">Logout</a>
+        </li>
+        {{> notifications_dropdown}}
+      </ul>
+    </div> -->
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="navbar-collapse-custom">
@@ -32,8 +48,6 @@
         </li>
         {{> notifications_dropdown}}
       </ul>
-
-
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
   {{> accept_trade_modal}}

@@ -2,8 +2,12 @@
     <li class="dropdown">
         <a id="notifications-dropdown-link" href="#" class="nav-dropdown dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="notifications-bell" class="glyphicon glyphicon-bell"></span>
             {{#if has_requests}}
+
             <div class="badger-outter" id="Badger"><div class="badger-inner"><p class="badger-badge badger-number" id="Badge">{{num_requests}}</p></div></div>
             {{/if}}
+                    
+            <span class="notifications_label">Notifications</span>
+        
         </a>
         <ul class="{{#if has_requests}}notifications-dropdown-with-requests{{else}}notifications-dropdown-without-requests{{/if}} dropdown-menu">
             <div id="notifications-scroll" class="pre-scrollable">

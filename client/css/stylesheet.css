@@ -196,15 +196,6 @@ span.tags
     font-weight: bold;
     padding: 2px 4px;
     }
-.dropdown-menu 
-{
-    background-color: #34495e;    
-    box-shadow: none;
-/*    -webkit-box-shadow: none;
-*/    width: 250px;
-    margin-left: -125px;
-    left: 50%;
-    }
 .dropdown-menu .divider 
 {
     background:none;    
@@ -386,6 +377,7 @@ span.tags
 
 .notification-date-time-retweets {
   margin-left: 10px;
+  background: none;
 }
 
 .shout-proposal-buttons {
@@ -811,20 +803,6 @@ object {
   margin-top: 10px;
 }
 
-/*Badger CSS*/
-.badger-outter
-  {
-/*  min-width: 36px;
-  height: 36px;*/
-  border-radius: 18px;
-  -moz-border-radius: 18px;
-  -webkit-border-radius: 18px;
-  float:left;
-  position:absolute;
-  top:9px;
-  right:5px;
-  z-index:9999;
-  }
 .badger-inner
   {
   min-width: 20px;
@@ -1190,6 +1168,11 @@ li
   padding-bottom: 10px;
 }
 
+.glyphicon-log-out-custom {
+  margin-left: 3px;
+  font-size: 20px
+}
+
 
 /* Sticky footer styles
 -------------------------------------------------- */
@@ -1209,4 +1192,58 @@ li {
   width: 100%;
   margin-top: 20px;
   padding-top: 10px;
+}
+
+/*Responsive CSS based on viewport size*/
+
+@media screen and (max-width: 768px) {
+  /*Badger CSS*/
+  .badger-outter
+    {
+  /*  min-width: 36px;
+    height: 36px;*/
+    border-radius: 18px;
+    -moz-border-radius: 18px;
+    -webkit-border-radius: 18px;
+    float:left;
+    position:absolute;
+    top:9px;
+    margin-left: 8px;
+    z-index:9999;
+    }
+
+    #notifications-dropdown-link {
+      color: black;
+    }
+    .dropdown-menu {
+      background-color: #34495e;    
+      box-shadow: none;
+    }
+}
+@media screen and (min-width: 768px) {
+  .badger-outter
+    {
+  /*  min-width: 36px;
+    height: 36px;*/
+    border-radius: 18px;
+    -moz-border-radius: 18px;
+    -webkit-border-radius: 18px;
+    float:left;
+    position:absolute;
+    top:9px;
+    right:5px;
+    z-index:9999;
+    }
+    #smallNav {
+      display: none;
+    }
+    .notifications_label {
+      display: none;
+    }
+    .dropdown-menu 
+      {
+      box-shadow: none;
+      margin-left: -125px;
+      left: 50%;
+    }
 }

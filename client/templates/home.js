@@ -150,35 +150,35 @@ Template.home.events({
 });
 
 Meteor.startup(function () {
-	Session.set("alert-element-width", ($(window).width()/2-500)+1000 + "px");
+	// Session.set("alert-element-width", ($(window).width()/2-500)+1000 + "px");
 
-  window.addEventListener('resize', function(){
-    Session.set("alert-element-width", ($(window).width()/2-500)+1000 + "px");
+ //  window.addEventListener('resize', function(){
+ //    Session.set("alert-element-width", ($(window).width()/2-500)+1000 + "px");
 
-  });
+ //  });
 
-    Tracker.autorun(function(){
-    if(Meteor.userId()){
-		Meteor.call("updateUserTimeline", Meteor.userId(), function(err, result) {
-			if (err) {
-				console.log(err);
-			}
+ //    Tracker.autorun(function(){
+ //    if(Meteor.userId()){
+	// 	Meteor.call("updateUserTimeline", Meteor.userId(), function(err, result) {
+	// 		if (err) {
+	// 			console.log(err);
+	// 		}
 
-		});
+	// 	});
 		
-		Meteor.call("verifyUserCredentials", function(err, result) {
-			if (err) {
-				console.log(err);
-			}
-		});
+	// 	Meteor.call("verifyUserCredentials", function(err, result) {
+	// 		if (err) {
+	// 			console.log(err);
+	// 		}
+	// 	});
 
-		Meteor.call("updateUserFollowersAndFriends", Meteor.userId(), function(err, result) {
-			if (err) {
-				console.log(err);
-			}
-		});
-    }
-  });
+	// 	Meteor.call("updateUserFollowersAndFriends", Meteor.userId(), function(err, result) {
+	// 		if (err) {
+	// 			console.log(err);
+	// 		}
+	// 	});
+ //    }
+ //  });
 
 });
 
