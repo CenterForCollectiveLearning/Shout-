@@ -377,7 +377,7 @@ span.tags
 
 .notification-date-time-retweets {
   margin-left: 10px;
-  background: none;
+  background: none !important;
 }
 
 .shout-proposal-buttons {
