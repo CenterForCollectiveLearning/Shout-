@@ -211,9 +211,13 @@ Template.relationships.events({
   	Session.set("otherUserTimeline", undefined);
   },
 
-  	'click #search-clear-users': function() {
+  'click #search-clear-users': function() {
 		$("#relationship-search-input").val('');
 		Session.set("userListStatus", "full");
+	},
+
+	'click #invite-button': function() {
+		$("#invite_modal").modal('show');
 	}
 
 });
