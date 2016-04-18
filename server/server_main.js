@@ -143,7 +143,7 @@ Meteor.publish("tweets", function() {
 		return this.ready();
 	}
 
-	return Tweets.find({"user.screen_name":user.services.twitter.screenName});
+	return Tweets.find({"user.screen_name":user.services.twitter.screenName}, {fields: {'_id': 1, 'id_str':1, 'created_at':1, 'text':1, 'user.screen_name':1, 'retweet_count':1, 'favorite_count':1}});
 });
 
 
