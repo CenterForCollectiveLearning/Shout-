@@ -1071,6 +1071,11 @@ li
   visibility: hidden;
 }
 
+.invite-section {
+  margin-bottom: 4px;
+  text-align: right;
+}
+
 .dropdown-menu > li > a:hover {
     background-color: #f2f2f2;
     background-image: none;
@@ -1173,6 +1178,34 @@ li
   font-size: 20px
 }
 
+.invite-modal-body {
+  text-align: center;
+}
+
+.invite-success {
+  display: none;
+}
+
+.invite-error {
+  display: none;
+}
+
+#send-invite-btn {
+  float: right;
+  background-color: #DFE5EA;
+}
+
+.custom-footer {
+  text-align: center;
+}
+
+.screen-name-error {
+  display: none;
+}
+
+.message-error {
+  display: none;
+}
 
 /* Sticky footer styles
 -------------------------------------------------- */

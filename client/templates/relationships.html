@@ -11,10 +11,17 @@
 			{{/if}}
 		{{/unless}}
 	{{#if existCurrentTraders}}
-	<div class="heading"> Relationships </div>
-		<div class="sort-by relationships-sort-by" hidden="{{existsCurrentSelectedUser}}">
+		<div class="heading"> Relationships </div>
+<!-- 		<div class="sort-by relationships-sort-by" hidden="{{existsCurrentSelectedUser}}">
 		Sort by: <a>own</a> | <a>owe</a> | <a>followers</a>
+		</div> -->
+		<div class="invite-section">
+			<span> Can't find a friend? 
+			</span>
+			<span><button type="button" class="btn btn-sm btn-default" id="invite-button" data-toggle="modal" data-target="invite_modal">Invite</button></span>
+			{{> invite_modal}}
 		</div>
+
 	{{/if}}
 	<div id="relationship-search-div">
       <div class="input-group">

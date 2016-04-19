@@ -34,7 +34,8 @@ Meteor.users.publicFields = {
 	// basicAuth.protect(['/login']);
 //}
 
-var makeTwitterCall = function (apiCall, params) {
+// Type = GET or POST
+var makeTwitterCall = function (apiCall, params, type) {
 	var res;
 	var user = Meteor.user();
 	var client = new Twit({
@@ -43,7 +44,15 @@ var makeTwitterCall = function (apiCall, params) {
 		access_token: user.services.twitter.accessToken,
 		access_token_secret: user.services.twitter.accessTokenSecret
 	});
-	var twitterResultsSync = Meteor.wrapAsync(client.get, client);
+
+	var twitterResultsSync;
+	if (type=="get") {
+		twitterResultsSync = Meteor.wrapAsync(client.get, client);
+	}
+	else {
+		twitterResultsSync = Meteor.wrapAsync(client.post, client)
+	}
+
 	try {
 		res = twitterResultsSync(apiCall, params);
 	}
@@ -154,7 +163,7 @@ Meteor.methods({
 	// This is because the general twitter login does not populate the email addresses. 
 	verifyUserCredentials: function() {
 		var twitterParams = {"include_email": true};
-		var res = makeTwitterCall('account/verify_credentials', twitterParams);
+		var res = makeTwitterCall('account/verify_credentials', twitterParams, "get");
 		if (res.email) {
 			Meteor.users.update({"_id" :Meteor.userId()},{$set : {"profile.email":res.email}});
 		}
@@ -226,7 +235,7 @@ Meteor.methods({
 			var highest_id;
 			while (num_batches_processed < NUM_BATCH_ITERATIONS) {
 				var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, max_id: lowest_id}
-				var res =  makeTwitterCall('statuses/user_timeline', twitterParams);
+				var res =  makeTwitterCall('statuses/user_timeline', twitterParams, "get");
 
 				// A patch - to reduce the number of API calls. 
 				if (num_batches_processed >= 1 && res.length<= 1) {
@@ -276,7 +285,7 @@ Meteor.methods({
 			}
 
 			// Pull only most recent tweets
-			var res =  makeTwitterCall('statuses/user_timeline', twitterParams); 
+			var res =  makeTwitterCall('statuses/user_timeline', twitterParams, "get"); 
 			_.each(res, function(tweet) { 
 				  if (!highest_id || tweet.id > highest_id) {
 			  		Tweets.insert(tweet);
@@ -294,7 +303,7 @@ Meteor.methods({
 			check(search_terms, String);
 			check(username_for_timeline, String);
 			var twitterParams = {q: search_terms, from: username_for_timeline};
-			return makeTwitterCall('search/tweets', twitterParams)
+			return makeTwitterCall('search/tweets', twitterParams, "get")
 		}
 		else {
 			throw new Meteor.Error("logged-out");
@@ -466,7 +475,6 @@ Meteor.methods({
 			// Example code
 			var twitterResultsSync = Meteor.wrapAsync(traderTwit.post, traderTwit);
 			var apiCall = 'statuses/retweet/' + tweet_id;
-			//var params = {id: tweet_id};
 
 			try {
 				if (direct) {
@@ -602,6 +610,20 @@ Meteor.methods({
 
 	markRecentActivitiesAsSeen: function() {
 		Recent_activity.update({"user_id":Meteor.userId(), "seen":false}, {$set:{"seen":true}});
+	},
+
+	sendDirectMessageInvite: function(twitter_handle, message_text) {
+		check(twitter_handle, String);
+		check(message_text, String);
+		var twitterParams = {"screen_name":twitter_handle, "text":message_text};
+		var res;
+		try {
+			res = makeTwitterCall('direct_messages/new', twitterParams, "post");
+		} 
+		catch(error) {
+			console.log(error);
+			throw new Meteor.Error("direct-message-error");
+		}
 	}
 
 });
