@@ -475,7 +475,6 @@ Meteor.methods({
 			// Example code
 			var twitterResultsSync = Meteor.wrapAsync(traderTwit.post, traderTwit);
 			var apiCall = 'statuses/retweet/' + tweet_id;
-			//var params = {id: tweet_id};
 
 			try {
 				if (direct) {
@@ -617,8 +616,14 @@ Meteor.methods({
 		check(twitter_handle, String);
 		check(message_text, String);
 		var twitterParams = {"screen_name":twitter_handle, "text":message_text};
-		//var res = makeTwitterCall('direct_messages/new', twitterParams, "post");
-
+		var res;
+		try {
+			res = makeTwitterCall('direct_messages/new', twitterParams, "post");
+		} 
+		catch(error) {
+			console.log(error);
+			throw new Meteor.Error("direct-message-error");
+		}
 	}
 
 });

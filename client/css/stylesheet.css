@@ -1186,8 +1186,13 @@ li
   display: none;
 }
 
+.invite-error {
+  display: none;
+}
+
 #send-invite-btn {
   float: right;
+  background-color: #DFE5EA;
 }
 
 .custom-footer {
