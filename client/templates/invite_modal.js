@@ -21,6 +21,9 @@ Template.invite_modal.events({
 		}
 
 		// Parse out the '@' from the twitter handle 
+		if (twitter_handle.substring(0,1)=="@") {
+			twitter_handle = twitter_handle.substring(1);
+		}
 
 		Meteor.call("sendDirectMessageInvite", twitter_handle, message_text, function(err, result) {
 			if (err) {
