@@ -636,6 +636,9 @@ Meteor.startup(function() {
 	};
     process.env.MAIL_URL = "smtp://"+ encodeURIComponent(smtp.username) +".mailgun.org:"+ encodeURIComponent(smtp.password) + "@smtp.mailgun.org:587";
 
+	// prerenderio.set('prerenderServiceUrl', 'http://localhost:3000/');
+	prerenderio.set('prerenderToken', '15FfkxVfilHf1x4Rl3Lr');
+
      // Accounts.loginServiceConfiguration.insert({
      //    service     : 'twitter',
      //    consumerKey : TWITTER_API_KEY,

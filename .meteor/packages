@@ -40,3 +40,6 @@ ecmascript
 jabbslad:basic-auth
 email
 meteorhacks:ssr
+okgrow:analytics
+meteorhacks:fast-render
+dfischer:prerenderio
