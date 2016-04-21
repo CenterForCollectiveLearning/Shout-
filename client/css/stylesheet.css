@@ -1207,6 +1207,10 @@ li
   display: none;
 }
 
+#loader-img {
+  max-width: 100%;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
