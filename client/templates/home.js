@@ -82,7 +82,7 @@ Template.home.helpers({
 	tradeNeedsReview: function() {
 		var selected_trader_id =  Session.get("selectedTraderId");
 		return checkIfRetweetNeedsReview(selected_trader_id);
-	}
+	},
 
 });
 

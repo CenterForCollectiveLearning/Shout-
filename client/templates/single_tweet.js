@@ -29,7 +29,7 @@ Template.single_tweet.events({
 
 	// TODO: Shouldn't clear the Shout! request unless the retweet sends successfully. 
 	'click .shout-accept': function() {
-		Meteor.call("sendRetweet", this.tweet_id, this.retweeting_user, this.original_poster_id, false, function(err, result) {
+		Meteor.call("sendShout", this.tweet_id, this.retweeting_user, this.original_poster_id, false, function(err, result) {
 			if (err){
 				console.log("error sending retweet");
 				console.log(err.reason);

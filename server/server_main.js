@@ -8,9 +8,6 @@ var TWITTER_API_SECRET = Meteor.settings.consumer_secret;
 var SMTP_USERNAME = Meteor.settings.smtp_username;
 var SMTP_PASSWORD = Meteor.settings.smtp_password;
 
-// Before launch, we'll password-protect the app (except landing page)
-var PASSWORD_PROTECT = Meteor.settings.password_protect;
-
 // Batch size of tweets to return from Twitter API.
 // Max is 200.
 var BATCH_TWEET_SIZE = 200;
@@ -21,7 +18,6 @@ var BATCH_TWEET_SIZE = 200;
 // So BATCH_TWEET_SIZE * NUM_TWEET_ITERATIONS <= 3200
 var NUM_BATCH_ITERATIONS = 5;
 
-// For now, only omit these two fields when publishing the Users collection.
 Meteor.users.publicFields = {
 	"services.twitter.accessToken":0,
 	"services.twitter.accessTokenSecret":0
@@ -29,21 +25,34 @@ Meteor.users.publicFields = {
 
 // WebApp.connectHandlers.use(Meteor.npmRequire("prerender-node"));
 
-//if (PASSWORD_PROTECT) {
-	// var basicAuth = new HttpBasicAuth("shout_beta", "macroconnections");
-	// basicAuth.protect(['/login']);
-//}
-
-// Type = GET or POST
-var makeTwitterCall = function (apiCall, params, type) {
+// General function for making a call to the Twitter API. 
+// Type = GET or POST request
+var makeTwitterCall = function (apiCall, params, type, retweetCall=false, trader_id=false) {
 	var res;
 	var user = Meteor.user();
-	var client = new Twit({
-		consumer_key: TWITTER_API_KEY,
-		consumer_secret: TWITTER_API_SECRET,
-		access_token: user.services.twitter.accessToken,
-		access_token_secret: user.services.twitter.accessTokenSecret
-	});
+	var client;
+
+	if (retweetCall) {
+		// Make the twitter call here
+		var trader = Meteor.users.findOne({"_id":trader_id});
+		var trader_access_token = trader.services.twitter.accessToken;
+		var trader_access_token_secret = trader.services.twitter.accessTokenSecret;
+
+		client = new Twit({
+			consumer_key: TWITTER_API_KEY,
+			consumer_secret: TWITTER_API_SECRET,
+			access_token: trader_access_token,
+			access_token_secret: trader_access_token_secret
+		});
+
+	} else {
+		client = new Twit({
+			consumer_key: TWITTER_API_KEY,
+			consumer_secret: TWITTER_API_SECRET,
+			access_token: user.services.twitter.accessToken,
+			access_token_secret: user.services.twitter.accessTokenSecret
+		});
+	}
 
 	var twitterResultsSync;
 	if (type=="get") {
@@ -57,13 +66,15 @@ var makeTwitterCall = function (apiCall, params, type) {
 		res = twitterResultsSync(apiCall, params);
 	}
 	catch (err) {
-		console.log("Error making twitter call: " + err);
+		log.error("User " + Meteor.userId() + " - Error making twitter call - " + apiCall);
+		// TODO - replace w log
 		if (err.statusCode !== 404) {
 			throw err;
 		}
 			res = {};
 	}
 	return res;
+
 };
 
 // Check that trade request has correct params
@@ -75,16 +86,98 @@ var checkTradeParams = function(user_id_from, user_id_to, num_proposed_from, num
 };
 
 // Decreases the trade quantities on a successful retweet. 
+// TODO: These must happen atomically - Transactions? 
 var decrementTradeCounts= function(trader_id_posted, other_trader_id) {
 	Trades.update({"user_id":trader_id_posted, "trades.other_user_id":other_trader_id}, {$inc:{"trades.$.other_trade_num":-1}});
 	Trades.update({"user_id":other_trader_id, "trades.other_user_id":trader_id_posted}, {$inc:{"trades.$.this_trade_num":-1}});
 };
 
 // Removes a trade that has 0-0 balance from the collection. 
+// TODO: These must happen atomically - Transactions? 
 var checkForFinishedTrade= function(trader_id_posted, other_user_id) {
 	Trades.update({"user_id":trader_id_posted}, {$pull:{"trades":{"other_user_id":other_user_id, "this_trade_num":0, "other_trade_num":0}}});
 	Trades.update({"user_id":other_user_id}, {$pull:{"trades":{"other_user_id":trader_id_posted, "this_trade_num":0, "other_trade_num":0}}});
 };
+
+var	newUserTimelineLoad= function() {
+		// Pull down batches of tweets
+		var num_batches_processed = 0;
+		var lowest_id;
+		var highest_id;
+		var last_seen_tweet_id;
+		var user = Meteor.user();
+		log.info("User " + user._id + "- First time login. Begin timeline load");
+		while (num_batches_processed < NUM_BATCH_ITERATIONS) {
+			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, max_id: lowest_id}
+			var res =  makeTwitterCall('statuses/user_timeline', twitterParams, "get");
+
+			// Optimizations - to reduce # API calls. 
+			if (res.length == 0) {
+				break;
+			}
+
+			if (res.length == 1 && res[0].id_str==last_seen_tweet_id) {
+				break;
+			}
+
+			_.each(res, function(tweet, j) { 
+				// If we aren't on the first batch, skip the first tweet. 
+				if (typeof(lowest_id)==="undefined") {
+					lowest_id = tweet.id_str;
+				}
+				if (typeof(highest_id)==="undefined") {
+					highest_id = tweet.id_str;
+				}
+
+				// After the first batch, the first tweet/batch is a duplicate.
+				if (tweet.id_str != last_seen_tweet_id) {
+					Tweets.insert(tweet);
+					last_seen_tweet_id = tweet.id_str;
+				}
+
+				  if (tweet.id < lowest_id) {
+				  	lowest_id = tweet.id_str;
+				  };
+				  if (tweet.id > highest_id) {
+				  	highest_id = tweet.id_str;
+				  }
+				});
+				num_batches_processed += 1;
+		};			
+		log.info("User " + user._id + "- First time login. Finished timeline load");
+
+		// User is no longer a first-time user
+		// Update profile accordingly and store the ids corresponding to the tweets we have downloaded
+		Meteor.users.update({"_id":Meteor.userId()}, {"$set":{"profile.has_logged_in":true, "profile.highest_tweet_id": highest_id, "profile.lowest_tweet_id": lowest_id}});
+
+	};
+
+var oldUserTimelineLoad = function() {
+		var user = Meteor.user();
+		var highest_id = user.profile && user.profile.highest_tweet_id;
+		var twitterParams;
+		log.info("User " + user._id + "- Return user. Begin timeline load");
+
+		if (highest_id) {
+			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE}
+		}
+		else {
+			twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, since_id: highest_id}
+		}
+
+		// Pull only most recent tweets
+		var res =  makeTwitterCall('statuses/user_timeline', twitterParams, "get"); 
+		_.each(res, function(tweet) { 
+			  if (!highest_id || tweet.id_str > highest_id) {
+		  		Tweets.insert(tweet);
+		  		highest_id = tweet.id_str;
+			  }
+		});
+
+		log.info("User " + user._id + "- Return user. Finished timeline load");
+		Meteor.users.update({"_id":Meteor.userId()}, {"$set":{"profile.highest_tweet_id": highest_id}});
+	};
+
 
 
 
@@ -151,7 +244,7 @@ Meteor.publish("tweets", function() {
 	if (!this.userId) {
 		return this.ready();
 	}
-
+	var user = Meteor.users.findOne({"_id":this.userId});
 	return Tweets.find({"user.screen_name":user.services.twitter.screenName}, {fields: {'_id': 1, 'id_str':1, 'created_at':1, 'text':1, 'user.screen_name':1, 'retweet_count':1, 'favorite_count':1}});
 });
 
@@ -159,13 +252,16 @@ Meteor.publish("tweets", function() {
 
 Meteor.methods({
 
-	// If user has an email address, put it in the database. 
-	// This is because the general twitter login does not populate the email addresses. 
+	// If user has an email address, add to the DB. 
+	// The general twitter login does not populate the email addresses. 
 	verifyUserCredentials: function() {
 		var twitterParams = {"include_email": true};
 		var res = makeTwitterCall('account/verify_credentials', twitterParams, "get");
 		if (res.email) {
 			Meteor.users.update({"_id" :Meteor.userId()},{$set : {"profile.email":res.email}});
+		} 
+		else {
+			log.warn("User " + Meteor.userId() + "- Could not update email address")
 		}
 	},
 
@@ -175,7 +271,6 @@ Meteor.methods({
 	sendNotificationEmail: function(other_user_id, notification_text) {
 		var other_user = Meteor.users.findOne({"_id":other_user_id});
 		var other_user_email = other_user &&  other_user.profile &&  other_user.profile.email;
-		console.log("About to send notif email to " + other_user_email);
 
 		if (other_user_email) {
 			SSR.compileTemplate( 'notificationEmail', Assets.getText( 'notification-email.html' ) );
@@ -192,117 +287,51 @@ Meteor.methods({
 			  subject: "Notification from Shout!",
 			  html: SSR.render( 'notificationEmail', emailData)
 			});
+			log.info("User " + Meteor.userId() + " sent notif email to " + other_user_id + " with text " + notification_text);
+
+		}
+		else {
+			log.warn("User " + Meteor.userId() + " sending email - " + other_user_id + " - Fail - no email address for this user");
 		}
 	
 	},
 
 
 	// Returns the tweets we have stored in our db for a particular user
-	getUserTimeline: function(user_id) {
-		console.log("getUserTimeline called - " + new Date())
-		check(user_id, String);
-
-		var user = Meteor.users.findOne({"_id":user_id});
+	getUserTimeline: function() {
+		var user = Meteor.user();
 		if (user && user.services.twitter) {
 			var screenName = user.services.twitter.screenName;
 		}
 		var res = Tweets.find({"user.screen_name":screenName}, {sort: {"id":-1}}).fetch();
-		console.log("getUserTimeline finishing - " + new Date());
 		return res;		
 	},
 
 	// Pull down the timeline data from Twitter here.
 	// If first user login, pull tweets in batches. 
 	// Else, pull most recent tweets.
-
-	// TODO: Optimize this - Loading time is way too slow.
-	updateUserTimeline: function(user_id) {
-		console.log("updateUserTimeline method called at " + new Date());
-		check(user_id, String);
-
-		var user = Meteor.users.findOne({"_id":user_id});
+	updateUserTimeline: function() {
+		log.info("User " + Meteor.userId() + " - updating timeline");
+		var user = Meteor.user()
 		if (!(user && user.services && user.services.twitter)) {
-			console.log("No user - " + new Date());
 			throw new Meteor.Error("no user");
 			return;
 		}
-		 if (!user.profile.has_logged_in) {
-		 	var startTime = new Date()
-		 	console.log("Updating " + user.profile.screenName + " timeline for the first time at " + startTime);
-			// Pull down batches of tweets
-			var num_batches_processed = 0;
-			var lowest_id;
-			var highest_id;
-			while (num_batches_processed < NUM_BATCH_ITERATIONS) {
-				var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, max_id: lowest_id}
-				var res =  makeTwitterCall('statuses/user_timeline', twitterParams, "get");
-
-				// A patch - to reduce the number of API calls. 
-				if (num_batches_processed >= 1 && res.length<= 1) {
-					break;
-				}
-
-				_.each(res, function(tweet, j) { 
-					// If we aren't on the first batch, skip the first tweet. 
-					if (typeof(lowest_id)==="undefined") {
-						lowest_id = tweet.id-1;
-					}
-					if (typeof(highest_id)==="undefined") {
-						highest_id = tweet.id;
-					}
-
-					if (num_batches_processed===0 || j!==0) {
-						Tweets.insert(tweet);
-					}
-
-					  if (tweet.id < lowest_id) {
-					  	lowest_id = tweet.id-1;
-					  };
-					  if (tweet.id > highest_id) {
-					  	highest_id = tweet.id;
-					  }
-					});
-					var time_spent = new Date() - startTime;
-					console.log("Updating user timeline - Batch   " + num_batches_processed + ", num processed: " + res.length + ", time spent: " + time_spent);
-					num_batches_processed += 1;
-			};			
-
-			// User is no longer a first-time user
-			// Update profile accordingly and store the ids corresponding to the tweets we have downloaded
-			Meteor.users.update({"_id":user_id}, {"$set":{"profile.has_logged_in":true, "profile.highest_tweet_id": highest_id, "profile.lowest_tweet_id": lowest_id}});
-
+		if (!user.profile.has_logged_in) {
+			newUserTimelineLoad(); 	
 		}
 		else {
-			console.log("Updating " + user.profile.name + " user timeline - starting " + new Date());
-
-			var highest_id = user.profile && user.profile.highest_tweet_id;
-			var twitterParams;
-			if (highest_id) {
-				var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE}
-			}
-			else {
-				twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, since_id: highest_id}
-			}
-
-			// Pull only most recent tweets
-			var res =  makeTwitterCall('statuses/user_timeline', twitterParams, "get"); 
-			_.each(res, function(tweet) { 
-				  if (!highest_id || tweet.id > highest_id) {
-			  		Tweets.insert(tweet);
-			  		highest_id = tweet.id;
-				  }
-			});
-			Meteor.users.update({"_id":user_id}, {"$set":{"profile.highest_tweet_id": highest_id}});
-			console.log("Updating " +  user.profile.name + " user timeline - finished  " + new Date());
-
+			oldUserTimelineLoad();
 		}	
 	},
 
-	getSearchedUserTimeline: function(search_terms, username_for_timeline) {
+	getSearchedUserTimeline: function(search_terms) {
 		if (this.userId){
 			check(search_terms, String);
-			check(username_for_timeline, String);
-			var twitterParams = {q: search_terms, from: username_for_timeline};
+
+			var user = Meteor.user()
+			var screenname = user && user.services && user.services.twitter && user.services.twitter.screenName;
+			var twitterParams = {q: search_terms, from: screenname};
 			return makeTwitterCall('search/tweets', twitterParams, "get")
 		}
 		else {
@@ -331,7 +360,7 @@ Meteor.methods({
 		if (this.userId){
 			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
 			Current_trade_requests.update({"user_id_from":user_id_from, "user_id_to":user_id_to}, {"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "review_status": review_status}, {"upsert":true});
-			console.log("Updating current trade request!");
+			log.info("User " + Meteor.userId() + " - Updated current trade request. TO: " + user_id_to +", FROM: " + user_id_from);
 			Meteor.call("sendNotificationEmail", user_id_to, "sent you a trade request!");
 
 		}
@@ -344,14 +373,12 @@ Meteor.methods({
 	// Once a trade proposal is accepted/rejected, push the trade request to the historic trade request collection
 	// and clear the current request.
 	pushHistoricTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to, status) {
-		
-		console.log("user_id_from: " + user_id_from + ", user_id_to: " + user_id_to);
 		if (this.userId){
 			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
 			check(status, String);
-
 			Historic_trade_requests.insert({"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "status": status});
 			Current_trade_requests.remove({"user_id_from":user_id_from, "user_id_to":user_id_to});
+			log.info("User " + Meteor.userId() + " - Pushed historic trade request. TO: " + user_id_to + ", FROM: " + user_id_from + ", status: " + status);
 		}
 		else {
 			throw new Meteor.Error("logged-out");
@@ -397,6 +424,8 @@ Meteor.methods({
 				status = "accept_without_review";
 			}
 			Meteor.call("addTradeRequestToActivity",user_id_from, user_id_to, status);
+			log.info("User " + Meteor.userId() + " - Created new trade. TO: " + user_id_to + ", FROM: " + user_id_from);
+
 
 		}
 		else {
@@ -439,6 +468,9 @@ Meteor.methods({
 			Meteor.call("addTradeRequestToActivity",user_id_from, user_id_to, status);
 			Meteor.call("sendNotificationEmail", user_id_to, "accepted your trade request."); // CHECK THIS
 
+			log.info("User " + Meteor.userId() + " - Added to existing trade. TO: " + user_id_to +", FROM: " + user_id_from);
+
+
 		}
 		else {
 			throw new Meteor.Error("logged-out");
@@ -450,65 +482,43 @@ Meteor.methods({
 		Shout_requests.remove({"tweet_id":tweet_id, "retweeting_user": retweeting_user, "original_poster_id": original_poster_id});
 	},
 
-	// 'direct' arg is true if the retweet is triggered directly (not through a shout! request)
-	// In the direct case, trade quantities have not been decremented previously.
-	sendRetweet: function(tweet_id, trader_id_posted, other_trader_id, direct) {
+	// Actually triggers the retweet
+	// NEW version
+	sendShout: function(tweet_id, trader_id_posted, other_trader_id, direct) {
 		check(tweet_id, String);
 		check(trader_id_posted, String);
 		check(other_trader_id, String);
-
 		if (this.userId) {
-
-			// Create a Twit object for the user who is actually sending the retweet.
-			var trader = Meteor.users.findOne({"_id":trader_id_posted});
-			var trader_access_token = trader.services.twitter.accessToken;
-			var trader_access_token_secret = trader.services.twitter.accessTokenSecret;
-
-			traderTwit = new Twit({
-				consumer_key: TWITTER_API_KEY,
-				consumer_secret: TWITTER_API_SECRET,
-				access_token: trader_access_token,
-				access_token_secret: trader_access_token_secret
-			});
-
-
-			// Example code
-			var twitterResultsSync = Meteor.wrapAsync(traderTwit.post, traderTwit);
-			var apiCall = 'statuses/retweet/' + tweet_id;
-
 			try {
+				var twitterParams = {"id":tweet_id};
+				makeTwitterCall('statuses/retweet', twitterParams, "post", true, trader_id_posted);
+
+				// If successful AND it was a direct Shout!, decrement trade counts
 				if (direct) {
-					twitterResultsSync(apiCall);
+					decrementTradeCounts(trader_id_posted, other_trader_id);
+					Recent_activity.insert({"user_id":trader_id_posted, type: "direct_shout", "is_notification_receiver": true, "other_user_id": other_trader_id, "tweet_id":tweet_id, "status": null, "seen":false, "time":new Date()}) 
+					Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":tweet_id, "status": null, "seen":false, "time":new Date()}) 
+				} 
+				else {
+					Meteor.call("addShoutRequestToActivity", other_trader_id, trader_id_posted, tweet_id, "accept");
+					Meteor.call("sendNotificationEmail", trader_id_posted, "accepted your Shout! request.");	
 				}
-				
+				log.info("RETWEET SUCCESS. Posting user: " + trader_id_posted +", other user: " + other_trader_id);
 			}
 			catch (err) {
-				console.log("Error sending retweet");
-				console.log(err);
-				console.log(err.reason);
+				// throw meteor error to client
+				// Should be specific to the type of retweet error. 
+				log.warn("RETWEET ERROR. Posting user: " + trader_id_posted +", other user: " + other_trader_id + ", ERR: " + err.reason);
+				throw new Meteor.Error("Error posting retweet");
+
+				// If was an INDIRECT Shout!, re-increment the trade counts
 				if (!direct) {
 					Meteor.call("incrementTradeCounts", trader_id_posted, other_trader_id);
 				}
-				throw new Meteor.Error("Error posting retweet");
-				return;
 			}
-			if (direct) {
-				decrementTradeCounts(trader_id_posted, other_trader_id);
-				Recent_activity.insert({"user_id":trader_id_posted, type: "direct_shout", "is_notification_receiver": true, "other_user_id": other_trader_id, "tweet_id":tweet_id, "status": null, "seen":false, "time":new Date()}) 
-				Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":tweet_id, "status": null, "seen":false, "time":new Date()}) 
-				
-				// If trade has reached 0-0, we should remove it. 
-				checkForFinishedTrade(trader_id_posted, other_trader_id);
 
-			} 
-			else {
-				Meteor.call("addShoutRequestToActivity", other_trader_id, trader_id_posted, tweet_id, "accept");
-				Meteor.call("sendNotificationEmail", trader_id_posted, "accepted your Shout! request.");
-
-			} 		
-
-			Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
-			 
+			// If trade has reached 0-0, we should remove it. 
+			checkForFinishedTrade(trader_id_posted, other_trader_id);
 		}
 		else {
 			throw new Meteor.Error("logged-out");
@@ -577,18 +587,6 @@ Meteor.methods({
 		}
 	},
 
-	updateProfile: function(user_id, edited_bio, edited_interests){
-		if (this.userId) {
-			check(user_id, String);
-			check(edited_bio, String);
-			check(edited_interests, String);
-			Meteor.users.update({"_id" :user_id},{$set : {"profile.bio":edited_bio, "profile.interests":edited_interests}});
-		}
-		else {
-			throw new Meteor.Error("logged-out");
-		}
-	},
-
 	createNewShoutRequest: function(tweet_id, trader_id) {
 		if (this.userId) {
 			Shout_requests.insert({"original_poster_id": Meteor.userId(), "retweeting_user": trader_id, "tweet_id": tweet_id});
@@ -612,16 +610,20 @@ Meteor.methods({
 		Recent_activity.update({"user_id":Meteor.userId(), "seen":false}, {$set:{"seen":true}});
 	},
 
+	// TODO: More specificity in errors back to client
 	sendDirectMessageInvite: function(twitter_handle, message_text) {
 		check(twitter_handle, String);
 		check(message_text, String);
 		var twitterParams = {"screen_name":twitter_handle, "text":message_text};
 		var res;
 		try {
-			res = makeTwitterCall('direct_messages/new', twitterParams, "post");
+			makeTwitterCall('direct_messages/new', twitterParams, "post");
+			log.info("User " + Meteor.userId() + "- Sent DM invite to " + twitter_handle)
+
 		} 
 		catch(error) {
 			console.log(error);
+			log.warn("User " + Meteor.userId() + "- ERROR sending DM invite to" + twitter_handle)
 			throw new Meteor.Error("direct-message-error");
 		}
 	}
@@ -629,7 +631,6 @@ Meteor.methods({
 });
 
 Meteor.startup(function() {
-	console.log("In meteor startup function");
 	var smtp = {
 		username: SMTP_USERNAME,
 		password: SMTP_PASSWORD,

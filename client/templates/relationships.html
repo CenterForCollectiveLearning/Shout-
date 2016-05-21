@@ -4,9 +4,9 @@
 			{{#if existCurrentNonTradingUsers}}
 				<div id="start-new-text" class="heading"> Start a new relationship </div>
 				{{#unless existsCurrentSelectedTweet}}
-				<div class="sort-by sort-by-filler">
+<!-- 				<div class="sort-by sort-by-filler">
 					Sort by: <a>own</a> | <a>owe</a> | <a>followers</a>
-				</div>
+				</div> -->
 				{{/unless}}
 			{{/if}}
 		{{/unless}}
@@ -15,13 +15,14 @@
 <!-- 		<div class="sort-by relationships-sort-by" hidden="{{existsCurrentSelectedUser}}">
 		Sort by: <a>own</a> | <a>owe</a> | <a>followers</a>
 		</div> -->
+	{{/if}}
+		{{#if showInviteFeature}}
 		<div class="invite-section">
 			<span> Can't find a friend? 
 			</span>
 			<span><button type="button" class="btn btn-sm btn-default" id="invite-button" data-toggle="modal" data-target="invite_modal">Invite</button></span>
 			{{> invite_modal}}
 		</div>
-
 	{{/if}}
 	<div id="relationship-search-div">
       <div class="input-group">
