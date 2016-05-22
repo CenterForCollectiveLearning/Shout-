@@ -89,7 +89,6 @@ Template.home.helpers({
 
 
 Template.home.events({
-
 	'click #trade-button': function(event){
 		var selected_tweet_id = Session.get("selectedTweetId");
 		var selected_trader_id =  Session.get("selectedTraderId");
@@ -165,18 +164,6 @@ Meteor.startup(function () {
 			}
 
 		});
-
-			// Meteor.call("verifyUserCredentials", function(err, result) {
-			// 	if (err) {
-			// 		console.log(err);
-			// 	}
-			// });
-
-			// Meteor.call("updateUserFollowersAndFriends", Meteor.userId(), function(err, result) {
-			// 	if (err) {
-			// 		console.log(err);
-			// 	}
-			// });
     }
   });
 

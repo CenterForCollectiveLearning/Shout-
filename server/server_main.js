@@ -606,7 +606,6 @@ Meteor.methods({
 		check(twitter_handle, String);
 		check(message_text, String);
 		var twitterParams = {"screen_name":twitter_handle, "text":message_text};
-		var res;
 		try {
 			makeTwitterCall('direct_messages/new', twitterParams, "post");
 			log.info("User " + Meteor.userId() + "- Sent DM invite to " + twitter_handle)
@@ -617,6 +616,22 @@ Meteor.methods({
 			log.warn("User " + Meteor.userId() + "- ERROR sending DM invite to" + twitter_handle)
 			throw new Meteor.Error("direct-message-error");
 		}
+	},
+
+	tweet: function(tweet_text) {
+		check(tweet_text, String);
+		var twitterParams = {"status":tweet_text};
+		try {
+			makeTwitterCall('statuses/update', twitterParams, "post");
+			log.info("User " + Meteor.userId() + "- posted new tweet ")
+
+		} 
+		catch(error) {
+			console.log(error);
+			log.warn("User " + Meteor.userId() + "- ERROR posting new tweet")
+			throw new Meteor.Error("tweet-error");
+		}
+
 	}
 
 });

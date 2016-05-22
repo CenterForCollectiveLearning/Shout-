@@ -1,6 +1,13 @@
 <template name="recent_tweets">
 	{{#if Template.subscriptionsReady}}
-		<div class="heading"> Your Latest Tweets </div>
+		<div>
+			<span class="heading">Your Latest Tweets</span>
+			<span style="float:right">
+				<button type="button" class="btn btn-sm btn-default" id="quick-tweet-button">Quick Tweet<span class="fa fa-twitter"></span></button>
+				{{> quick_tweet_modal}}
+			</span>
+		</div>
+
 		<div class="sort-by" id="tweet-sort-by" hidden="{{existsCurrentSelectedTweet}}">
 			<span>Sort by: <a id="sort-latest">latest</a> | <a id="sort-retweets">retweets</a> | <a id="sort-favorites">favorites</a>
 			</span><span><button type="button" class="btn btn-sm btn-default" id="reload-tweets-button">Reload <span class="glyphicon glyphicon-refresh"></span></button></span>

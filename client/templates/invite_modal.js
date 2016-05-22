@@ -5,8 +5,8 @@ Template.invite_modal.events({
 		var twitter_handle;
 		var message_text; 
 
-		message_text = $("#invite-msg-text").val()
-		twitter_handle = $("#invite-twitter-handle").val()
+		message_text = $("#invite-msg-text").val();
+		twitter_handle = $("#invite-twitter-handle").val();
 
 		if (message_text.length==0) {
 			$(".message-error").show();

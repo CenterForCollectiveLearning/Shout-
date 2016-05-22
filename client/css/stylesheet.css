@@ -1212,6 +1212,10 @@ li
   max-width: 100%;
 }
 
+#quick-tweet-button {
+  margin-top: 10px;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {

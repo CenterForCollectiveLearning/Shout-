@@ -79,6 +79,11 @@ Template.recent_tweets.helpers ({
 });
 
 Template.recent_tweets.events({
+
+	'click #quick-tweet-button': function() {
+		$("#quick_tweet_modal").modal('show');
+	},
+
 	// Functions to get highlighting working correctly
 	'mouseenter inner-tweet-panel': function(event) {
 		event.stopPropagation();
@@ -172,24 +177,6 @@ Template.recent_tweets.events({
 		})
 	}
 });
-
-function loadUserTimeline() {
-	Meteor.call("getUserTimeline", Meteor.userId(), function(error, result){
-	if (error) {
-		console.log("Error getting user timeline");
-		console.log(error.reason);
-		return;
-	}
-	Session.set("fullTweetList", result);
-	Session.set("fullTweetListByDate", result);
-	Session.set("tweetListStatus", "full");
-
-	//??
-	Session.set("panels_ready", false);
-
-	Session.set("timeline_ready", true);
-	});
-}
 
 Template.recent_tweets.onCreated(function() {
  	Session.set("timeline_ready", false);
