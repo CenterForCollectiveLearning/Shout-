@@ -69,6 +69,13 @@ Template.recent_tweets.helpers ({
 		return dateConverter(date);
 	},
 
+	hasNoTweets: function() {
+		if (Session.get("fullTweetList").length===0) {
+			return true;
+		}
+		return false;
+	}
+
 });
 
 Template.recent_tweets.events({

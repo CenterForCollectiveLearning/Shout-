@@ -11,9 +11,6 @@ function hasCurrentTradeRelationship(other_user_id) {
 Template.relationships.helpers({
 
 	showInviteFeature: function() {
-		console.log(existsCurrentSelectedUser());
-		console.log(existsCurrentSelectedTweet());
-
 		return !(existsCurrentSelectedUser() && existsCurrentSelectedTweet());
 	},
 

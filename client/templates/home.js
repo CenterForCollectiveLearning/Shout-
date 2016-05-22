@@ -165,18 +165,18 @@ Meteor.startup(function () {
 			}
 
 		});
-		
-		Meteor.call("verifyUserCredentials", function(err, result) {
-			if (err) {
-				console.log(err);
-			}
-		});
 
-		Meteor.call("updateUserFollowersAndFriends", Meteor.userId(), function(err, result) {
-			if (err) {
-				console.log(err);
-			}
-		});
+			// Meteor.call("verifyUserCredentials", function(err, result) {
+			// 	if (err) {
+			// 		console.log(err);
+			// 	}
+			// });
+
+			// Meteor.call("updateUserFollowersAndFriends", Meteor.userId(), function(err, result) {
+			// 	if (err) {
+			// 		console.log(err);
+			// 	}
+			// });
     }
   });
 

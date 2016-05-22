@@ -5,7 +5,8 @@ Template.signin_page.events({
 				console.log("Error logging in with Twitter");
 				console.log(err);
 			}
-			//Meteor.call('verifyUserCredentials');
+			Meteor.call('verifyUserCredentials');
+			Meteor.call('updateUserFollowersAndFriends');
 		});
 	}
 });

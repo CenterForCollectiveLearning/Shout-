@@ -159,10 +159,10 @@ var oldUserTimelineLoad = function() {
 		log.info("User " + user._id + "- Return user. Begin timeline load");
 
 		if (highest_id) {
-			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE}
+			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, since_id: highest_id}
 		}
 		else {
-			twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, since_id: highest_id}
+			twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE}
 		}
 
 		// Pull only most recent tweets
@@ -204,28 +204,28 @@ Meteor.publish("trades", function() {
 	if (!this.userId) {
 		return this.ready();
 	}
-	return Trades.find();
+	return Trades.find({"user_id":this.userId});
 });
 
 Meteor.publish("current_trade_requests", function() {
 	if (!this.userId) {
 		return this.ready();
 	}
-	return Current_trade_requests.find();
+	return Current_trade_requests.find({"user_id_to":this.userId});
 });
 
-Meteor.publish("historic_trade_requests", function() {
-	if (!this.userId) {
-		return this.ready();
-	}
-	return Historic_trade_requests.find();
-});
+// Meteor.publish("historic_trade_requests", function() {
+// 	if (!this.userId) {
+// 		return this.ready();
+// 	}
+// 	return Historic_trade_requests.find();
+// });
 
 Meteor.publish("shout_requests", function() {
 	if (!this.userId) {
 		return this.ready();
 	}
-	return Shout_requests.find();
+	return Shout_requests.find({"retweeting_user":this.userId});
 });
 
 Meteor.publish("retweet_ids", function() {
@@ -234,9 +234,10 @@ Meteor.publish("retweet_ids", function() {
 	}
 	return Retweet_ids.find();
 });
+
 Meteor.publish("recent_activity", function() {
 	if (!this.userId) {
-		return this.ready();
+		return this.ready({"user_id":this.userId});
 	}
 	return Recent_activity.find();
 });
@@ -325,34 +326,19 @@ Meteor.methods({
 		}	
 	},
 
-	getSearchedUserTimeline: function(search_terms) {
-		if (this.userId){
-			check(search_terms, String);
+	// TODO: Figure out why this is causing so many API calls, and bring it back
+	updateUserFollowersAndFriends: function() {
+		if (this.userId) {
+			var twitterParams = {user_id: Meteor.userId()};
+			var followers_result = makeTwitterCall('followers/ids', twitterParams, "get");
+			var friends_result = makeTwitterCall('friends/ids', twitterParams, "get");
 
-			var user = Meteor.user()
-			var screenname = user && user.services && user.services.twitter && user.services.twitter.screenName;
-			var twitterParams = {q: search_terms, from: screenname};
-			return makeTwitterCall('search/tweets', twitterParams, "get")
+			// Update db collections
+			Meteor.users.update({"_id":Meteor.userId()}, {"$set":{"profile.has_logged_in":true, "profile.followers_list": followers_result, "profile.friends_list": friends_result}});
 		}
 		else {
 			throw new Meteor.Error("logged-out");
 		}
-	},
-
-
-	// TODO: Figure out why this is causing so many API calls, and bring it back
-	updateUserFollowersAndFriends: function() {
-		// if (this.userId) {
-		// 	var twitterParams = {user_id: Meteor.userId()};
-		// 	var followers_result = makeTwitterCall('followers/ids', twitterParams);
-		// 	var friends_result = makeTwitterCall('friends/ids', twitterParams);
-
-		// 	// Update db collections
-		// 	Meteor.users.update({"_id":Meteor.userId()}, {"$set":{"profile.has_logged_in":true, "profile.followers_list": followers_result, "profile.friends_list": friends_result}});
-		// }
-		// else {
-		// 	throw new Meteor.Error("logged-out");
-		// }
 	},
 
 	// Updates the current trade requests.
