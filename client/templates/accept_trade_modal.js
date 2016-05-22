@@ -42,7 +42,7 @@ Template.accept_trade_modal.events({
 		else {
 			Meteor.call("createNewTrade", user_id_from, user_id_to, proposed_from, proposed_to, review_status_from, review_status_to);
 		}
-		Meteor.call("pushHistoricTradeRequest", user_id_from, user_id_to, proposed_from, proposed_to, status);
+		Meteor.call("pushHistoricTradeRequest", user_id_from, proposed_from, proposed_to, status);
 		$('.modal').modal('hide');
 	}
 });

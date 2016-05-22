@@ -88,15 +88,13 @@ Template.profile_modal.events({
     event.preventDefault();
 
     // Push the old request to the historic collection
-    var user_id_to = Meteor.userId();
     var user_id_from = Session.get("modify_trade_from_id");
     var old_proposed_from = Session.get("old_proposed_from");
     var old_proposed_to = Session.get("old_proposed_to");
     
-    Meteor.call("pushHistoricTradeRequest", user_id_from, user_id_to, old_proposed_from, old_proposed_to, "modified");
+    Meteor.call("pushHistoricTradeRequest", user_id_from, old_proposed_from, old_proposed_to, "modified");
     // Update the current trade request
     var user_id_to = Session.get("modify_trade_from_id");
-    var user_id_from = Meteor.userId();
     var new_proposed_from = template.find('.num-you').value;
     var new_proposed_to = template.find('.num-them').value;
 
@@ -109,7 +107,7 @@ Template.profile_modal.events({
       review_status = true;
     }
 
-    Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, new_proposed_from, new_proposed_to, review_status, function(err, result) {
+    Meteor.call("updateCurrentTradeRequest", user_id_to, new_proposed_from, new_proposed_to, review_status, function(err, result) {
         if (err) {
           console.log(err.reason);
         } 
@@ -172,7 +170,7 @@ Template.profile_modal.events({
 
 
 
-    Meteor.call("updateCurrentTradeRequest", user_id_from, user_id_to, proposed_from, proposed_to, review_status, function(err, result) {
+    Meteor.call("updateCurrentTradeRequest", user_id_to, proposed_from, proposed_to, review_status, function(err, result) {
       if (err) {
         console.log(err.reason);
       } 

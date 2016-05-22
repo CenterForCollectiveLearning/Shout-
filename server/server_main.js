@@ -342,11 +342,12 @@ Meteor.methods({
 	},
 
 	// Updates the current trade requests.
-	updateCurrentTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to, review_status) {
+	// Request is FROM the logged-in user. 
+	updateCurrentTradeRequest: function(user_id_to, num_proposed_from, num_proposed_to, review_status) {
 		if (this.userId){
-			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
-			Current_trade_requests.update({"user_id_from":user_id_from, "user_id_to":user_id_to}, {"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "review_status": review_status}, {"upsert":true});
-			log.info("User " + Meteor.userId() + " - Updated current trade request. TO: " + user_id_to +", FROM: " + user_id_from);
+			checkTradeParams(Meteor.userId(), user_id_to, num_proposed_from, num_proposed_to);
+			Current_trade_requests.update({"user_id_from":Meteor.userId(), "user_id_to":user_id_to}, {"user_id_from":Meteor.userId(), "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "review_status": review_status}, {"upsert":true});
+			log.info("User " + Meteor.userId() + " - Updated current trade request. TO: " + user_id_to +", FROM: " + Meteor.userId());
 			Meteor.call("sendNotificationEmail", user_id_to, "sent you a trade request!");
 
 		}
@@ -358,13 +359,14 @@ Meteor.methods({
 
 	// Once a trade proposal is accepted/rejected, push the trade request to the historic trade request collection
 	// and clear the current request.
-	pushHistoricTradeRequest: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to, status) {
+	// The request that gets pushed is TO the logged-in user. 
+	pushHistoricTradeRequest: function(user_id_from, num_proposed_from, num_proposed_to, status) {
 		if (this.userId){
-			checkTradeParams(user_id_from, user_id_to, num_proposed_from, num_proposed_to);
+			checkTradeParams(user_id_from, Meteor.userId(), num_proposed_from, num_proposed_to);
 			check(status, String);
-			Historic_trade_requests.insert({"user_id_from":user_id_from, "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "status": status});
-			Current_trade_requests.remove({"user_id_from":user_id_from, "user_id_to":user_id_to});
-			log.info("User " + Meteor.userId() + " - Pushed historic trade request. TO: " + user_id_to + ", FROM: " + user_id_from + ", status: " + status);
+			Historic_trade_requests.insert({"user_id_from":user_id_from, "user_id_to":Meteor.userId(), "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "status": status});
+			Current_trade_requests.remove({"user_id_from":user_id_from, "user_id_to":Meteor.userId()});
+			log.info("User " + Meteor.userId() + " - Pushed historic trade request. TO: " + Meteor.userId() + ", FROM: " + user_id_from + ", status: " + status);
 		}
 		else {
 			throw new Meteor.Error("logged-out");
@@ -377,19 +379,22 @@ Meteor.methods({
 	},
 
 	// Adds the accepted or rejected trade request to Recent Activity
-	addTradeRequestToActivity: function(user_id_from, user_id_to, status) {
-		Recent_activity.insert({"user_id": user_id_from, "type":"trade_req", "is_notification_receiver":true, "tweet_id": null, "other_user_id":user_id_to, "status":status, "time":new Date(), "seen": false})
-		Recent_activity.insert({"user_id": user_id_to, "type":"trade_req", "is_notification_receiver":false, "tweet_id": null, "other_user_id":user_id_from, "status":status, "time":new Date(), "seen": false})
+	// Request is TO the logged-in user. 
+	addTradeRequestToActivity: function(user_id_from,status) {
+		Recent_activity.insert({"user_id": user_id_from, "type":"trade_req", "is_notification_receiver":true, "tweet_id": null, "other_user_id":Meteor.userId(), "status":status, "time":new Date(), "seen": false})
+		Recent_activity.insert({"user_id": Meteor.userId(), "type":"trade_req", "is_notification_receiver":false, "tweet_id": null, "other_user_id":user_id_from, "status":status, "time":new Date(), "seen": false})
 	},
 
 	// Adds the accepted or rejected Shout! request to Recent Activity
-	addShoutRequestToActivity: function(user_id_from, user_id_to, tweet_id, status) {
-		Recent_activity.insert({"user_id": user_id_from, "type": "shout_req", "is_notification_receiver": true, "tweet_id": tweet_id, "other_user_id": user_id_to, "status": status, "time":new Date(), "seen": false});
-		Recent_activity.insert({"user_id": user_id_to, "type": "shout_req", "is_notification_receiver": false, "tweet_id": tweet_id, "other_user_id": user_id_from, "status": status, "time":new Date(), "seen": false});
+	// Request is TO the logged-in user. 
+	addShoutRequestToActivity: function(user_id_from, tweet_id, status) {
+		Recent_activity.insert({"user_id": user_id_from, "type": "shout_req", "is_notification_receiver": true, "tweet_id": tweet_id, "other_user_id": Meteor.userId(), "status": status, "time":new Date(), "seen": false});
+		Recent_activity.insert({"user_id": Meteor.userId(), "type": "shout_req", "is_notification_receiver": false, "tweet_id": tweet_id, "other_user_id": user_id_from, "status": status, "time":new Date(), "seen": false});
 	},
 
 	// Review status from/to parameters identify whether the users want to allow direct retweets through their account
 	// Each individual trade object stores the review preference of the OTHER trader.
+
 	createNewTrade: function(user_id_from, user_id_to, num_proposed_from, num_proposed_to, review_status_from, review_status_to) {
 		// Pulls out any existing trade with the other user; inserts the new one. 
 		// TODO: Revise this logic - Should not be a need to pull out an existing trade
@@ -409,7 +414,7 @@ Meteor.methods({
 			else {
 				status = "accept_without_review";
 			}
-			Meteor.call("addTradeRequestToActivity",user_id_from, user_id_to, status);
+			Meteor.call("addTradeRequestToActivity",user_id_from, status);
 			log.info("User " + Meteor.userId() + " - Created new trade. TO: " + user_id_to + ", FROM: " + user_id_from);
 
 
@@ -464,8 +469,8 @@ Meteor.methods({
 	},
 
 	// Removes the shout! request -- Called when user rejects a request
-	clearShoutRequest: function(tweet_id, retweeting_user, original_poster_id) {
-		Shout_requests.remove({"tweet_id":tweet_id, "retweeting_user": retweeting_user, "original_poster_id": original_poster_id});
+	clearShoutRequest: function(tweet_id, original_poster_id) {
+		Shout_requests.remove({"tweet_id":tweet_id, "retweeting_user": Meteor.userId(), "original_poster_id": original_poster_id});
 	},
 
 	// Actually triggers the retweet

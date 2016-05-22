@@ -1084,6 +1084,7 @@ li
 #page-wrapper {
   padding-left: 20px;
   padding-right: 20px;
+  height: 100vh;
 }
 
 .col-container {

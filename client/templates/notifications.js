@@ -71,8 +71,8 @@ Template.notifications.events({
 		}
 		else if ($(e.currentTarget).hasClass("reject")) {
 			new_status = "denied";
-			Meteor.call("addTradeRequestToActivity", this.user_id_from, this.user_id_to, "reject")
-			Meteor.call("pushHistoricTradeRequest", this.user_id_from, this.user_id_to, this.proposed_from, this.proposed_to, new_status);
+			Meteor.call("addTradeRequestToActivity", this.user_id_from, "reject")
+			Meteor.call("pushHistoricTradeRequest", this.user_id_from, this.proposed_from, this.proposed_to, new_status);
 
 		}
 		else {
