@@ -1216,6 +1216,15 @@ li
   margin-top: 10px;
 }
 
+.num-them {
+  color: #cc3300;
+}
+
+.num-you {
+  color: #00cc00;
+
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {

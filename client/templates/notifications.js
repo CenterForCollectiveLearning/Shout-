@@ -39,7 +39,28 @@ Template.notifications.helpers({
 
   	exists_recent_activity: function() {
   		return exists_recent_activity();
+  	},
+
+  	get_old_trade_to: function(historic_req_id) {
+  		old_req = Historic_trade_requests.findOne({"_id":historic_req_id});
+  		console.log(old_req);
+  		return old_req.proposed_to;
+  	},
+
+  	get_old_trade_from: function(historic_req_id) {
+		old_req = Historic_trade_requests.findOne({"_id":historic_req_id});
+		console.log(old_req);
+		return old_req.proposed_from;
+  	},
+
+  	is_counteroffer: function(request) {
+  		if (request.modified_req_id) {
+  			return true;
+  		}
+  		return false;
   	}
+
+
 });
 
 Template.notifications.events({
@@ -58,16 +79,6 @@ Template.notifications.events({
 
 			$("#accept-trade-modal").modal('show');
 
-
-			// new_status = "approved";
-			// if (has_current_trade_relationship(this.user_id_from)) {
-			// 	Meteor.call("addToExistingTrade", this.user_id_from, this.user_id_to, this.proposed_from, this.proposed_to);
-			// }
-			// else {
-			// 	Meteor.call("createNewTrade", this.user_id_from, this.user_id_to, this.proposed_from, this.proposed_to);
-			// }
-			// Meteor.call("pushHistoricTradeRequest", this.user_id_from, this.user_id_to, this.proposed_from, this.proposed_to, new_status);
-
 		}
 		else if ($(e.currentTarget).hasClass("reject")) {
 			new_status = "denied";
@@ -78,7 +89,6 @@ Template.notifications.events({
 		else {
 			// Logic to get the other user timeline
 			//Session.set("isInProfileModal", true);
-			console.log("Modify logic here.. ");
 			new_status = "modified";
 			Session.set("modify_trade_from_id", this.user_id_from);
 			Session.set("old_proposed_from", this.proposed_from);
@@ -97,7 +107,8 @@ Template.notifications.onCreated(function() {
 		this.subscribe('current_trade_requests');
 		this.subscribe('shout_requests');
 		this.subscribe('tweets');
-		this.subscribe('recent_activity')
+		this.subscribe('recent_activity');
+		this.subscribe('historic_trade_requests');
 	});
 });
 

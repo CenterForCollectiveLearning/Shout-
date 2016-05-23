@@ -91,12 +91,9 @@ Template.profile_modal.events({
     var user_id_from = Session.get("modify_trade_from_id");
     var old_proposed_from = Session.get("old_proposed_from");
     var old_proposed_to = Session.get("old_proposed_to");
-    
-    Meteor.call("pushHistoricTradeRequest", user_id_from, old_proposed_from, old_proposed_to, "modified");
-    // Update the current trade request
-    var user_id_to = Session.get("modify_trade_from_id");
+
     var new_proposed_from = template.find('.num-you').value;
-    var new_proposed_to = template.find('.num-them').value;
+    var new_proposed_to = template.find('.num-them').value;  
 
     var review_status;
 
@@ -107,18 +104,19 @@ Template.profile_modal.events({
       review_status = true;
     }
 
-    Meteor.call("updateCurrentTradeRequest", user_id_to, new_proposed_from, new_proposed_to, review_status, function(err, result) {
-        if (err) {
-          console.log(err.reason);
-        } 
-        else {
-          Session.set("requested-user-for-alert", getSpecificUser(user_id_to));
-          $("#trade-req-alert").show();
-          $("#trade-req-alert").fadeTo(2000, 500).slideUp(500, function(){
-            $("#trade-req-alert").hide();
-          });
-        }
-        });
+
+    Meteor.call("updateCurrentPushHistoric", user_id_from, old_proposed_from, old_proposed_to, new_proposed_from, new_proposed_to, "modified", review_status, function(err, result) {
+      if (err) {
+        console.log(err.reason);
+      } else {
+            Session.set("requested-user-for-alert", getSpecificUser(user_id_from));
+            $("#trade-req-alert").show();
+            $("#trade-req-alert").fadeTo(2000, 500).slideUp(500, function(){
+              $("#trade-req-alert").hide();
+            });
+      }
+    })
+
       $('.modal').modal('hide');
   },
 

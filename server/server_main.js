@@ -178,11 +178,7 @@ var oldUserTimelineLoad = function() {
 		Meteor.users.update({"_id":Meteor.userId()}, {"$set":{"profile.highest_tweet_id": highest_id}});
 	};
 
-
-
-
 // PUBLICATIONS
-// TODO: More selective publications
 Meteor.publish("userData", function() {
 	if (!this.userId) {
 		return this.ready();
@@ -211,15 +207,17 @@ Meteor.publish("current_trade_requests", function() {
 	if (!this.userId) {
 		return this.ready();
 	}
-	return Current_trade_requests.find({"user_id_to":this.userId});
+	return Current_trade_requests.find({$or:[{"user_id_to":this.userId}, {"user_id_from":this.userId}]})
+	//return Current_trade_requests.find({"user_id_to":this.userId});
 });
 
-// Meteor.publish("historic_trade_requests", function() {
-// 	if (!this.userId) {
-// 		return this.ready();
-// 	}
-// 	return Historic_trade_requests.find();
-// });
+Meteor.publish("historic_trade_requests", function() {
+	if (!this.userId) {
+		return this.ready();
+	}
+	return Historic_trade_requests.find({$or:[{"user_id_to":this.userId}, {"user_id_from":this.userId}]})
+	//return Historic_trade_requests.find();
+});
 
 Meteor.publish("shout_requests", function() {
 	if (!this.userId) {
@@ -341,38 +339,56 @@ Meteor.methods({
 		}
 	},
 
+	// For now: Just combines logic in updateCurrent and pushHistoric
+	updateCurrentPushHistoric: function(user_id, old_proposed_from, old_proposed_to, new_proposed_from, new_proposed_to, old_status, review_status) {
+		if (this.userId) {
+			console.log("IN UPDATE CURRENT PUSH HISTORIC");
+			checkTradeParams(Meteor.userId(), user_id, old_proposed_from, old_proposed_to);
+			check(old_status, String);
+			Historic_trade_requests.insert({"user_id_from":user_id, "user_id_to":Meteor.userId(), "proposed_from":old_proposed_from, "proposed_to":old_proposed_to, "status": old_status}, function(err, result) { 
+				Current_trade_requests.remove({"user_id_from":user_id, "user_id_to":Meteor.userId()});
+				var modifiedReqId = result
+				console.log("ModifiedReqId: " + modifiedReqId);
+				Meteor.call("updateCurrentTradeRequest",user_id, new_proposed_from, new_proposed_to, review_status, modifiedReqId);
+
+			});
+		}
+		 else {
+			throw new Meteor.Error("logged-out");
+
+		}
+	},
+
+
 	// Updates the current trade requests.
 	// Request is FROM the logged-in user. 
-	updateCurrentTradeRequest: function(user_id_to, num_proposed_from, num_proposed_to, review_status) {
-		if (this.userId){
+	updateCurrentTradeRequest: function(user_id_to, num_proposed_from, num_proposed_to, review_status, modifiedReqId=false) {
+		if (this.userId) {
 			checkTradeParams(Meteor.userId(), user_id_to, num_proposed_from, num_proposed_to);
-			Current_trade_requests.update({"user_id_from":Meteor.userId(), "user_id_to":user_id_to}, {"user_id_from":Meteor.userId(), "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "review_status": review_status}, {"upsert":true});
+			Current_trade_requests.update({"user_id_from":Meteor.userId(), "user_id_to":user_id_to}, {"user_id_from":Meteor.userId(), "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "review_status": review_status, "modified_req_id":modifiedReqId}, {"upsert":true});
 			log.info("User " + Meteor.userId() + " - Updated current trade request. TO: " + user_id_to +", FROM: " + Meteor.userId());
-			Meteor.call("sendNotificationEmail", user_id_to, "sent you a trade request!");
 
-		}
-		else {
+			Meteor.call("sendNotificationEmail", user_id_to, "sent you a trade request!");
+		} else {
 			throw new Meteor.Error("logged-out");
 		}
-
 	},
 
 	// Once a trade proposal is accepted/rejected, push the trade request to the historic trade request collection
 	// and clear the current request.
 	// The request that gets pushed is TO the logged-in user. 
 	pushHistoricTradeRequest: function(user_id_from, num_proposed_from, num_proposed_to, status) {
-		if (this.userId){
+		if (this.userId) {
 			checkTradeParams(user_id_from, Meteor.userId(), num_proposed_from, num_proposed_to);
 			check(status, String);
-			Historic_trade_requests.insert({"user_id_from":user_id_from, "user_id_to":Meteor.userId(), "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "status": status});
-			Current_trade_requests.remove({"user_id_from":user_id_from, "user_id_to":Meteor.userId()});
-			log.info("User " + Meteor.userId() + " - Pushed historic trade request. TO: " + Meteor.userId() + ", FROM: " + user_id_from + ", status: " + status);
-		}
-		else {
-			throw new Meteor.Error("logged-out");
+			Historic_trade_requests.insert({"user_id_from":user_id_from, "user_id_to":Meteor.userId(), "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "status": status}, function(err, result) { 
+				Current_trade_requests.remove({"user_id_from":user_id_from, "user_id_to":Meteor.userId()});
+				log.info("User " + Meteor.userId() + " - Pushed historic trade request. TO: " + Meteor.userId() + ", FROM: " + user_id_from + ", status: " + status);
+			});
+		} else {
+			throw new Meteor.Error("logged-out");	
 		}
 	},
-
 
 	getTweet: function(tweet_id) {
 		return Tweets.findOne({"id_str":tweet_id.toString()});
