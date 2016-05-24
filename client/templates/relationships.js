@@ -138,6 +138,13 @@ Template.relationships.helpers({
 	findTradeWithUser: function(other_user_id) {
 		return Trades.findOne({"user_id": Meteor.userId(), "trades.other_user_id": other_user_id});
 	},
+
+	usersLoaded: function() {
+		if (Session.get("fullUserList")!= undefined) {
+			return true;
+		}
+		return false;
+	}
 });
 
 Template.relationships.events({

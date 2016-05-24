@@ -11,19 +11,18 @@
 			{{/if}}
 		{{/unless}}
 	{{#if existCurrentTraders}}
-		<div class="heading"> Relationships </div>
+		<div id="relationship-heading" class="heading"> Relationships </div>
 <!-- 		<div class="sort-by relationships-sort-by" hidden="{{existsCurrentSelectedUser}}">
 		Sort by: <a>own</a> | <a>owe</a> | <a>followers</a>
 		</div> -->
 	{{/if}}
-		{{#if showInviteFeature}}
-		<div class="invite-section">
+		<div class="invite-section" style="{{#unless showInviteFeature}}visibility:hidden{{/unless}}">
 			<span> Can't find a friend? 
 			</span>
 			<span><button type="button" class="btn btn-sm btn-default" id="invite-button" data-toggle="modal" data-target="invite_modal">Invite</button></span>
 			{{> invite_modal}}
 		</div>
-	{{/if}}
+	{{#if usersLoaded}}
 	<div id="relationship-search-div">
       <div class="input-group">
           <input type="text" class="form-control" id="relationship-search-input">
@@ -36,6 +35,8 @@
           </span>
        </div>
   </div>
+  {{/if}}
+
 
 {{#if existCurrentTraders}}
 	{{/if}}

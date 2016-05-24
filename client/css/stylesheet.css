@@ -350,6 +350,10 @@ span.tags
   padding-bottom: 10px;
 }
 
+#relationship-heading {
+  padding-bottom: 5px;
+}
+
 .tweet-panel {
   font-size: 15px;
   margin-left: 0px;
@@ -841,7 +845,7 @@ object {
 
 .notifications-dropdown-without-requests {
   background-color: #F0F4F7;
-  width: 350px;
+  width: 500px;
   padding: 0px;
 }
 
@@ -919,7 +923,7 @@ object {
   text-align: right;
 }
 
-#reload-tweets-button {
+.reload-tweets-desktop {
   float: right;
 }
 
@@ -1212,7 +1216,7 @@ li
   max-width: 100%;
 }
 
-#quick-tweet-button {
+.quick-tweet-desktop {
   margin-top: 10px;
 }
 
@@ -1223,6 +1227,10 @@ li
 .num-you {
   color: #00cc00;
 
+}
+
+.mobile-buttons {
+  margin-bottom: 10px;
 }
 
 /* Sticky footer styles
@@ -1269,6 +1277,10 @@ li {
     .dropdown-menu {
       background-color: #34495e;    
       box-shadow: none;
+    }
+
+    .tweet-text {
+      margin-left: 10px;
     }
 }
 @media screen and (min-width: 768px) {
