@@ -406,6 +406,7 @@ span.tags
     -moz-border-radius: 3px;
     border-radius: 3px;
   font-size: 16px;
+  padding-right: 5px;
 }
 
 .inner-trader-panel {
@@ -414,7 +415,7 @@ span.tags
 }
 
 .inner-trader-panel:last-child {
-  text-align: right;
+  /*text-align: right;*/
 }
 
 .tweet-search-div {
@@ -433,7 +434,7 @@ span.tags
 
 .trading-num {
   margin-top: 5px;
-  font-size: 34px;
+  /*font-size: 34px;*/
   text-align: center;
 }
 
@@ -576,6 +577,7 @@ span.tags
 .btn-request{
   background-color: #DFE5EA;
   margin-top: 8px;
+  float: right;
 }
 
 #requests-table {
@@ -687,7 +689,7 @@ object {
 
 .macro-media-logo {
   height: 60px; 
-  float:left;
+  /*float:left;*/
   padding: 5px;
   margin-left: 5px;
 }
@@ -1233,6 +1235,10 @@ li
   margin-bottom: 10px;
 }
 
+.mobile-footer-logo {
+  text-align: center;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -1282,6 +1288,9 @@ li {
     .tweet-text {
       margin-left: 10px;
     }
+    .trading-num {
+      font-size: 26px;
+    }
 }
 @media screen and (min-width: 768px) {
   .badger-outter
@@ -1308,5 +1317,8 @@ li {
       box-shadow: none;
       margin-left: -125px;
       left: 50%;
+    }
+    .trading-num {
+      font-size: 34px;
     }
 }
