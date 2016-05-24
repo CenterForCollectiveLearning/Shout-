@@ -4,7 +4,8 @@
             <div class="modal-content profile-modal-content">
                 <div class="modal-header">
                     {{#with get_user_by_id _id}}
-                    <div class="row">
+
+                    <div class="row hidden-xs">
                         <div class="col-xs-5 profile-modal-user">
                             <div class="profile-modal-name">
                                 {{profile.name}}
@@ -23,6 +24,21 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row visible-xs-* hidden-sm hidden-md hidden-lg">
+                        <div class="col-xs-3">
+                            <img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
+                        </div>
+                        <div class="col-xs-9 profile-modal-user">
+                            <div class="profile-modal-name">
+                                {{profile.name}}
+                            </div>
+                            <div class="profile-modal-screenname">
+                                <b>@{{services.twitter.screenName}}</b>
+                            </div>
+                        </div>
+                    </div>
+
+
                     {{/with}}
                 </div>
                 <div class="modal-body profile-modal-footer">
@@ -59,11 +75,21 @@
                             {{/if}}
                         </div>
                             <div class="profile-modal-make-deal">
-                                <div>
+                                <div class="hidden-xs">
                                     I will retweet you
                                     <input type="number" min="{{get_min_trade_param}}" max="{{get_max_trade_param}}" class="form-control form-control-custom num-them"> times if you retweet me
                                     <input type="number" min="0" max="25" class="form-control form-control-custom num-you"> times.
                                 </div>
+
+                                <div class="visible-xs-* hidden-sm hidden-md hidden-lg">
+                                    <div style="margin-bottom:10px"> 
+                                        <input type="number" min="{{get_min_trade_param}}" max="{{get_max_trade_param}}" class="form-control form-control-custom num-them"> Times I will retweet you
+                                    </div>
+                                    <div> <input type="number" min="0" max="25" class="form-control form-control-custom num-you"> Times you will retweet me
+                                    </div>
+                                </div>
+
+
                                 <form>
                                     <div class="radio">
                                         <label>

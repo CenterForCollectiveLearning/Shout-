@@ -488,7 +488,7 @@ span.tags
 
 .form-control-custom {
   display: inline;
-  width: 12%;
+  width: 60px;
 }
 
 .hobbies-list {
@@ -1237,6 +1237,14 @@ li
 
 .mobile-footer-logo {
   text-align: center;
+}
+
+.screen-name-group {
+  text-align: left;
+}
+
+.message-group {
+  text-align: left;
 }
 
 /* Sticky footer styles
