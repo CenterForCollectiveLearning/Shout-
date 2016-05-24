@@ -1299,6 +1299,10 @@ li {
     .trading-num {
       font-size: 26px;
     }
+
+    #relationship-heading {
+      margin-top: 10px;
+    }
 }
 @media screen and (min-width: 768px) {
   .badger-outter

@@ -1,10 +1,11 @@
 <template name="recent_tweets">
 	{{#if Template.subscriptionsReady}}
 		<div>
+			{{> quick_tweet_modal}}
 			<span class="heading">Your Latest Tweets</span>
 			<span style="float:right" class="hidden-xs">
 				<button type="button" class="btn btn-sm btn-default quick-tweet-desktop" id="quick-tweet-button">Quick Tweet<span class="fa fa-twitter"></span></button>
-				{{> quick_tweet_modal}}
+				
 			</span>
 		</div>
 
@@ -18,9 +19,10 @@
 		<div class="visible-xs-* hidden-sm hidden-md hidden-lg mobile-buttons">
 			<span>
 				<button type="button" class="btn btn-sm btn-default quick-tweet-mobile" id="quick-tweet-button">Quick Tweet<span class="fa fa-twitter"></span></button>
-				{{> quick_tweet_modal}}
+				
 			</span>
 			<span><button type="button" class="btn btn-sm btn-default reload-tweets-mobile" id="reload-tweets-button">Reload <span class="glyphicon glyphicon-refresh"></span></button></span>
+			
 		</div>
 		<div id="tweet-search-div">
 			<div class="input-group">
