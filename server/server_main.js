@@ -178,6 +178,32 @@ var oldUserTimelineLoad = function() {
 		Meteor.users.update({"_id":Meteor.userId()}, {"$set":{"profile.highest_tweet_id": highest_id}});
 	};
 
+// Helper function for email data
+var getNotificationText = function(notif_type) {
+	if (notif_type=="sent_trade_req") {
+		return " sent you a trade request!"
+	}
+	else if (notif_type=="sent_counter_req") {
+		return " sent you a counter-offer!"
+	}
+	else if (notif_type=="accepted_trade_req") {
+		return " accepted your trade request!"
+	}
+	else if (notif_type=="rejected_trade_req") {
+		return " rejected your trade request :("
+	}
+	else if (notif_type=="sent_shout_req") {
+		return " sent you a retweet request!"
+	}
+	else if (notif_type=="accepted_shout_req") {
+		return " sent your retweet!"
+	}
+	else if (notif_type=="rejected_shout_req") {
+		return " rejected your retweet :("
+	}
+};
+
+
 // PUBLICATIONS
 Meteor.publish("userData", function() {
 	if (!this.userId) {
@@ -267,25 +293,63 @@ Meteor.methods({
 
 	// Notification email sent to the other_user param
 	// Email contents contain info about logged-in user and action
-	sendNotificationEmail: function(other_user_id, notification_text) {
+	// Notification types:
+	// 		sent_trade_req
+	// 		sent_counter_req
+	// 		accepted_trade_req
+	// 		rejected_trade_req
+	//		sent_shout_req
+	//		accepted_shout_req
+	//		rejected_shout_req
+	sendNotificationEmail: function(other_user_id, type, tweet_text=null, tweet_datetime=null, proposed_to=null, proposed_from=null, old_proposed_to=null, old_proposed_from=null) {
 		var other_user = Meteor.users.findOne({"_id":other_user_id});
 		var other_user_email = other_user &&  other_user.profile &&  other_user.profile.email;
 
 		if (other_user_email) {
-			SSR.compileTemplate( 'notificationEmail', Assets.getText( 'notification-email.html' ) );
+
+			SSR.compileTemplate( 'shoutNotificationEmail', Assets.getText( 'shoutNotificationEmail.html' ) );
+			SSR.compileTemplate( 'tradeNotificationEmail', Assets.getText( 'tradeNotificationEmail.html' ) );
+
+
+			var notification_text = getNotificationText(type);
+			// Shout or Trade
+			var isTradeNotif=false;
+			if (type=="sent_trade_req" || type=="accepted_trade_req" || type=="rejected_trade_req" || type=="sent_counter_req") {
+				console.log("Is trade notif...")
+				isTradeNotif= true;
+			}
 
 			var emailData = {
-			  notification_name: Meteor.user().profile.name,
-			  notification_user_icon: Meteor.user().services.twitter.profile_image_url,
-			  notification_text: notification_text
+			  from_name: Meteor.user().profile.name,
+			  from_screenName: Meteor.user().services.twitter.screenName,
+			  from_user_icon: Meteor.user().services.twitter.profile_image_url,
+			  type: type,
+			  notification_text:notification_text,
+			  tweet_text: tweet_text, 
+			  tweet_datetime: tweet_datetime,
+			  proposed_to: proposed_to, 
+			  proposed_from: proposed_from, 
+			  old_proposed_to: old_proposed_to, 
+			  old_proposed_from: old_proposed_from
 			};
 
-			Email.send({
-			  to: other_user_email,
-			  from: "shout.notifications@gmail.com",
-			  subject: "Notification from Shout!",
-			  html: SSR.render( 'notificationEmail', emailData)
-			});
+			if (isTradeNotif) {
+				Email.send({
+				  to: other_user_email,
+				  from: "shout.notifications@gmail.com",
+				  subject: "Notification from Shout!",
+				  html: SSR.render( 'tradeNotificationEmail', emailData)
+				});
+
+			} else {
+				Email.send({
+				  to: other_user_email,
+				  from: "shout.notifications@gmail.com",
+				  subject: "Notification from Shout!",
+				  html: SSR.render( 'shoutNotificationEmail', emailData)
+				});
+			}
+
 			log.info("User " + Meteor.userId() + " sent notif email to " + other_user_id + " with text " + notification_text);
 
 		}
@@ -368,7 +432,12 @@ Meteor.methods({
 			Current_trade_requests.update({"user_id_from":Meteor.userId(), "user_id_to":user_id_to}, {"user_id_from":Meteor.userId(), "user_id_to":user_id_to, "proposed_from":num_proposed_from, "proposed_to":num_proposed_to, "review_status": review_status, "modified_req_id":modifiedReqId}, {"upsert":true});
 			log.info("User " + Meteor.userId() + " - Updated current trade request. TO: " + user_id_to +", FROM: " + Meteor.userId());
 
-			Meteor.call("sendNotificationEmail", user_id_to, "sent you a trade request!");
+			if (modifiedReqId== false) {
+				Meteor.call("sendNotificationEmail", user_id_to, type="sent_trade_req", null, null, proposed_to=num_proposed_to, proposed_from=num_proposed_from);
+			} else {
+				Meteor.call("sendNotificationEmail", user_id_to, type="sent_counter_req", null, null, proposed_to=num_proposed_to, proposed_from=num_proposed_from);
+			}
+
 		} else {
 			throw new Meteor.Error("logged-out");
 		}
@@ -473,7 +542,8 @@ Meteor.methods({
 			}
 
 			Meteor.call("addTradeRequestToActivity",user_id_from, user_id_to, status);
-			Meteor.call("sendNotificationEmail", user_id_to, "accepted your trade request."); // CHECK THIS
+
+			Meteor.call("sendNotificationEmail", user_id_to, "accepted_trade_req", null, null, proposed_to=num_proposed_to, proposed_from=num_proposed_from); // CHECK THIS
 
 			log.info("User " + Meteor.userId() + " - Added to existing trade. TO: " + user_id_to +", FROM: " + user_id_from);
 
@@ -508,7 +578,10 @@ Meteor.methods({
 				} 
 				else {
 					Meteor.call("addShoutRequestToActivity", other_trader_id, trader_id_posted, tweet_id, "accept");
-					Meteor.call("sendNotificationEmail", trader_id_posted, "accepted your Shout! request.");	
+
+					var tweet = Tweets.findOne({"id_str":tweet_id})
+
+					Meteor.call("sendNotificationEmail", trader_id_posted, "accepted_shout_req", tweet_text=tweet.text, tweet_datetime=tweet.created_at);	
 				}
 				log.info("RETWEET SUCCESS. Posting user: " + trader_id_posted +", other user: " + other_trader_id);
 			}
@@ -598,7 +671,9 @@ Meteor.methods({
 		if (this.userId) {
 			Shout_requests.insert({"original_poster_id": Meteor.userId(), "retweeting_user": trader_id, "tweet_id": tweet_id});
 			decrementTradeCounts(trader_id, Meteor.userId()); 
-			Meteor.call("sendNotificationEmail", trader_id, "sent you a Shout! request.");
+
+			var tweet = Tweets.findOne({"id_str":tweet_id})
+			Meteor.call("sendNotificationEmail", trader_id, "sent_shout_req", tweet_text=tweet.text, tweet_datetime=tweet.created_at);
 
 		}
 		else {
@@ -667,6 +742,7 @@ Meteor.startup(function() {
      //    consumerKey : TWITTER_API_KEY,
      //    secret      : TWITTER_API_SECRET
      //  });
+
 
 });
 

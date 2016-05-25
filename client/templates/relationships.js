@@ -129,7 +129,9 @@ Template.relationships.helpers({
 	isRequested: function(other_user_id) {
 		var count_1 = Current_trade_requests.find({"user_id_from": Meteor.userId(), "user_id_to": other_user_id}).fetch().length;
 		var count_2 = Current_trade_requests.find({"user_id_from": other_user_id, "user_id_to": Meteor.userId()}).fetch().length;
-		if (count_1>0 || count_2>0) {
+
+		if (count_1 && count_2 && count_1>0 || count_2>0) {
+			console.log("count1: " + count1 + ", count2: " + count2);
 			return true;
 		}
 		return false;
