@@ -382,6 +382,7 @@ span.tags
 .notification-date-time-retweets {
   margin-left: 10px;
   background: none !important;
+  text-align: left !important;
 }
 
 .shout-proposal-buttons {
@@ -601,7 +602,6 @@ span.tags
 .btn-trade {
   font-size: 16px;
   color: black;
-  width: 400px;
   background-color: #66b2ff;
 }
 
@@ -1247,6 +1247,10 @@ li
   text-align: left;
 }
 
+#loader-wrapper {
+  height: 100vh;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -1332,5 +1336,9 @@ li {
     }
     .trading-num {
       font-size: 34px;
+    }
+
+    .btn-trade {
+      width: 400px;
     }
 }

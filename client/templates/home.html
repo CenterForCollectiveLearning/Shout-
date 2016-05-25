@@ -56,7 +56,9 @@
 		<div class="row trade-buttons" >
 			<button class="btn btn-lg btn-primary btn-trade" id="trade-button">
 				{{#if tradeNeedsReview}}
-					Send request to Shout! through @{{getRetweetingTrader}}
+
+					<span class="hidden-xs">Send request to Shout! through @{{getRetweetingTrader}}</span>
+					<span class="visible-xs-* hidden-sm hidden-md hidden-lg"></span>
 				{{else}}
 			 		Send Shout! through @{{getRetweetingTrader}}
 				{{/if}}
