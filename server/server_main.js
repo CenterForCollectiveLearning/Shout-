@@ -583,7 +583,7 @@ Meteor.methods({
 
 					var tweet = Tweets.findOne({"id_str":tweet_id})
 
-					Meteor.call("sendNotificationEmail", trader_id_posted, "accepted_shout_req", tweet_text=tweet.text, tweet_datetime=tweet.created_at);	
+					Meteor.call("sendNotificationEmail", other_trader_id, "accepted_shout_req", tweet_text=tweet.text, tweet_datetime=tweet.created_at);	
 				}
 				log.info("RETWEET SUCCESS. Posting user: " + trader_id_posted +", other user: " + other_trader_id);
 			}
