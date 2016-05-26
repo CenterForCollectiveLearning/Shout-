@@ -35,7 +35,7 @@ Template.single_tweet.events({
 				console.log(err.reason);
 			}
 		});
-		Meteor.call('clearShoutRequest', this.tweet_id, this.retweeting_user, this.original_poster_id, function(err, result) {
+		Meteor.call('clearShoutRequest', this.tweet_id, this.original_poster_id, function(err, result) {
 			if (err) {
 				console.log("error clearing the Shout! request");
 				console.log(err.reason);
@@ -45,19 +45,20 @@ Template.single_tweet.events({
 
 	// Reject the shout! Increment the trade count
 	'click .shout-reject': function() {
+		console.log("Shout reject clicked.. tweet id: " + this.tweet_id + ", retweeting user: " + this.retweeting_user)
 		Meteor.call("incrementTradeCounts", this.retweeting_user, this.original_poster_id, function(err, result) {
 			if (err) {
 				console.log("error incrementing trade counts");
 				console.log(err.reason)
 			}
 		});
-		Meteor.call("addShoutRequestToActivity", this.original_poster, this.retweeting_user, this.tweet_id, "reject", function(err, result) {
+		Meteor.call("addShoutRequestToActivity", this.original_poster, this.tweet_id, "reject", function(err, result) {
 			if (err) {
 				console.log("Error adding the Shout! request to Recent Activity");
 				console.log(err.reason);
 			}
 		})
-		Meteor.call('clearShoutRequest', this.tweet_id, this.retweeting_user, this.original_poster_id, function(err, result) {
+		Meteor.call('clearShoutRequest', this.tweet_id, this.original_poster_id, function(err, result) {
 			if (err) {
 				console.log("error clearing the Shout! request");
 				console.log(err.reason);

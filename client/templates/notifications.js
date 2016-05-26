@@ -43,13 +43,11 @@ Template.notifications.helpers({
 
   	get_old_trade_to: function(historic_req_id) {
   		old_req = Historic_trade_requests.findOne({"_id":historic_req_id});
-  		console.log(old_req);
   		return old_req.proposed_to;
   	},
 
   	get_old_trade_from: function(historic_req_id) {
 		old_req = Historic_trade_requests.findOne({"_id":historic_req_id});
-		console.log(old_req);
 		return old_req.proposed_from;
   	},
 

@@ -473,6 +473,7 @@ Meteor.methods({
 	// Adds the accepted or rejected Shout! request to Recent Activity
 	// Request is TO the logged-in user. 
 	addShoutRequestToActivity: function(user_id_from, tweet_id, status) {
+		console.log("Adding shout request to activity with status " + status);
 		Recent_activity.insert({"user_id": user_id_from, "type": "shout_req", "is_notification_receiver": true, "tweet_id": tweet_id, "other_user_id": Meteor.userId(), "status": status, "time":new Date(), "seen": false});
 		Recent_activity.insert({"user_id": Meteor.userId(), "type": "shout_req", "is_notification_receiver": false, "tweet_id": tweet_id, "other_user_id": user_id_from, "status": status, "time":new Date(), "seen": false});
 	},
@@ -556,6 +557,7 @@ Meteor.methods({
 
 	// Removes the shout! request -- Called when user rejects a request
 	clearShoutRequest: function(tweet_id, original_poster_id) {
+		console.log("tweet id: " + tweet_id + ", original poster id:  " + original_poster_id);
 		Shout_requests.remove({"tweet_id":tweet_id, "retweeting_user": Meteor.userId(), "original_poster_id": original_poster_id});
 	},
 
@@ -577,7 +579,7 @@ Meteor.methods({
 					Recent_activity.insert({"user_id":other_trader_id, type: "direct_shout", "is_notification_receiver": false, "other_user_id": trader_id_posted, "tweet_id":tweet_id, "status": null, "seen":false, "time":new Date()}) 
 				} 
 				else {
-					Meteor.call("addShoutRequestToActivity", other_trader_id, trader_id_posted, tweet_id, "accept");
+					Meteor.call("addShoutRequestToActivity", other_trader_id, tweet_id, "accept");
 
 					var tweet = Tweets.findOne({"id_str":tweet_id})
 
