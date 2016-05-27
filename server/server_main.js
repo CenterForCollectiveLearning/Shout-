@@ -740,6 +740,7 @@ Meteor.methods({
 
 		log.info("User " + user._id + "- updateAUserTimeline function");
 		while (num_batches_processed < NUM_BATCH_ITERATIONS) {
+			log.info("NUM BATCHES PROCESSED: " + num_batches_processed);
 			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, max_id: lowest_id}
 			log.info("makeTwitterCall with params screenName " + user.services.twitter.screenName +", lowest_id " + lowest_id)
 			var res =  makeTwitterCall('statuses/user_timeline', twitterParams, "get");
