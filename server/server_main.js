@@ -375,16 +375,17 @@ Meteor.methods({
 	// Else, pull most recent tweets.
 	updateUserTimeline: function() {
 		log.info("User " + Meteor.userId() + " - updating timeline");
-		var user = Meteor.user()
+		var user = Meteor.user();
+		console.log(user);
 		if (!(user && user.services && user.services.twitter)) {
 			throw new Meteor.Error("no user");
 			return;
 		}
-		if (!user.profile.has_logged_in) {
-			newUserTimelineLoad(); 	
+		if (user.profile.has_logged_in) {
+			oldUserTimelineLoad(); 	
 		}
 		else {
-			oldUserTimelineLoad();
+			newUserTimelineLoad();
 		}	
 	},
 
@@ -725,7 +726,63 @@ Meteor.methods({
 			throw new Meteor.Error("tweet-error");
 		}
 
-	}
+	},
+
+	// THIS IS FOR TESTING!
+	// Remove after bug fix. 
+	updateAUserTimeline: function(user_id) {
+		var num_batches_processed = 0;
+		var lowest_id;
+		var highest_id;
+		var last_seen_tweet_id;
+
+		var user = Meteor.users.findOne({"_id":user_id});
+
+		log.info("User " + user._id + "- First time login. Begin timeline load");
+		while (num_batches_processed < NUM_BATCH_ITERATIONS) {
+			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, max_id: lowest_id}
+			var res =  makeTwitterCall('statuses/user_timeline', twitterParams, "get");
+
+			// Optimizations - to reduce # API calls. 
+			if (res.length == 0) {
+				break;
+			}
+
+			if (res.length == 1 && res[0].id_str==last_seen_tweet_id) {
+				break;
+			}
+
+			_.each(res, function(tweet, j) { 
+				// If we aren't on the first batch, skip the first tweet. 
+				if (typeof(lowest_id)==="undefined") {
+					lowest_id = tweet.id_str;
+				}
+				if (typeof(highest_id)==="undefined") {
+					highest_id = tweet.id_str;
+				}
+
+				// After the first batch, the first tweet/batch is a duplicate.
+				if (tweet.id_str != last_seen_tweet_id) {
+					Tweets.insert(tweet);
+					last_seen_tweet_id = tweet.id_str;
+				}
+
+				  if (tweet.id < lowest_id) {
+				  	lowest_id = tweet.id_str;
+				  };
+				  if (tweet.id > highest_id) {
+				  	highest_id = tweet.id_str;
+				  }
+				});
+				num_batches_processed += 1;
+		};			
+		log.info("User " + user_id + "- First time login. Finished timeline load");
+
+		// User is no longer a first-time user
+		// Update profile accordingly and store the ids corresponding to the tweets we have downloaded
+		Meteor.users.update({"_id":user_id}, {"$set":{"profile.has_logged_in":true, "profile.highest_tweet_id": highest_id, "profile.lowest_tweet_id": lowest_id}});
+
+	},
 
 });
 
