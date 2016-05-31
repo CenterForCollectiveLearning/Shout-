@@ -13,7 +13,9 @@
 
 		<div style="max-width: {{alert_width}}" id="direct-shout-alert" class="alert alert-success custom-alert" role="alert">Shout! sent through {{getRequestedUserForAlert}}.</div>
 
-		<div style="max-width: {{alert_width}}" id="direct-shout-error-alert" class="alert alert-success custom-alert" role="alert">Error sending Shout! through {{getRequestedUserForAlert}}.</div>
+		<div style="max-width: {{alert_width}}" id="direct-shout-error-alert" class="alert alert-danger custom-alert" role="alert">Error sending Shout! through {{getRequestedUserForAlert}}.</div>
+
+		<div style="max-width: {{alert_width}}" id="already-retweeted-error-alert" class="alert alert-danger custom-alert" role="alert"> {{getRequestedUserForAlert}} has already retweeted this tweet.</div>
 	</div>
 
 	<div class="row">

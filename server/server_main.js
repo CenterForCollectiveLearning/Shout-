@@ -315,7 +315,6 @@ Meteor.methods({
 			// Shout or Trade
 			var isTradeNotif=false;
 			if (type=="sent_trade_req" || type=="accepted_trade_req" || type=="rejected_trade_req" || type=="sent_counter_req") {
-				console.log("Is trade notif...")
 				isTradeNotif= true;
 			}
 
@@ -376,7 +375,6 @@ Meteor.methods({
 	updateUserTimeline: function() {
 		log.info("User " + Meteor.userId() + " - updating timeline");
 		var user = Meteor.user();
-		console.log(user);
 		if (!(user && user.services && user.services.twitter)) {
 			throw new Meteor.Error("no user");
 			return;
@@ -407,13 +405,11 @@ Meteor.methods({
 	// For now: Just combines logic in updateCurrent and pushHistoric
 	updateCurrentPushHistoric: function(user_id, old_proposed_from, old_proposed_to, new_proposed_from, new_proposed_to, old_status, review_status) {
 		if (this.userId) {
-			console.log("IN UPDATE CURRENT PUSH HISTORIC");
 			checkTradeParams(Meteor.userId(), user_id, old_proposed_from, old_proposed_to);
 			check(old_status, String);
 			Historic_trade_requests.insert({"user_id_from":user_id, "user_id_to":Meteor.userId(), "proposed_from":old_proposed_from, "proposed_to":old_proposed_to, "status": old_status}, function(err, result) { 
 				Current_trade_requests.remove({"user_id_from":user_id, "user_id_to":Meteor.userId()});
 				var modifiedReqId = result
-				console.log("ModifiedReqId: " + modifiedReqId);
 				Meteor.call("updateCurrentTradeRequest",user_id, new_proposed_from, new_proposed_to, review_status, modifiedReqId);
 
 			});
@@ -474,7 +470,6 @@ Meteor.methods({
 	// Adds the accepted or rejected Shout! request to Recent Activity
 	// Request is TO the logged-in user. 
 	addShoutRequestToActivity: function(user_id_from, tweet_id, status) {
-		console.log("Adding shout request to activity with status " + status);
 		Recent_activity.insert({"user_id": user_id_from, "type": "shout_req", "is_notification_receiver": true, "tweet_id": tweet_id, "other_user_id": Meteor.userId(), "status": status, "time":new Date(), "seen": false});
 		Recent_activity.insert({"user_id": Meteor.userId(), "type": "shout_req", "is_notification_receiver": false, "tweet_id": tweet_id, "other_user_id": user_id_from, "status": status, "time":new Date(), "seen": false});
 	},
@@ -558,7 +553,6 @@ Meteor.methods({
 
 	// Removes the shout! request -- Called when user rejects a request
 	clearShoutRequest: function(tweet_id, original_poster_id) {
-		console.log("tweet id: " + tweet_id + ", original poster id:  " + original_poster_id);
 		Shout_requests.remove({"tweet_id":tweet_id, "retweeting_user": Meteor.userId(), "original_poster_id": original_poster_id});
 	},
 
@@ -572,6 +566,9 @@ Meteor.methods({
 			try {
 				var twitterParams = {"id":tweet_id};
 				makeTwitterCall('statuses/retweet', twitterParams, "post", true, trader_id_posted);
+
+				// Update our collection of retweet ids
+				Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
 
 				// If successful AND it was a direct Shout!, decrement trade counts
 				if (direct) {
@@ -591,8 +588,12 @@ Meteor.methods({
 			catch (err) {
 				// throw meteor error to client
 				// Should be specific to the type of retweet error. 
-				log.warn("RETWEET ERROR. Posting user: " + trader_id_posted +", other user: " + other_trader_id + ", ERR: " + err.reason);
-				throw new Meteor.Error("Error posting retweet");
+				log.warn("RETWEET ERROR. Posting user: " + trader_id_posted +", other user: " + other_trader_id + ", ERR: " + err.message);
+				if (err.message=="You have already retweeted this tweet.") {
+					Retweet_ids.update({"tweet_id":tweet_id}, {$push:{"trader_ids":trader_id_posted.toString()}}, {"upsert":true});          
+
+				}
+				throw new Meteor.Error("Error posting retweet", err.message);
 
 				// If was an INDIRECT Shout!, re-increment the trade counts
 				if (!direct) {
@@ -631,7 +632,6 @@ Meteor.methods({
 				return followers_users.concat(friends_users, other_users);
 			}
 			// If we can't access the user's followers or friends, just load the user list in random order. 
-			//console.log("Could not load followers and friends");
 			return Meteor.users.find({"_id": {$ne:Meteor.userId()}}).fetch();
 		}
 		else {

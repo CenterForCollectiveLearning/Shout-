@@ -117,12 +117,18 @@ Template.home.events({
 			Meteor.call("sendShout", selected_tweet_id, selected_trader_id, Meteor.userId(), true, function(error) {
 				console.log(error);
 				if (error) {
-					console.log(error.reason);
 					Session.set("requested-user-for-alert", getSpecificUser(selected_trader_id));
-			        $("#direct-shout-error-alert").show();
-			        $("#direct-shout-error-alert").fadeTo(2000, 500).slideUp(500, function(){
-			          $("#direct-shout-error-alert").hide();
-			        });
+					if (error.reason=="You have already retweeted this tweet.") {
+				        $("#already-retweeted-error-alert").show();
+				        $("#already-retweeted-error-alert").fadeTo(2000, 500).slideUp(500, function(){
+				          $("#already-retweeted-error-alert").hide();
+				        });
+					} else {
+				        $("#direct-shout-error-alert").show();
+				        $("#direct-shout-error-alert").fadeTo(2000, 500).slideUp(500, function(){
+				          $("#direct-shout-error-alert").hide();
+				        });
+					}
 				}
 				else {
 			        Session.set("requested-user-for-alert", getSpecificUser(selected_trader_id));
