@@ -114,7 +114,7 @@ Template.home.events({
 		else {
 			// Directly trigger retweet
 			// Uncomment below line
-			Meteor.call("sendRetweet", selected_tweet_id, selected_trader_id, Meteor.userId(), true, function(error) {
+			Meteor.call("sendShout", selected_tweet_id, selected_trader_id, Meteor.userId(), true, function(error) {
 				console.log(error);
 				if (error) {
 					console.log(error.reason);
