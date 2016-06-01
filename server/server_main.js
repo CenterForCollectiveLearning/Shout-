@@ -387,6 +387,7 @@ Meteor.methods({
 			throw new Meteor.Error("no user");
 			return;
 		}
+		console.log(user.profile)
 		if (user.profile.has_logged_in) {
 			oldUserTimelineLoad(); 	
 		}
@@ -404,7 +405,7 @@ Meteor.methods({
 			var friends_result = makeTwitterCall('friends/ids', twitterParams, "get");
 
 			// Update db collections
-			Meteor.users.update({"_id":Meteor.userId()}, {"$set":{"profile.has_logged_in":true, "profile.followers_list": followers_result, "profile.friends_list": friends_result}});
+			Meteor.users.update({"_id":Meteor.userId()}, {"$set":{"profile.followers_list": followers_result, "profile.friends_list": friends_result}});
 		}
 		else {
 			throw new Meteor.Error("logged-out");
