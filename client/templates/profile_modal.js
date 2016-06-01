@@ -72,7 +72,13 @@ Template.profile_modal.helpers({
 
   num_tweets: function(user_id) {
     var user = getSpecificUser(user_id);
-    return Tweets.find({"user.screen_name": user.services.twitter.screenName}).count();
+    var profile = user && user.profile;
+    if (profile.num_tweets) {
+      return profile.num_tweets;
+    }
+    else {
+      return "N/A";
+    }
   }
 });
 

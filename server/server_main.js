@@ -203,6 +203,14 @@ var getNotificationText = function(notif_type) {
 	}
 };
 
+var updateNumTweets = function() {
+	var user = Meteor.user()
+	if (user && user.services && user.services.twitter && user.services.twitter.screenName) {
+		numTweets= Tweets.find({"user.screen_name":user.services.twitter.screenName}).count();
+		Meteor.users.update({"_id":Meteor.userId()}, {"$set":{"profile.num_tweets": numTweets}});
+	}
+};
+
 
 // PUBLICATIONS
 Meteor.publish("userData", function() {
@@ -384,7 +392,8 @@ Meteor.methods({
 		}
 		else {
 			newUserTimelineLoad();
-		}	
+		}
+		updateNumTweets();	
 	},
 
 	// TODO: Figure out why this is causing so many API calls, and bring it back

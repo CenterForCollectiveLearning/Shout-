@@ -385,10 +385,6 @@ span.tags
   text-align: left !important;
 }
 
-.shout-proposal-buttons {
-  margin-top: 30px;
-}
-
 .modal-tweet-panel {
   margin-top: 10px;
 }
@@ -840,7 +836,7 @@ object {
 /*End badger CSS*/
 
 .notifications-dropdown-with-requests {
-  background-color: #F0F4F7;
+  background-color: #F0F4F7 !important;
   width: 500px;
   padding: 0px;
 }
@@ -977,7 +973,6 @@ li
 }
 
 #notifications-heading {
-  width: 180px;
   margin: auto;
   font-size: 26px;
   margin-top: 20px;
@@ -1251,6 +1246,14 @@ li
   height: 100vh;
 }
 
+.btn-wrapper {
+  text-align: right;
+}
+
+.notif-panel-body {
+  background-color: #F0F4F7;
+}
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -1307,6 +1310,9 @@ li {
     #relationship-heading {
       margin-top: 10px;
     }
+    .shout-proposal-buttons {
+      padding: 10px;
+    }
 }
 @media screen and (min-width: 768px) {
   .badger-outter
@@ -1340,5 +1346,8 @@ li {
 
     .btn-trade {
       width: 400px;
+    }
+    .shout-proposal-buttons {
+      margin-top: 30px;
     }
 }

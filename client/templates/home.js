@@ -123,6 +123,7 @@ Template.home.events({
 				        $("#already-retweeted-error-alert").fadeTo(2000, 500).slideUp(500, function(){
 				          $("#already-retweeted-error-alert").hide();
 				        });
+				        
 					} else {
 				        $("#direct-shout-error-alert").show();
 				        $("#direct-shout-error-alert").fadeTo(2000, 500).slideUp(500, function(){
