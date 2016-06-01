@@ -593,6 +593,7 @@ Meteor.methods({
 					Meteor.call("sendNotificationEmail", other_trader_id, "accepted_shout_req", tweet_text=tweet.text, tweet_datetime=tweet.created_at);	
 				}
 				log.info("RETWEET SUCCESS. Posting user: " + trader_id_posted +", other user: " + other_trader_id);
+				Shout_store.insert({"tweet_id":tweet_id, "user_id_poster":trader_id_posted, "datetime":new Date()})
 			}
 			catch (err) {
 				// throw meteor error to client
@@ -712,7 +713,7 @@ Meteor.methods({
 		try {
 			makeTwitterCall('direct_messages/new', twitterParams, "post");
 			log.info("User " + Meteor.userId() + "- Sent DM invite to " + twitter_handle)
-
+			DM_store.insert({"user_id_from":Meteor.userId(), "user_handle_to":twitter_handle, "text":message_text})
 		} 
 		catch(error) {
 			console.log(error);
@@ -726,7 +727,8 @@ Meteor.methods({
 		var twitterParams = {"status":tweet_text};
 		try {
 			makeTwitterCall('statuses/update', twitterParams, "post");
-			log.info("User " + Meteor.userId() + "- posted new tweet ")
+			log.info("User " + Meteor.userId() + "- posted new tweet ");
+			Quick_tweet_store.insert({"user_id":Meteor.userId(), "tweet_text":tweet_text, "datetime":new Date()})
 
 		} 
 		catch(error) {

@@ -9,6 +9,10 @@ Tweets = new Mongo.Collection("tweets");
 Shout_requests = new Mongo.Collection("shout_requests");
 Recent_activity = new Mongo.Collection("recent_activity");
 
+// Additional collections for tracking activities
+Quick_tweet_store = new Mongo.Collection("quick_tweet_store");
+DM_store = new Mongo.Collection("dm_store");
+Shout_store = new Mongo.Collection("shout_store");
 
 Meteor.users.publicFields = {
 	"services.twitter.accessToken":0,

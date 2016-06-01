@@ -33,7 +33,7 @@
 	<div class="row hidden-xs">
 		<div class="col-md-8" style="width:65%">
 			<div class="notification-tweet-panel" style="width:100%">
-			<div class="col-xs-2 col-sm-3 inner-tweet-panel"> 
+			<div class="col-xs-2 col-sm-2 col-md-3 inner-tweet-panel"> 
 				{{#with getSpecificUser original_poster_id}}
 				<img class="user-icon img-rounded" src="{{services.twitter.profile_image_url}}">
 				{{/with}}
@@ -47,6 +47,13 @@
 				{{/with}}
 			</div>
 		</div>
+		{{#with getTweet tweet_id}}
+		<div class="notification-date-time-retweets date-time-retweets hidden-xs">
+			{{dateConverter created_at}} | <span class="glyphicon glyphicon-retweet"></span>  {{retweet_count}} | 
+			<span class="glyphicon glyphicon-heart"></span> {{favorite_count}}
+		</div>
+		{{/with}}
+
 		</div>
 		<div class="col-md-4">
             <div class="btn-group shout-proposal-buttons" role="group">
@@ -55,10 +62,4 @@
             </div>
 		</div>
 	</div>
-	{{#with getTweet tweet_id}}
-	<div class="notification-date-time-retweets date-time-retweets hidden-xs">
-		{{dateConverter created_at}} | <span class="glyphicon glyphicon-retweet"></span>  {{retweet_count}} | 
-		<span class="glyphicon glyphicon-heart"></span> {{favorite_count}}
-	</div>
-	{{/with}}
 </template>

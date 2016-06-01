@@ -1073,7 +1073,7 @@ li
 }
 
 .invite-section {
-  margin-bottom: 4px;
+  margin-bottom: 1px;
   text-align: right;
 }
 
@@ -1348,6 +1348,6 @@ li {
       width: 400px;
     }
     .shout-proposal-buttons {
-      margin-top: 30px;
+      margin-top: 10px;
     }
 }

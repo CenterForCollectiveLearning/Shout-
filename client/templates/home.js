@@ -115,7 +115,6 @@ Template.home.events({
 			// Directly trigger retweet
 			// Uncomment below line
 			Meteor.call("sendShout", selected_tweet_id, selected_trader_id, Meteor.userId(), true, function(error) {
-				console.log(error);
 				if (error) {
 					Session.set("requested-user-for-alert", getSpecificUser(selected_trader_id));
 					if (error.reason=="You have already retweeted this tweet.") {
