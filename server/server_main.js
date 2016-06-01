@@ -750,11 +750,8 @@ Meteor.methods({
 
 		var user = Meteor.users.findOne({"_id":user_id});
 
-		log.info("User " + user._id + "- updateAUserTimeline function");
 		while (num_batches_processed < NUM_BATCH_ITERATIONS) {
-			log.info("NUM BATCHES PROCESSED: " + num_batches_processed);
 			var twitterParams = {screen_name: user.services.twitter.screenName, include_rts: false, count:BATCH_TWEET_SIZE, max_id: lowest_id}
-			log.info("makeTwitterCall with params screenName " + user.services.twitter.screenName +", lowest_id " + lowest_id)
 			var res =  makeTwitterCall('statuses/user_timeline', twitterParams, "get");
 
 
@@ -765,12 +762,10 @@ Meteor.methods({
 			}
 
 			if (res.length == 1 && res[0].id_str==last_seen_tweet_id) {
-				log.info("only one result in res " + res[0].id_str + " and it is a duplicate; break")
 				break;
 			}
 
 			_.each(res, function(tweet, j) { 
-				log.info("processing tweet " + tweet.id_str)
 				// If we aren't on the first batch, skip the first tweet. 
 				if (typeof(lowest_id)==="undefined") {
 					lowest_id = tweet.id_str;
@@ -781,7 +776,6 @@ Meteor.methods({
 
 				// After the first batch, the first tweet/batch is a duplicate.
 				if (tweet.id_str != last_seen_tweet_id) {
-					log.info("inserting tweet " + tweet.id_str + "!")
 					Tweets.insert(tweet);
 					last_seen_tweet_id = tweet.id_str;
 				}
