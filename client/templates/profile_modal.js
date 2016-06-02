@@ -126,7 +126,6 @@ Template.profile_modal.events({
       $('.modal').modal('hide');
   },
 
-
   'click #make-offer': function(e, template) {
     e.preventDefault();
     var user_id_to = this._id;

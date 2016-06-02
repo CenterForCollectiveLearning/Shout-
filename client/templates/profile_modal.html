@@ -75,21 +75,17 @@
                             {{/if}}
                         </div>
                             <div class="profile-modal-make-deal">
-                                <div class="hidden-xs">
-                                    I will retweet you
-                                    <input type="number" min="{{get_min_trade_param}}" max="{{get_max_trade_param}}" class="form-control form-control-custom num-them"> times if you retweet me
-                                    <input type="number" min="0" max="25" class="form-control form-control-custom num-you"> times.
+                                <div>
+                                    <span class="hidden-xs">I will retweet you</span>
+                                    <input type="number" min="{{get_min_trade_param}}" max="{{get_max_trade_param}}" class="form-control form-control-custom num-them"> 
+                                    <span class="hidden-xs">times if you retweet me</span>
+                                    <span class="visible-xs-* hidden-sm hidden-md hidden-lg">Times I retweet you</span>
+                                    <div class="visible-xs-* hidden-sm hidden-md hidden-lg" style="margin-top:10px"></div>
+                                    <input type="number" min="{{get_min_trade_param}}" max="{{get_max_trade_param}}" class="form-control form-control-custom num-you"> 
+                                    <span class="hidden-xs">times.</span>
+
+                                    <span class="visible-xs-* hidden-sm hidden-md hidden-lg">Times you retweet me</span>
                                 </div>
-
-                                <div class="visible-xs-* hidden-sm hidden-md hidden-lg">
-                                    <div style="margin-bottom:10px"> 
-                                        <input type="number" min="{{get_min_trade_param}}" max="{{get_max_trade_param}}" class="form-control form-control-custom num-them"> Times I will retweet you
-                                    </div>
-                                    <div> <input type="number" min="0" max="25" class="form-control form-control-custom num-you"> Times you will retweet me
-                                    </div>
-                                </div>
-
-
                                 <form>
                                     <div class="radio">
                                         <label>

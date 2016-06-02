@@ -387,7 +387,6 @@ Meteor.methods({
 			throw new Meteor.Error("no user");
 			return;
 		}
-		console.log(user.profile)
 		if (user.profile.has_logged_in) {
 			oldUserTimelineLoad(); 	
 		}
