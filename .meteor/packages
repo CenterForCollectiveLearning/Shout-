@@ -12,6 +12,7 @@ meteorhacks:npm
 
 npm-container
 accounts-twitter
+standard-minifiers
 meteor-base
 mobile-experience
 mongo
@@ -46,7 +47,3 @@ wylio:winston-papertrail
 u2622:persistent-session
 fortawesome:fontawesome
 meteorhacks:kadira
-meteorhacks:kadira-profiler
-standard-minifier-css
-standard-minifier-js
-kadira:debug
